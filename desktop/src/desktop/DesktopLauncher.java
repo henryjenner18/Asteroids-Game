@@ -8,7 +8,7 @@ import main.AsteroidsMain;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "Asteroids by HHHHHenry";
+		config.title = "Asteroids by HHHHHHenry";
 		config.width = AsteroidsMain.getWidth();
 		config.height = AsteroidsMain.getHeight();
 		config.resizable = false;
