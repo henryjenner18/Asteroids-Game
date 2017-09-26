@@ -28,6 +28,8 @@ public class GameRenderer { //Renders game objects
 	private static int numAsteroids;
 	private static ArrayList<Asteroid> asteroids;
 	
+	float x = -200;
+	
 	public GameRenderer(GameWorld world) {
 		myWorld = world;
 		
@@ -60,11 +62,35 @@ public class GameRenderer { //Renders game objects
 		}
 	}
 	
-	public void drawRocket() {	
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(1, 1, 1, 1);	
-		shapeRenderer.polygon(rocket.getVertices());
+	public void drawRocket() {
+		Gdx.gl.glLineWidth(3);
+		
+		//triangle
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(176/255.0f, 196/255.0f, 222/255.0f, 1);	
+		//shapeRenderer.polygon(rocket.getVertices());
+		shapeRenderer.triangle(rocket.getVertex(0), rocket.getVertex(1),
+				rocket.getVertex(2), rocket.getVertex(3),
+				rocket.getVertex(4), rocket.getVertex(5));
 		shapeRenderer.end();
+		
+		//outline
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(108/255.0f, 108/255.0f, 108/255.0f, 1);	
+		shapeRenderer.triangle(rocket.getVertex(0), rocket.getVertex(1),
+				rocket.getVertex(2), rocket.getVertex(3),
+				rocket.getVertex(4), rocket.getVertex(5));
+		shapeRenderer.end();
+		
+		//window
+		/*shapeRenderer.begin(ShapeType.Filled);	
+		shapeRenderer.circle(rocket.getX(), rocket.getY(), 12);
+		shapeRenderer.end();
+		
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(135/255.0f, 206/255.0f, 235/255.0f, 1);
+		shapeRenderer.circle(rocket.getX(), rocket.getY(), 8);
+		shapeRenderer.end();*/
 	}
 	
 	public void drawAsteroid(int i) {
@@ -79,7 +105,9 @@ public class GameRenderer { //Renders game objects
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
-		batch.draw(spaceImage, 0, 0, 1600, 1200);
+		batch.draw(spaceImage, x, 0, 2000, 1600);
 		batch.end();
+		
+		x += 0.05;
 	}
 }
