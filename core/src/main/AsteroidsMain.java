@@ -5,7 +5,6 @@ import com.badlogic.gdx.Game;
 import screens.GameScreen;
 
 public class AsteroidsMain extends Game { //Main class
-	//a test comment removed
 	private static int width = 1600;
 	private static int height = 1000;
 
