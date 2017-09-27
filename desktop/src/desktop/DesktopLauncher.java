@@ -8,9 +8,11 @@ import main.AsteroidsMain;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "Asteroids by Hhenry";
+		config.title = "Asteroids by Henry";
 		config.width = AsteroidsMain.getWidth();
 		config.height = AsteroidsMain.getHeight();
+		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
+		//config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
 		config.resizable = false;
 		new LwjglApplication(new AsteroidsMain(), config);
 	}

@@ -7,7 +7,7 @@ import gameObjects.Asteroid;
 import gameObjects.Rocket;
 import main.AsteroidsMain;
 
-public class GameWorld { //Updates game objects
+public class GameWorld { // Updates game objects
 	
 	private Rocket rocket;
 	
@@ -15,8 +15,8 @@ public class GameWorld { //Updates game objects
 	private static ArrayList<Asteroid> asteroids;
 	
 	public GameWorld() {
-		Random r = new Random();
-		int randHeading = r.nextInt(361); //random heading between 0-360 degrees
+		Random r = new Random(); // random function
+		int randHeading = r.nextInt(361); // random heading between 0-360 degrees
 		rocket = new Rocket(80, randHeading, AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
 		
 		numAsteroids = 5;
@@ -36,7 +36,7 @@ public class GameWorld { //Updates game objects
 		}
 	}
 	
-	//getters:	
+	// Getters:	
 	public Rocket getRocket() {
 		return rocket;
 	}

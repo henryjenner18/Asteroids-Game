@@ -75,7 +75,7 @@ public class Rocket {
 		vertices[5] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
 	}
 	
-	//getters:
+	// Getters:
 	public float getX() {
 		return position.x;
 	}

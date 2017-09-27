@@ -14,25 +14,23 @@ import gameObjects.Asteroid;
 import gameObjects.Rocket;
 import main.AsteroidsMain;
 
-public class GameRenderer { //Renders game objects
+public class GameRenderer { // Renders game objects
+	
+	private GameWorld myWorld;
+	private OrthographicCamera cam; // Single plane camera view
+	private ShapeRenderer shapeRenderer;
 	
 	private Texture spaceImage;
 	private SpriteBatch batch;
 	
-	private GameWorld myWorld;
-	private OrthographicCamera cam;
-	private ShapeRenderer shapeRenderer;
-	
 	private Rocket rocket;
-	
 	private static int numAsteroids;
 	private static ArrayList<Asteroid> asteroids;
 	
-	float x = -200;
-	
 	public GameRenderer(GameWorld world) {
-		myWorld = world;
+		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
 		
+		// Setting size of projection to resolution in Main and translating to move origin to bottom left
 		cam = new OrthographicCamera(AsteroidsMain.getWidth(), AsteroidsMain.getHeight());
 		cam.translate(AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
 		cam.update();
@@ -65,18 +63,19 @@ public class GameRenderer { //Renders game objects
 	public void drawRocket() {
 		Gdx.gl.glLineWidth(3);
 		
-		//triangle
+		// Triangle
 		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(176/255.0f, 196/255.0f, 222/255.0f, 1);	
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		shapeRenderer.setColor(176/255.0f, 196/255.0f, 222/255.0f, 0.5f);
 		//shapeRenderer.polygon(rocket.getVertices());
 		shapeRenderer.triangle(rocket.getVertex(0), rocket.getVertex(1),
 				rocket.getVertex(2), rocket.getVertex(3),
 				rocket.getVertex(4), rocket.getVertex(5));
 		shapeRenderer.end();
 		
-		//outline
+		// Outline
 		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(0, 1, 1, 1);	
+		shapeRenderer.setColor(255 / 255.0f, 109 / 255.0f, 120 / 255.0f, 1);	
 		shapeRenderer.triangle(rocket.getVertex(0), rocket.getVertex(1),
 				rocket.getVertex(2), rocket.getVertex(3),
 				rocket.getVertex(4), rocket.getVertex(5));
@@ -95,9 +94,7 @@ public class GameRenderer { //Renders game objects
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
-		batch.draw(spaceImage, x, 0, 2000, 1600);
+		batch.draw(spaceImage, 0, 0, AsteroidsMain.getWidth(), AsteroidsMain.getHeight());
 		batch.end();
-		
-		x += 0.05;
 	}
 }
