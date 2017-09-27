@@ -13,14 +13,14 @@ public class InputHandler implements InputProcessor {
 	}
 
 	@Override
-	public boolean keyDown(int keycode) { //pressing a key
-		if(keycode == 19) { //up
+	public boolean keyDown(int keycode) { // Pressing a key
+		if(keycode == 19) { // Up
 			myRocket.thrusting = true;
 			
-		} else if(keycode == 21) { //left
+		} else if(keycode == 21) { // Left
 			myRocket.left = true;
 			
-		} else if(keycode == 22) { //right
+		} else if(keycode == 22) { // Right
 			myRocket.right = true;
 		}
 		
@@ -28,14 +28,14 @@ public class InputHandler implements InputProcessor {
 	}
 
 	@Override
-	public boolean keyUp(int keycode) { //releasing a key
-		if(keycode == 19) { //up
+	public boolean keyUp(int keycode) { // Releasing a key
+		if(keycode == 19) { // Up
 			myRocket.thrusting = false;
 		
-		} else if(keycode == 21) { //left
+		} else if(keycode == 21) { // Left
 			myRocket.left = false;
 			
-		} else if(keycode == 22) { //right
+		} else if(keycode == 22) { // Right
 			myRocket.right = false;
 		}
 		

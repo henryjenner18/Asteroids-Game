@@ -20,22 +20,24 @@ public class Rocket {
 	
 	public Rocket(float ht, float hg, float x, float y) {
 		height = ht;
-		heading = hg + 90; //set 0 degrees to north
+		heading = hg + 90; // Set 0 degrees to north
 		position = new Vector2(x, y);
 		vertices = new float[6];
 		velocity = new Vector2(0, 0);
 	}
 	
 	public void update(float delta) {
-		if(thrusting) thrust(delta); //apply force if pressing up
-		position.add(velocity); //add velocity to rocket's position
-		//velocity.scl((float) 0.9999999); //friction
+		if(thrusting) { // If up key is being pressed
+			thrust(delta); // Run thrust method to apply force
+		}
+		position.add(velocity); // Add velocity to rocket's position
+		// Velocity.scl((float) 0.9999999); //friction
 		
 		if(left) heading += 4;
 		if(right) heading -= 4;
 		
-		wrap();	
-		setVertices();
+		wrap();	// Check if rocket has hit edges
+		setVertices(); // Alter coordinates
 	}
 	
 	private void thrust(float delta) {
