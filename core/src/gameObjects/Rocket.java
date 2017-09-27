@@ -22,7 +22,7 @@ public class Rocket {
 		height = ht;
 		heading = hg + 90; //set 0 degrees to north
 		position = new Vector2(x, y);
-		vertices = new float[8];
+		vertices = new float[6];
 		velocity = new Vector2(0, 0);
 	}
 	
@@ -65,14 +65,14 @@ public class Rocket {
 		vertices[0] = position.x + MathUtils.cos(radians) * height / 2;
 		vertices[1] = position.y + MathUtils.sin(radians) * height / 2;
 		
-		vertices[2] = position.x + MathUtils.cos(radians - 3 * MathUtils.PI / 4) * height / 2;
-		vertices[3] = position.y + MathUtils.sin(radians - 3 * MathUtils.PI / 4) * height / 2;
+		vertices[2] = position.x + MathUtils.cos(radians - 3 * MathUtils.PI / 4) * height / 3;
+		vertices[3] = position.y + MathUtils.sin(radians - 3 * MathUtils.PI / 4) * height / 3;
 		
-		vertices[4] = position.x + MathUtils.cos(radians + MathUtils.PI) * height / 4;
-		vertices[5] = position.y + MathUtils.sin(radians + MathUtils.PI) * height / 4;
+		//vertices[4] = position.x + MathUtils.cos(radians + MathUtils.PI) * height / 4;
+		//vertices[5] = position.y + MathUtils.sin(radians + MathUtils.PI) * height / 4;
 		
-		vertices[6] = position.x + MathUtils.cos(radians + 3 * MathUtils.PI / 4) * height / 2;
-		vertices[7] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 2;
+		vertices[4] = position.x + MathUtils.cos(radians + 3 * MathUtils.PI / 4) * height / 3;
+		vertices[5] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
 	}
 
 	public float getX() {
@@ -87,8 +87,12 @@ public class Rocket {
 		return height;
 	}
 
-	public float[] getVertices() {
+	/*public float[] getVertices() {
 		return vertices;
+	}*/
+	
+	public float getVertex(int i) {
+		return vertices[i];
 	}
 
 	public float getHeading() {

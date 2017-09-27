@@ -17,7 +17,7 @@ public class GameWorld { //Updates game objects
 	public GameWorld() {
 		Random r = new Random();
 		int randHeading = r.nextInt(361); //random heading between 0-360 degrees
-		rocket = new Rocket(120, randHeading, AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
+		rocket = new Rocket(80, randHeading, AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
 		
 		numAsteroids = 5;
 		asteroids = new ArrayList<Asteroid>(numAsteroids);
