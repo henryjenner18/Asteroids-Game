@@ -1,5 +1,5 @@
 package gameWorld;
-//c1
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,7 +36,7 @@ public class GameWorld { //Updates game objects
 		}
 	}
 	
-	// getters	
+	//getters:	
 	public Rocket getRocket() {
 		return rocket;
 	}

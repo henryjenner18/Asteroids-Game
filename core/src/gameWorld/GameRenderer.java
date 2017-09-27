@@ -1,5 +1,5 @@
 package gameWorld;
-//c2
+
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -81,16 +81,6 @@ public class GameRenderer { //Renders game objects
 				rocket.getVertex(2), rocket.getVertex(3),
 				rocket.getVertex(4), rocket.getVertex(5));
 		shapeRenderer.end();
-		
-		//window
-		/*shapeRenderer.begin(ShapeType.Filled);	
-		shapeRenderer.circle(rocket.getX(), rocket.getY(), 12);
-		shapeRenderer.end();
-		
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(135/255.0f, 206/255.0f, 235/255.0f, 1);
-		shapeRenderer.circle(rocket.getX(), rocket.getY(), 8);
-		shapeRenderer.end();*/
 	}
 	
 	public void drawAsteroid(int i) {
