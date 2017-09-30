@@ -7,23 +7,18 @@ import com.badlogic.gdx.math.Vector2;
 
 import main.AsteroidsMain;
 
-public class Asteroid {
-	
-	private Vector2 position;
-	private Vector2 velocity;
+public class Asteroid extends SpaceObject {
 	
 	private float[] angles;
 	private float[] radii;
-	private float[] vertices;
 	
-	private int num;
 	private float maxRadius;
 	//private float minRadius;
 	
 	Random rand = new Random();
 	
 	public Asteroid(int n, int max) {
-		num = n;
+		edges = n;
 		maxRadius = max;
 		//minRadius = maxRadius - (maxRadius * 1 / 2);
 		
@@ -33,12 +28,12 @@ public class Asteroid {
 		
 		int velX = rand.nextInt(9) - 4;
 		int velY = rand.nextInt(9) - 4;
-		velocity = new Vector2(velX, velY);
+		velocity = new Vector2(velX, velY); // Need to use delta
 		velocity.scl((float) 0.2);
 		
-		angles = new float[num];
-		radii = new float[num];
-		vertices = new float[num * 2]; // 2 elements needed for each vertex
+		angles = new float[edges];
+		radii = new float[edges];
+		vertices = new float[edges * 2]; // 2 elements needed for each vertex
 		
 		generateAngles();
 		generateRadii();
@@ -49,6 +44,8 @@ public class Asteroid {
 		
 		wrap();
 		setVertices();
+		
+		//linearEquation(vertices);
 	}
 	
 	private void wrap() { //screen wrap
@@ -65,7 +62,7 @@ public class Asteroid {
 	private void setVertices() {
 		float radians;
 		
-		for(int i = 0; i < num * 2; i += 2) { //search for every even element/x-coordinate
+		for(int i = 0; i < edges * 2; i += 2) { //search for every even element/x-coordinate
 			// x-coordinate
 			radians = (float) Math.toRadians(angles[i / 2]);
 			vertices[i] = position.x + MathUtils.cos(radians) * radii[i / 2];
@@ -78,7 +75,7 @@ public class Asteroid {
 	private void generateRadii() {
 		int r = 100; // starting radius
 		
-		for(int i = 0; i < num; i++) {
+		for(int i = 0; i < edges; i++) {
 			int dr = rand.nextInt(21) - 10;
 			r += dr;
 			
@@ -92,23 +89,19 @@ public class Asteroid {
 	}
 	
 	private void generateAngles() {
-		float a = 360 / num; // regular difference between each angle
+		float a = 360 / edges; // regular difference between each angle
 		
-		for(int i = 0; i < num; i++) {
+		for(int i = 0; i < edges; i++) {
 			angles[i] = a * i;
 		}
 		
 		/*int maxD = 10;
 		int minD = -(maxD);
 		
-		for(int i = 0; i < num; i++) {
+		for(int i = 0; i < edges; i++) {
 			int d = rand.nextInt(maxD + 1 - minD) + minD;
 			angles[i] = (regularDiff * i) + d;
 		}*/
 		
-	}
-
-	public float[] getVertices() {
-		return vertices;
 	}
 }

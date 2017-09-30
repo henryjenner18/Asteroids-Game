@@ -5,13 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import main.AsteroidsMain;
 
-public class Rocket {
-	
-	private Vector2 position;
-	private Vector2 velocity;
+public class Rocket extends SpaceObject {
 	
 	private float height;
-	private float[] vertices;
 	public float heading;
 	
 	public boolean thrusting;
@@ -23,6 +19,7 @@ public class Rocket {
 		heading = hg + 90; // Set 0 degrees to north
 		position = new Vector2(x, y);
 		vertices = new float[6];
+		edges = vertices.length / 2;
 		velocity = new Vector2(0, 0);
 	}
 	
@@ -38,6 +35,8 @@ public class Rocket {
 		
 		wrap();	// Check if rocket has hit edges
 		setVertices(); // Alter coordinates
+		
+		//linearEquation(vertices);
 	}
 	
 	private void thrust(float delta) {
@@ -77,25 +76,9 @@ public class Rocket {
 		vertices[5] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
 	}
 	
-	// Getters:
-	public float getX() {
-		return position.x;
-	}
-	
-	public float getY() {
-		return position.y;
-	}
-	
+	// Getters
 	public float getHeight() {
 		return height;
-	}
-
-	/*public float[] getVertices() {
-		return vertices;
-	}*/
-	
-	public float getVertex(int i) {
-		return vertices[i];
 	}
 
 	public float getHeading() {

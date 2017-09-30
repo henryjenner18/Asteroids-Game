@@ -9,21 +9,22 @@ import main.AsteroidsMain;
 
 public class GameWorld { // Updates game objects
 	
-	private Rocket rocket;
-	
+	private Rocket rocket;	
 	private static int numAsteroids;
 	private static ArrayList<Asteroid> asteroids;
 	
+	public static float xInt, yInt;
+	
 	public GameWorld() {
-		Random r = new Random(); // random function
-		int randHeading = r.nextInt(361); // random heading between 0-360 degrees
+		Random r = new Random(); // Random function
+		int randHeading = r.nextInt(361); // Random heading between 0-360 degrees
 		rocket = new Rocket(80, randHeading, AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
 		
 		numAsteroids = 5;
 		asteroids = new ArrayList<Asteroid>(numAsteroids);
 		
 		for(int i = 0; i < numAsteroids; i++) {
-			Asteroid asteroid = new Asteroid(10, 120); // vertices, max radius
+			Asteroid asteroid = new Asteroid(10, 150); // Vertices, max radius
 			asteroids.add(asteroid);
 		}
 	}
