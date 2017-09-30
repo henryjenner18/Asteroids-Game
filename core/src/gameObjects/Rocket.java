@@ -1,5 +1,9 @@
 package gameObjects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -29,7 +33,7 @@ public class Rocket extends SpaceObject {
 		}
 		position.add(velocity); // Add velocity to rocket's position
 		
-		int dh = 5; // Change of heading when key pressed
+		int dh = 4; // Change of heading when key pressed
 		if(left) heading += dh;
 		if(right) heading -= dh;
 		
@@ -41,13 +45,13 @@ public class Rocket extends SpaceObject {
 		Vector2 force = new Vector2();
 		float radians = (float) Math.toRadians(heading);
 		
-		force.x = MathUtils.cos(radians) * delta * 11;
-		force.y = MathUtils.sin(radians) * delta * 11;
+		force.x = MathUtils.cos(radians) * delta * 9;
+		force.y = MathUtils.sin(radians) * delta * 9;
 		
 		velocity.add(force);
 	}
 	
-	private void wrap() { //screen wrap
+	private void wrap() { // Screen wrap
 		float w = AsteroidsMain.getWidth();
 		float h = AsteroidsMain.getHeight();;
 		float r = height / 2;
@@ -72,6 +76,26 @@ public class Rocket extends SpaceObject {
 		
 		vertices[4] = position.x + MathUtils.cos(radians + 3 * MathUtils.PI / 4) * height / 3;
 		vertices[5] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
+	}
+	
+	public void render(ShapeRenderer sr) {
+		Gdx.gl.glLineWidth(3);
+		Gdx.gl.glEnable(GL20.GL_BLEND); // Allows transparency
+		
+		// Triangle
+		sr.begin(ShapeType.Filled);
+		sr.setColor(176/255.0f, 196/255.0f, 222/255.0f, 0.5f);
+		//shapeRenderer.polygon(rocket.getVertices());
+		sr.triangle(vertices[0], vertices[1], vertices[2],
+				vertices[3], vertices[4], vertices[5]);
+		sr.end();
+		
+		// Outline
+		sr.begin(ShapeType.Line);
+		sr.setColor(0, 1, 1, 1);	
+		sr.triangle(vertices[0], vertices[1], vertices[2],
+				vertices[3], vertices[4], vertices[5]);
+		sr.end();
 	}
 	
 	public float getHeight() {

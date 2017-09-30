@@ -3,6 +3,8 @@ package gameObjects;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -90,5 +92,12 @@ public class Asteroid extends SpaceObject {
 		}
 		
 		Arrays.sort(angles); // Order the angles ascending
+	}
+
+	public void render(ShapeRenderer sr) {
+		sr.begin(ShapeType.Line);
+		sr.setColor(1, 1, 1, 1);	
+		sr.polygon(vertices);
+		sr.end();
 	}
 }

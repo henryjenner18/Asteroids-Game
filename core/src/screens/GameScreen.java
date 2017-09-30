@@ -18,7 +18,7 @@ public class GameScreen implements Screen { // Implementing methods of the scree
 	public GameScreen() {
 		world = new GameWorld(); // Initialise world
 		manager = new GameManager(world); // Initialise manager
-		renderer = new GameRenderer(world); // Initialise renderer; can retrieve objects from world
+		renderer = new GameRenderer(world, manager); // Initialise renderer; can retrieve objects from world
 		
 		Gdx.input.setInputProcessor(new InputHandler(world.getRocket()));
 	}
