@@ -63,7 +63,7 @@ public class Asteroid extends SpaceObject {
 	private void setVertices() {
 		float radians;
 		
-		for(int i = 0; i < edges * 2; i += 2) { //search for every even element/x-coordinate
+		for(int i = 0; i < edges * 2; i += 2) { // Search for every even element/x-coordinate
 			// x-coordinate
 			radians = (float) Math.toRadians(angles[i / 2]);
 			vertices[i] = position.x + MathUtils.cos(radians) * radii[i / 2];
