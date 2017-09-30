@@ -21,6 +21,7 @@ public class GameRenderer { // Renders game objects
 	private ShapeRenderer shapeRenderer;
 	
 	private Texture spaceImage;
+	private Texture explosionImage;
 	private SpriteBatch batch;
 	
 	private Rocket rocket;
@@ -48,6 +49,7 @@ public class GameRenderer { // Renders game objects
 		}
 		
 		spaceImage = new Texture("Infinite-space.jpg");
+		explosionImage = new Texture("explosion.png");
 		batch = new SpriteBatch();
 	}
 	
@@ -66,11 +68,18 @@ public class GameRenderer { // Renders game objects
 	private void drawCollisions() {
 		ArrayList<float[]> collisions = GameManager.getIntersections();
 		
+		/*if(collisions.size() > 0) { // An explosion
+			int wh = 190; // Width and height
+			batch.begin();
+			batch.draw(explosionImage, collisions.get(0)[0] - (wh / 2), collisions.get(0)[1] - (wh / 2), wh, wh);
+			batch.end();
+		}*/
+	
 		for(int i = 0; i < collisions.size(); i++) {
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.setColor(1, 0, 0, 1);
 			shapeRenderer.circle(collisions.get(i)[0], collisions.get(i)[1], 12);
-			shapeRenderer.end();
+			shapeRenderer.end();			
 		}
 	}
 
