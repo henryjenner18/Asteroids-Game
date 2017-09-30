@@ -13,6 +13,7 @@ public class DesktopLauncher {
 		config.height = AsteroidsMain.getHeight();
 		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
 		//config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
+		config.fullscreen = false;
 		config.resizable = false;
 		new LwjglApplication(new AsteroidsMain(), config);
 	}
