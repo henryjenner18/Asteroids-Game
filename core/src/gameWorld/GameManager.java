@@ -29,7 +29,6 @@ public class GameManager {
 	}
 
 	public void manage() {
-		System.out.println("");
 		rocket.linearEquation();
 		
 		for(int i = 0; i < numAsteroids; i++) {
@@ -76,12 +75,10 @@ public class GameManager {
 					
 					// Solve for x
 					float x = (rocketYintercepts[r] - asteroidYintercepts[s]) / (asteroidGradients[s] - rocketGradients[r]);
-					//System.out.println(x);
-					//System.out.println("Rocket edge: " + r + ", Asteroid no: " + a + ", Edge no: " + s);
+					
 					if(xCheck(x, rocketXs, asteroidXs) == true) {
 						// Collision has occurred
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
-						//System.out.println(x + "," + y);
 						float[] intersection = {x, y};
 						intersections.add(intersection);
 					}

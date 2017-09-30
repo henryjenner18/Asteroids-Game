@@ -29,7 +29,7 @@ public class Asteroid extends SpaceObject {
 		int velX = rand.nextInt(9) - 4;
 		int velY = rand.nextInt(9) - 4;
 		velocity = new Vector2(velX, velY); // Need to use delta
-		velocity.scl((float) 0.2);
+		velocity.scl((float) 0.3);
 		
 		angles = new float[edges];
 		radii = new float[edges];

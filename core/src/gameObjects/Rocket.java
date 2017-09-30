@@ -28,15 +28,12 @@ public class Rocket extends SpaceObject {
 			thrust(delta); // Run thrust method to apply force
 		}
 		position.add(velocity); // Add velocity to rocket's position
-		// Velocity.scl((float) 0.9999999); //friction
 		
 		if(left) heading += 4;
 		if(right) heading -= 4;
 		
 		wrap();	// Check if rocket has hit edges
 		setVertices(); // Alter coordinates
-		
-		//linearEquation(vertices);
 	}
 	
 	private void thrust(float delta) {
@@ -76,7 +73,6 @@ public class Rocket extends SpaceObject {
 		vertices[5] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
 	}
 	
-	// Getters
 	public float getHeight() {
 		return height;
 	}

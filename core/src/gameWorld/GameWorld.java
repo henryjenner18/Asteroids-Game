@@ -37,7 +37,6 @@ public class GameWorld { // Updates game objects
 		}
 	}
 	
-	// Getters:	
 	public Rocket getRocket() {
 		return rocket;
 	}

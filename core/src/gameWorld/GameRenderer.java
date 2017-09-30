@@ -68,7 +68,7 @@ public class GameRenderer { // Renders game objects
 		
 		for(int i = 0; i < collisions.size(); i++) {
 			shapeRenderer.begin(ShapeType.Line);
-			shapeRenderer.setColor(0, 1, 1, 1);
+			shapeRenderer.setColor(1, 0, 0, 1);
 			shapeRenderer.circle(collisions.get(i)[0], collisions.get(i)[1], 10);
 			shapeRenderer.end();
 		}
@@ -89,7 +89,7 @@ public class GameRenderer { // Renders game objects
 		
 		// Outline
 		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(255 / 255.0f, 109 / 255.0f, 120 / 255.0f, 1);	
+		shapeRenderer.setColor(0, 1, 1, 1);	
 		shapeRenderer.triangle(rocket.getVertex(0), rocket.getVertex(1),
 				rocket.getVertex(2), rocket.getVertex(3),
 				rocket.getVertex(4), rocket.getVertex(5));

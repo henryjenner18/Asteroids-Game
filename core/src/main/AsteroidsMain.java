@@ -5,7 +5,7 @@ import screens.GameScreen;
 
 public class AsteroidsMain extends Game { // Main game class
 	private static int width = 1600; // Dimensions used for whole program
-	private static int height = 1000;
+	private static int height = 950;
 
 	@Override
 	public void create() {
