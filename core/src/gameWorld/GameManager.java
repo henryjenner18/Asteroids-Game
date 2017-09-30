@@ -2,8 +2,8 @@ package gameWorld;
 
 import java.util.ArrayList;
 
-import gameObjects.Asteroid;
-import gameObjects.Rocket;
+import objects.Asteroid;
+import objects.Rocket;
 
 public class GameManager {
 	

@@ -3,10 +3,10 @@ package screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
-import gameHelpers.InputHandler;
 import gameWorld.GameManager;
 import gameWorld.GameRenderer;
 import gameWorld.GameWorld;
+import helpers.InputHandler;
 
 public class GameScreen implements Screen { // Implementing methods of the screen interface
 	// GameScreen class does not do any rendering/updating itself

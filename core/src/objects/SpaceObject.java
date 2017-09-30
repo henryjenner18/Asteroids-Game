@@ -1,4 +1,4 @@
-package gameObjects;
+package objects;
 
 import com.badlogic.gdx.math.Vector2;
 

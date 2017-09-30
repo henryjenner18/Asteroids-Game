@@ -1,4 +1,4 @@
-package gameObjects;
+package objects;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -29,8 +29,9 @@ public class Rocket extends SpaceObject {
 		}
 		position.add(velocity); // Add velocity to rocket's position
 		
-		if(left) heading += 4;
-		if(right) heading -= 4;
+		int dh = 5; // Change of heading when key pressed
+		if(left) heading += dh;
+		if(right) heading -= dh;
 		
 		wrap();	// Check if rocket has hit edges
 		setVertices(); // Alter coordinates

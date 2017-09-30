@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-import gameObjects.Asteroid;
-import gameObjects.Rocket;
 import main.AsteroidsMain;
+import objects.Asteroid;
+import objects.Rocket;
 
 public class GameRenderer { // Renders game objects
 	
@@ -69,7 +69,7 @@ public class GameRenderer { // Renders game objects
 		for(int i = 0; i < collisions.size(); i++) {
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.setColor(1, 0, 0, 1);
-			shapeRenderer.circle(collisions.get(i)[0], collisions.get(i)[1], 10);
+			shapeRenderer.circle(collisions.get(i)[0], collisions.get(i)[1], 12);
 			shapeRenderer.end();
 		}
 	}

@@ -1,5 +1,6 @@
-package gameObjects;
+package objects;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -12,15 +13,12 @@ public class Asteroid extends SpaceObject {
 	private float[] angles;
 	private float[] radii;
 	
-	private float maxRadius;
-	//private float minRadius;
+	private int maxRadius;
+	private int minRadius;
 	
 	Random rand = new Random();
 	
-	public Asteroid(int n, int max) {
-		edges = n;
-		maxRadius = max;
-		//minRadius = maxRadius - (maxRadius * 1 / 2);
+	public Asteroid(int n, int avgRadius) {
 		
 		int x = rand.nextInt(AsteroidsMain.getWidth() + 1);
 		int y = rand.nextInt(AsteroidsMain.getHeight() + 1);	
@@ -30,6 +28,11 @@ public class Asteroid extends SpaceObject {
 		int velY = rand.nextInt(9) - 4;
 		velocity = new Vector2(velX, velY); // Need to use delta
 		velocity.scl((float) 0.3);
+		
+		edges = 20; //n
+		int diff = 10;
+		maxRadius = avgRadius + diff;
+		minRadius = avgRadius - diff;
 		
 		angles = new float[edges];
 		radii = new float[edges];
@@ -44,8 +47,6 @@ public class Asteroid extends SpaceObject {
 		
 		wrap();
 		setVertices();
-		
-		//linearEquation(vertices);
 	}
 	
 	private void wrap() { //screen wrap
@@ -73,35 +74,21 @@ public class Asteroid extends SpaceObject {
 	}
 
 	private void generateRadii() {
-		int r = 100; // starting radius
-		
 		for(int i = 0; i < edges; i++) {
-			int dr = rand.nextInt(21) - 10;
-			r += dr;
+			int r = rand.nextInt((maxRadius - minRadius) + 1) + minRadius;
 			
 			radii[i] = r;
-			
-			
-			
-			/*float r = rand.nextInt((int) (maxRadius + 1 - minRadius)) + minRadius;
-			radii[i] = r;*/
 		}
 	}
 	
 	private void generateAngles() {
-		float a = 360 / edges; // regular difference between each angle
+		float a = 360 / edges; // Regular difference between each angle
 		
 		for(int i = 0; i < edges; i++) {
-			angles[i] = a * i;
+			int da = rand.nextInt(11) - 5; // Generate number between -5, 5
+			angles[i] = (a * i) + da; // Add change to offset angles a little
 		}
 		
-		/*int maxD = 10;
-		int minD = -(maxD);
-		
-		for(int i = 0; i < edges; i++) {
-			int d = rand.nextInt(maxD + 1 - minD) + minD;
-			angles[i] = (regularDiff * i) + d;
-		}*/
-		
+		Arrays.sort(angles); // Order the angles ascending
 	}
 }

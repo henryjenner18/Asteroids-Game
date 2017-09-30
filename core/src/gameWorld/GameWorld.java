@@ -3,9 +3,9 @@ package gameWorld;
 import java.util.ArrayList;
 import java.util.Random;
 
-import gameObjects.Asteroid;
-import gameObjects.Rocket;
 import main.AsteroidsMain;
+import objects.Asteroid;
+import objects.Rocket;
 
 public class GameWorld { // Updates game objects
 	
@@ -24,7 +24,7 @@ public class GameWorld { // Updates game objects
 		asteroids = new ArrayList<Asteroid>(numAsteroids);
 		
 		for(int i = 0; i < numAsteroids; i++) {
-			Asteroid asteroid = new Asteroid(10, 150); // Vertices, max radius
+			Asteroid asteroid = new Asteroid(10, 110); // Vertices, avg radius
 			asteroids.add(asteroid);
 		}
 	}
