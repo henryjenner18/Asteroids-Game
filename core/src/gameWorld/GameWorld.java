@@ -3,9 +3,9 @@ package gameWorld;
 import java.util.ArrayList;
 import java.util.Random;
 
+import gameObjects.Asteroid;
+import gameObjects.Rocket;
 import main.AsteroidsMain;
-import objects.Asteroid;
-import objects.Rocket;
 
 public class GameWorld { // Updates game objects
 	

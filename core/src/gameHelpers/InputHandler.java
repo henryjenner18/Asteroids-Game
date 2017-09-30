@@ -1,8 +1,8 @@
-package helpers;
+package gameHelpers;
 
 import com.badlogic.gdx.InputProcessor;
 
-import objects.Rocket;
+import gameObjects.Rocket;
 
 public class InputHandler implements InputProcessor {
 	

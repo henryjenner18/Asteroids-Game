@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
+import gameObjects.Asteroid;
+import gameObjects.Rocket;
 import main.AsteroidsMain;
-import objects.Asteroid;
-import objects.Rocket;
 
 public class GameRenderer { // Renders game objects
 	
