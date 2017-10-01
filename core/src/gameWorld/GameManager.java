@@ -40,7 +40,7 @@ public class GameManager {
 			asteroids.get(i).linearEquation();
 		}
 		
-		checkCollisions();
+		checkCollisions(); // Checks for intersections between rocket and asteroids
 	}
 
 	private void checkCollisions() {
