@@ -6,6 +6,7 @@ public class SpaceObject {
 	
 	protected Vector2 position;
 	protected Vector2 velocity;
+	protected float heading;
 	
 	protected float[] vertices;
 	protected int edges;

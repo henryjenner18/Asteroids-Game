@@ -12,19 +12,19 @@ import main.AsteroidsMain;
 public class Rocket extends SpaceObject {
 	
 	private float height;
-	public float heading;
 	
 	public boolean thrusting;
 	public boolean left;
 	public boolean right;
 	
-	public Rocket(float ht, float hg, float x, float y) {
+	public Rocket(int ht, float hg, float x, float y) {
+		
+		position = new Vector2(x, y);
+		velocity = new Vector2();
 		height = ht;
 		heading = hg + 90; // Set 0 degrees to north
-		position = new Vector2(x, y);
 		vertices = new float[6];
 		edges = vertices.length / 2;
-		velocity = new Vector2(0, 0);
 	}
 	
 	public void update(float delta) {

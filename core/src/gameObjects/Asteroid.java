@@ -17,38 +17,46 @@ public class Asteroid extends SpaceObject {
 	
 	private int maxRadius;
 	private int minRadius;
+	private int dv; // Alteration of velocity constant
 	
 	Random rand = new Random();
 	
-	public Asteroid(int n, int avgRadius) {
+	public Asteroid(int hg, int n, int avgRadius) {
 		
 		int x = rand.nextInt(AsteroidsMain.getWidth() + 1);
 		int y = rand.nextInt(AsteroidsMain.getHeight() + 1);	
 		position = new Vector2(x, y);
 		
-		int velX = rand.nextInt(9) - 4;
-		int velY = rand.nextInt(9) - 4;
-		velocity = new Vector2(velX, velY); // Need to use delta
-		velocity.scl((float) 0.3);
+		velocity = new Vector2();
+		heading = hg + 90; // Set 0 degrees to north
+		dv = rand.nextInt(31) + 40; // dv between 40 - 70
 		
 		edges = 20; //n
-		int diff = 10;
-		maxRadius = avgRadius + diff;
-		minRadius = avgRadius - diff;
-		
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges * 2]; // 2 elements needed for each vertex
+		
+		int diff = 10;
+		maxRadius = avgRadius + diff;
+		minRadius = avgRadius - diff;
 		
 		generateAngles();
 		generateRadii();
 	}
 	
 	public void update(float delta) {
+		move(delta);
 		position.add(velocity);
 		
 		wrap();
 		setVertices();
+	}
+	private void move(float delta) {
+		velocity.setZero(); // Wipes the current velocity vector
+		float radians = (float) Math.toRadians(heading);
+		
+		velocity.x = MathUtils.cos(radians) * delta * dv;
+		velocity.y = MathUtils.sin(radians) * delta * dv;
 	}
 	
 	private void wrap() { //screen wrap
