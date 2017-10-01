@@ -1,7 +1,4 @@
-/gameWorld/
 /gameObjects/
-/screens/
-/main/
-/helpers/
-/objects/
+/gameWorld/
 /gameHelpers/
+/main/

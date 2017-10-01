@@ -12,7 +12,6 @@ public class AsteroidsMain extends Game { // Main game class
 		setScreen(new GameScreen()); // Set the current screen to the game screen	
 	}
 	
-	// Getters:
 	public static int getWidth() {
 		return width;		
 	}

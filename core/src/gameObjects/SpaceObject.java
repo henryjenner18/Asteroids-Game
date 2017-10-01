@@ -6,7 +6,7 @@ public class SpaceObject {
 	
 	protected Vector2 position;
 	protected Vector2 velocity;
-	protected float heading;
+	protected int heading;
 	
 	protected float[] vertices;
 	protected int edges;
@@ -43,22 +43,10 @@ public class SpaceObject {
 			gradients[i] = m;
 			
 			// Find y-intercept c
-			// y - y1 = m(x - x1) so y = m(x - x1) + y1
-			// Therefore c = (- m * x1) + y1
+			// y - y1 = m(x - x1) so y = m(x - x1) + y1; therefore c = (- m * x1) + y1
 			c = (- m * x1) + y1;
 			yIntercepts[i] = c;
-			
-			//System.out.println("Edge " + i + ": y = " + m + "x + " + c);
 		}
-	}
-	
-	// Getters:
-	public float getX() {
-		return position.x;
-	}
-		
-	public float getY() {
-		return position.y;
 	}
 	
 	public float[] getVertices() {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 
 import gameObjects.Rocket;
+import gameWorld.GameWorld;
 
 public class InputHandler implements InputProcessor {
 	
@@ -25,7 +26,7 @@ public class InputHandler implements InputProcessor {
 			myRocket.right = true;
 			
 		} else if(keycode == Keys.SPACE) {
-			// Shoot bullet
+			GameWorld.addMissile();
 		}
 		
 		return true;

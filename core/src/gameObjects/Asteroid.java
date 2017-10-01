@@ -21,25 +21,21 @@ public class Asteroid extends SpaceObject {
 	
 	Random rand = new Random();
 	
-	public Asteroid(int hg, int n, int avgRadius) {
+	public Asteroid(int size) {
+		setProperties(size);
 		
 		int x = rand.nextInt(AsteroidsMain.getWidth() + 1);
 		int y = rand.nextInt(AsteroidsMain.getHeight() + 1);	
 		position = new Vector2(x, y);
 		
 		velocity = new Vector2();
-		heading = hg + 90; // Set 0 degrees to north
+		heading = rand.nextInt(361) + 90; // Set 0 degrees to north
 		dv = rand.nextInt(31) + 40; // dv between 40 - 70
 		
-		edges = 20; //n
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges * 2]; // 2 elements needed for each vertex
-		
-		int diff = 10;
-		maxRadius = avgRadius + diff;
-		minRadius = avgRadius - diff;
-		
+			
 		generateAngles();
 		generateRadii();
 	}
@@ -51,6 +47,7 @@ public class Asteroid extends SpaceObject {
 		wrap();
 		setVertices();
 	}
+	
 	private void move(float delta) {
 		velocity.setZero(); // Wipes the current velocity vector
 		float radians = (float) Math.toRadians(heading);
@@ -68,6 +65,26 @@ public class Asteroid extends SpaceObject {
 		if(position.x > w + r) position.x = -r;
 		if(position.y < -r) position.y = h + r;
 		if(position.y > h + r) position.y = -r;		
+	}
+	
+	private void setProperties(int size) {
+		int avgRadius = 0;
+		if(size == 4) {
+			avgRadius = 100;
+			edges = 20;
+		} else if(size == 3) {
+			avgRadius = 50;
+			edges = 15;
+		} else if(size == 2) {
+			avgRadius = 30;
+			edges = 12;
+		} else if(size == 1) {
+			avgRadius = 15;
+			edges = 10;
+		}
+		int diff = edges / 2;
+		maxRadius = avgRadius + diff;
+		minRadius = avgRadius - diff;		
 	}
 
 	private void setVertices() {

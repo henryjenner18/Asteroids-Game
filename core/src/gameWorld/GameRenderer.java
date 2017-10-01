@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import gameObjects.Asteroid;
+import gameObjects.Missile;
 import gameObjects.Rocket;
 import main.AsteroidsMain;
 
@@ -26,6 +27,8 @@ public class GameRenderer { // Renders game objects
 	private Rocket rocket;
 	private static int numAsteroids;
 	private static ArrayList<Asteroid> asteroids;
+	private static int numMissiles;
+	private static ArrayList<Missile> missiles;
 	
 	public GameRenderer(GameWorld world, GameManager manager) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
@@ -61,6 +64,21 @@ public class GameRenderer { // Renders game objects
 		}
 		
 		rocket.render(shapeRenderer);
+		
+		// This all needs to be in a set missiles method
+		numMissiles = myWorld.getNumMissiles();
+		missiles = new ArrayList<Missile>(numMissiles);
+		
+		for(int i = 0; i < numMissiles; i++) {
+			missiles.add(myWorld.getMissile(i));
+		}
+		// --------
+		
+		for(int i = 0; i < numMissiles; i++) {
+			missiles.get(i).render(shapeRenderer);
+		}
+		
+		
 		
 		myManager.render(shapeRenderer, batch, explosionImage);
 	}

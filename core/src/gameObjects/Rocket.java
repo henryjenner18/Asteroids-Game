@@ -11,13 +11,15 @@ import main.AsteroidsMain;
 
 public class Rocket extends SpaceObject {
 	
+	private static Vector2 position;
+	private static int heading;
 	private float height;
 	
 	public boolean thrusting;
 	public boolean left;
 	public boolean right;
 	
-	public Rocket(int ht, float hg, float x, float y) {
+	public Rocket(int ht, int hg, float x, float y) {
 		
 		position = new Vector2(x, y);
 		velocity = new Vector2();
@@ -98,11 +100,15 @@ public class Rocket extends SpaceObject {
 		sr.end();
 	}
 	
-	public float getHeight() {
-		return height;
+	public static float getX() {
+		return position.x;
 	}
-
-	public float getHeading() {
+		
+	public static float getY() {
+		return position.y;
+	}
+	
+	public static int getHeading() {
 		return heading;
 	}
 }
