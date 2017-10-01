@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import gameObjects.Asteroid;
 import gameObjects.Rocket;
 
-public class GameManager {
+public class GameManager {//
 	
 	private GameWorld myWorld;
 	
