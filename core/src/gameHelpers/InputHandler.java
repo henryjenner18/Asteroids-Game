@@ -1,5 +1,6 @@
 package gameHelpers;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 
 import gameObjects.Rocket;
@@ -14,14 +15,17 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) { // Pressing a key
-		if(keycode == 19) { // Up
+		if(keycode == Keys.UP) { // Up
 			myRocket.thrusting = true;
 			
-		} else if(keycode == 21) { // Left
+		} else if(keycode == Keys.LEFT) {
 			myRocket.left = true;
 			
-		} else if(keycode == 22) { // Right
+		} else if(keycode == Keys.RIGHT) {
 			myRocket.right = true;
+			
+		} else if(keycode == Keys.SPACE) {
+			// Shoot bullet
 		}
 		
 		return true;
@@ -29,13 +33,13 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean keyUp(int keycode) { // Releasing a key
-		if(keycode == 19) { // Up
+		if(keycode == Keys.UP) {
 			myRocket.thrusting = false;
 		
-		} else if(keycode == 21) { // Left
+		} else if(keycode == Keys.LEFT) {
 			myRocket.left = false;
 			
-		} else if(keycode == 22) { // Right
+		} else if(keycode == Keys.RIGHT) {
 			myRocket.right = false;
 		}
 		
