@@ -12,8 +12,10 @@ import main.AsteroidsMain;
 public class Rocket extends SpaceObject {
 	
 	private static Vector2 position;
+	private static Vector2 velocity;
 	private static int heading;
-	private float height;
+	private static int height;
+	private int terminalVel;
 	
 	public boolean thrusting;
 	public boolean left;
@@ -24,9 +26,10 @@ public class Rocket extends SpaceObject {
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		height = ht;
-		heading = hg + 90; // Set 0 degrees to north
+		heading = hg;
 		vertices = new float[6];
 		edges = vertices.length / 2;
+		terminalVel = 8;
 	}
 	
 	public void update(float delta) {
@@ -51,6 +54,17 @@ public class Rocket extends SpaceObject {
 		force.y = MathUtils.sin(radians) * delta * 9;
 		
 		velocity.add(force);
+		
+		terminalVelCheck(); // Adjust velocity if resultant is exceeding terminal velocity
+	}
+	
+	private void terminalVelCheck() {
+		double resultantVel = Math.sqrt(Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2)); // Pythagoras' theorem
+		
+		if(resultantVel > terminalVel) {
+			velocity.x = (float) ((velocity.x / resultantVel) * terminalVel); // Reduce x and y components
+			velocity.y = (float) ((velocity.y / resultantVel) * terminalVel);
+		}
 	}
 	
 	private void wrap() { // Screen wrap
@@ -108,7 +122,15 @@ public class Rocket extends SpaceObject {
 		return position.y;
 	}
 	
+	public static Vector2 getVelocity() {
+		return velocity;
+	}
+	
 	public static int getHeading() {
 		return heading;
+	}
+	
+	public static int getHeight() {
+		return height;
 	}
 }

@@ -3,6 +3,7 @@ package gameObjects;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -121,7 +122,7 @@ public class Asteroid extends SpaceObject {
 
 	public void render(ShapeRenderer sr) {
 		sr.begin(ShapeType.Line);
-		sr.setColor(1, 1, 1, 1);	
+		sr.setColor(Color.WHITE);	
 		sr.polygon(vertices);
 		sr.end();
 	}

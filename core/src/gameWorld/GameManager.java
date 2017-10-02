@@ -2,6 +2,7 @@ package gameWorld;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -139,7 +140,7 @@ public class GameManager {
 	public void render(ShapeRenderer sr, SpriteBatch batch, Texture explosionImage) {
 		for(int i = 0; i < intersections.size(); i++) {
 			sr.begin(ShapeType.Line);
-			sr.setColor(1, 0, 0, 1);
+			sr.setColor(Color.RED);
 			sr.circle(intersections.get(i)[0], intersections.get(i)[1], 12);
 			sr.end();
 		}
