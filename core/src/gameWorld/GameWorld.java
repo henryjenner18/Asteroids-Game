@@ -40,7 +40,6 @@ public class GameWorld { // Updates game objects
 		}
 		
 		numMissiles = missiles.size();
-		System.out.println(numMissiles);
 		
 		for(int i = 0; i < missiles.size(); i++) {
 			missiles.get(i).update(delta);
