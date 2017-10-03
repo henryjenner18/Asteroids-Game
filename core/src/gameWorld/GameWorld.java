@@ -40,6 +40,7 @@ public class GameWorld { // Updates game objects
 		}
 		
 		numMissiles = missiles.size();
+		System.out.println(numMissiles);
 		
 		for(int i = 0; i < missiles.size(); i++) {
 			missiles.get(i).update(delta);
@@ -49,6 +50,11 @@ public class GameWorld { // Updates game objects
 	public static void addMissile() {
 		Missile missile = new Missile();
 		missiles.add(missile);
+	}
+	
+	public static void removeMissile() {
+		missiles.remove(0); // Need to remove first element of missile array as this will have been the earliest missile to have been fired
+		numMissiles = missiles.size(); // Update number of missiles remaining
 	}
 	
 	public Rocket getRocket() {
