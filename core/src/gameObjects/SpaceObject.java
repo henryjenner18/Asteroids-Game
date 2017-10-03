@@ -53,10 +53,6 @@ public class SpaceObject {
 		return vertices;
 	}
 	
-	public float getVertex(int i) {
-		return vertices[i];
-	}
-	
 	public int getEdges() {
 		return edges;
 	}
