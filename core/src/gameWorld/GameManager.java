@@ -47,36 +47,37 @@ public class GameManager {
 	private void checkCollisions() {
 		intersections = new ArrayList<float[]>();
 		
-		float[] rocketVertices = rocket.getVertices(); // Attributes of the rocket
-		float[] rocketGradients = rocket.getGradients();
-		float[] rocketYintercepts = rocket.getYintercepts();
-		
-		for(int r = 0; r < rocket.getEdges(); r++) { // For each edge of the rocket
-			int numRocketPoints = r * 2;
-			float[] rocketXs = new float[2];
-			rocketXs[0] = rocketVertices[numRocketPoints];
+		for(int a = 0; a < numAsteroids; a++) { // For each asteroid
 			
-			if(numRocketPoints == rocketVertices.length - 2) {
-				rocketXs[1] = rocketVertices[0];
-			} else {
-				rocketXs[1] = rocketVertices[numRocketPoints + 2];
-			}
-			
-			for(int a = 0; a < numAsteroids; a++) { // For each asteroid
-				
-				float[] asteroidVertices = asteroids.get(a).getVertices(); // Attributes of current asteroid
-				float[] asteroidGradients = asteroids.get(a).getGradients();
-				float[] asteroidYintercepts = asteroids.get(a).getYintercepts();
+			float[][] asteroidVertices = asteroids.get(a).getVertices(); // Attributes of current asteroid
+			float[] asteroidGradients = asteroids.get(a).getGradients();
+			float[] asteroidYintercepts = asteroids.get(a).getYintercepts();
 
-				for(int s = 0; s < asteroids.get(a).getEdges(); s++) { // For each edge of the asteroid
-					int numAsteroidPoints = s * 2;
-					float[] asteroidXs = new float[2];
-					asteroidXs[0] = asteroidVertices[numAsteroidPoints];
+			for(int s = 0; s < asteroids.get(a).getEdges(); s++) { // For each edge of the asteroid
+
+				float[] asteroidXs = new float[2];
+				asteroidXs[0] = asteroidVertices[s][0];
+				
+				if(s == asteroids.get(a).getEdges() - 1) {
+					asteroidXs[1] = asteroidVertices[0][0];
+				} else {
+					asteroidXs[1] = asteroidVertices[s+1][0];
+				}
+				
+				// Asteroids - rocket
+				float[][] rocketVertices = rocket.getVertices(); // Attributes of the rocket
+				float[] rocketGradients = rocket.getGradients();
+				float[] rocketYintercepts = rocket.getYintercepts();
+				
+				for(int r = 0; r < rocket.getEdges(); r++) { // For each edge of the rocket
+
+					float[] rocketXs = new float[2];
+					rocketXs[0] = rocketVertices[r][0];
 					
-					if(numAsteroidPoints == asteroidVertices.length - 2) {
-						asteroidXs[1] = asteroidVertices[0];
+					if(r == rocket.getEdges() - 1) {
+						rocketXs[1] = rocketVertices[0][0];
 					} else {
-						asteroidXs[1] = asteroidVertices[numAsteroidPoints + 2];
+						rocketXs[1] = rocketVertices[r+1][0];
 					}
 					
 					// Solve for x
@@ -93,35 +94,35 @@ public class GameManager {
 		}
 	}
 	
-	private boolean xCheck(float x, float[] rocketXs, float[] asteroidXs) {
-		boolean rocketCheck = false;
-		boolean asteroidCheck = false;
+	private boolean xCheck(float x, float[] aXs, float[] bXs) {
+		boolean aCheck = false;
+		boolean bCheck = false;
 		
-		if(max2(rocketXs[0], rocketXs[1]) == rocketXs[0]) {
-			if(x <= rocketXs[0] && x >= rocketXs[1]) {
-				// Acceptable x for rocket edge
-				rocketCheck = true;
+		if(max2(aXs[0], aXs[1]) == aXs[0]) {
+			if(x <= aXs[0] && x >= aXs[1]) {
+				// Acceptable x for a edge
+				aCheck = true;
 			}
 		} else {
-			if(x <= rocketXs[1] && x >= rocketXs[0]) {
-				// Acceptable x for rocket edge
-				rocketCheck = true;
+			if(x <= aXs[1] && x >= aXs[0]) {
+				// Acceptable x for a edge
+				aCheck = true;
 			}
 		}
 		
-		if(max2(asteroidXs[0], asteroidXs[1]) == asteroidXs[0]) {
-			if(x <= asteroidXs[0] && x >= asteroidXs[1]) {
-				// Acceptable x for asteroid edge
-				asteroidCheck = true;
+		if(max2(bXs[0], bXs[1]) == bXs[0]) {
+			if(x <= bXs[0] && x >= bXs[1]) {
+				// Acceptable x for b edge
+				bCheck = true;
 			}
 		} else {
-			if(x <= asteroidXs[1] && x >= asteroidXs[0]) {
-				// Acceptable x for asteroid edge
-				asteroidCheck = true;
+			if(x <= bXs[1] && x >= bXs[0]) {
+				// Acceptable x for b edge
+				bCheck = true;
 			}
 		}
 		
-		if(rocketCheck == true && asteroidCheck == true) {
+		if(aCheck == true && bCheck == true) {
 			// Acceptable x for both
 			return true;
 		} else {
