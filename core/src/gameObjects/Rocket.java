@@ -26,9 +26,10 @@ public class Rocket extends SpaceObject {
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		height = ht;
+		r = height / 2;
 		heading = hg;
-		vertices = new float[6];
-		edges = vertices.length / 2;
+		vertices = new float[3][2]; // 3 vertices with a pair of x and y coordinates each
+		edges = vertices.length;
 		terminalVel = 8;
 	}
 	
@@ -50,8 +51,8 @@ public class Rocket extends SpaceObject {
 		Vector2 force = new Vector2();
 		float radians = (float) Math.toRadians(heading);
 		
-		force.x = MathUtils.cos(radians) * delta * 9;
-		force.y = MathUtils.sin(radians) * delta * 9;
+		force.x = MathUtils.cos(radians) * delta * 10;
+		force.y = MathUtils.sin(radians) * delta * 10;
 		
 		velocity.add(force);
 		
@@ -70,7 +71,6 @@ public class Rocket extends SpaceObject {
 	private void wrap() { // Screen wrap
 		float w = AsteroidsMain.getWidth();
 		float h = AsteroidsMain.getHeight();;
-		float r = height / 2;
 		
 		if(position.x < -r) position.x = w + r;
 		if(position.x > w + r) position.x = -r;
@@ -81,17 +81,15 @@ public class Rocket extends SpaceObject {
 	private void setVertices() {
 		float radians = (float) Math.toRadians(heading);
 		
-		vertices[0] = position.x + MathUtils.cos(radians) * height / 2;
-		vertices[1] = position.y + MathUtils.sin(radians) * height / 2;
+		vertices[0][0] = position.x + MathUtils.cos(radians) * height / 2;
+		vertices[0][1] = position.y + MathUtils.sin(radians) * height / 2;
 		
-		vertices[2] = position.x + MathUtils.cos(radians - 3 * MathUtils.PI / 4) * height / 3;
-		vertices[3] = position.y + MathUtils.sin(radians - 3 * MathUtils.PI / 4) * height / 3;
+		vertices[1][0] = position.x + MathUtils.cos(radians + 3 * MathUtils.PI / 4) * height / 3;
+		vertices[1][1] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
+				
+		vertices[2][0] = position.x + MathUtils.cos(radians - 3 * MathUtils.PI / 4) * height / 3;
+		vertices[2][1] = position.y + MathUtils.sin(radians - 3 * MathUtils.PI / 4) * height / 3;
 		
-		//vertices[4] = position.x + MathUtils.cos(radians + MathUtils.PI) * height / 4;
-		//vertices[5] = position.y + MathUtils.sin(radians + MathUtils.PI) * height / 4;
-		
-		vertices[4] = position.x + MathUtils.cos(radians + 3 * MathUtils.PI / 4) * height / 3;
-		vertices[5] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
 	}
 	
 	public void render(ShapeRenderer sr) {
@@ -101,16 +99,17 @@ public class Rocket extends SpaceObject {
 		// Triangle
 		sr.begin(ShapeType.Filled);
 		sr.setColor(176/255.0f, 196/255.0f, 222/255.0f, 0.5f);
-		//shapeRenderer.polygon(rocket.getVertices());
-		sr.triangle(vertices[0], vertices[1], vertices[2],
-				vertices[3], vertices[4], vertices[5]);
+		sr.triangle(vertices[0][0], vertices[0][1], // Vertex 0
+				vertices[1][0], vertices[1][1], // Vertex 1
+				vertices[2][0], vertices[2][1]); // Vertex 2
 		sr.end();
 		
 		// Outline
 		sr.begin(ShapeType.Line);
 		sr.setColor(0, 1, 1, 1);	
-		sr.triangle(vertices[0], vertices[1], vertices[2],
-				vertices[3], vertices[4], vertices[5]);
+		sr.triangle(vertices[0][0], vertices[0][1], // Vertex 0
+				vertices[1][0], vertices[1][1], // Vertex 1
+				vertices[2][0], vertices[2][1]); // Vertex 2
 		sr.end();
 	}
 	
