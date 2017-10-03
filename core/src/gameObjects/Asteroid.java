@@ -30,12 +30,12 @@ public class Asteroid extends SpaceObject {
 		position = new Vector2(x, y);
 		
 		velocity = new Vector2();
-		heading = rand.nextInt(361) + 90; // Set 0 degrees to north
+		heading = rand.nextInt(361);
 		dv = rand.nextInt(31) + 40; // dv between 40 - 70
 		
 		angles = new float[edges];
 		radii = new float[edges];
-		vertices = new float[edges * 2]; // 2 elements needed for each vertex
+		vertices = new float[edges][2];
 			
 		generateAngles();
 		generateRadii();
@@ -57,15 +57,14 @@ public class Asteroid extends SpaceObject {
 		velocity.y = MathUtils.sin(radians) * delta * dv;
 	}
 	
-	private void wrap() { //screen wrap
+	private void wrap() { // Screen wrap
 		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();
-		float r = maxRadius;
+		float h = AsteroidsMain.getHeight();;
 		
 		if(position.x < -r) position.x = w + r;
 		if(position.x > w + r) position.x = -r;
 		if(position.y < -r) position.y = h + r;
-		if(position.y > h + r) position.y = -r;		
+		if(position.y > h + r) position.y = -r;	
 	}
 	
 	private void setProperties(int size) {
@@ -85,19 +84,21 @@ public class Asteroid extends SpaceObject {
 		}
 		int diff = edges / 2;
 		maxRadius = avgRadius + diff;
-		minRadius = avgRadius - diff;		
+		minRadius = avgRadius - diff;
+		r = maxRadius;
 	}
 
 	private void setVertices() {
 		float radians;
 		
-		for(int i = 0; i < edges * 2; i += 2) { // Search for every even element/x-coordinate
+		for(int i = 0; i < edges; i ++) {
+			radians = (float) Math.toRadians(angles[i]);
+			
 			// x-coordinate
-			radians = (float) Math.toRadians(angles[i / 2]);
-			vertices[i] = position.x + MathUtils.cos(radians) * radii[i / 2];
+			vertices[i][0] = position.x + MathUtils.cos(radians) * radii[i];
 			
 			// y-coordinate
-			vertices[i+1] = position.y + MathUtils.sin(radians) * radii[i / 2];
+			vertices[i][1] = position.y + MathUtils.sin(radians) * radii[i];
 		}
 	}
 
@@ -121,9 +122,14 @@ public class Asteroid extends SpaceObject {
 	}
 
 	public void render(ShapeRenderer sr) {
+		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
+		for(int i = 0; i < edges; i ++) {
+			polygon[i*2] = vertices[i][0];
+			polygon[(i*2)+1] = vertices[i][1];
+		}
 		sr.begin(ShapeType.Line);
 		sr.setColor(Color.WHITE);	
-		sr.polygon(vertices);
+		sr.polygon(polygon);
 		sr.end();
 	}
 }
