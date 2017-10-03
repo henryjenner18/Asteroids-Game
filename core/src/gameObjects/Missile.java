@@ -6,14 +6,20 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import gameWorld.GameWorld;
 import main.AsteroidsMain;
 
 public class Missile extends SpaceObject {
 	
 	private int r;
 	private Vector2 rocketVel;
+	private int lifespan;
+	private float elapsedTime;
 	
 	public Missile() {
+		lifespan = 2;
+		elapsedTime = 0;
+		
 		heading = Rocket.getHeading();
 		float radians = (float) Math.toRadians(heading);
 		float x = Rocket.getX() + MathUtils.cos(radians) * Rocket.getHeight() / 2;
@@ -27,6 +33,10 @@ public class Missile extends SpaceObject {
 	}
 	
 	public void update(float delta) {
+		elapsedTime += delta;
+		if(elapsedTime >= lifespan) {
+			end();
+		}
 		move(delta);
 		position.add(velocity);
 		wrap();
@@ -50,6 +60,10 @@ public class Missile extends SpaceObject {
 		if(position.x > w + r) position.x = -r;
 		if(position.y < -r) position.y = h + r;
 		if(position.y > h + r) position.y = -r;	
+	}
+	
+	private void end() {
+		GameWorld.removeMissile();
 	}
 	
 	public void render(ShapeRenderer sr) {
