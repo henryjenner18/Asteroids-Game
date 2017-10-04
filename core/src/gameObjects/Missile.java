@@ -11,7 +11,7 @@ import main.AsteroidsMain;
 
 public class Missile extends SpaceObject {
 	
-	private int r;
+	private int l;
 	private Vector2 rocketVel;
 	private int lifespan;
 	private float elapsedTime;
@@ -28,8 +28,9 @@ public class Missile extends SpaceObject {
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		rocketVel = new Vector2(Rocket.getVelocity());
-		
-		r = 4;
+		vertices = new float[2][2];
+		edges = vertices.length;
+		l = 20;
 	}
 	
 	public void update(float delta) {
@@ -40,6 +41,16 @@ public class Missile extends SpaceObject {
 		move(delta);
 		position.add(velocity);
 		wrap();
+		setVertices();
+	}
+	
+	private void setVertices() {
+		float radians = (float) Math.toRadians(heading);
+		
+		vertices[0][0] = position.x;
+		vertices[0][1] = position.y;
+		vertices[1][0] = position.x + MathUtils.cos(radians) * l;
+		vertices[1][1] = position.y + MathUtils.sin(radians) * l;
 	}
 	
 	private void move(float delta) {
@@ -56,10 +67,10 @@ public class Missile extends SpaceObject {
 		float w = AsteroidsMain.getWidth();
 		float h = AsteroidsMain.getHeight();;
 		
-		if(position.x < -r) position.x = w + r;
-		if(position.x > w + r) position.x = -r;
-		if(position.y < -r) position.y = h + r;
-		if(position.y > h + r) position.y = -r;	
+		if(position.x < 0) position.x = w;
+		if(position.x > w) position.x = 0;
+		if(position.y < 0) position.y = h;
+		if(position.y > h) position.y = 0;	
 	}
 	
 	private void end() {
@@ -67,9 +78,10 @@ public class Missile extends SpaceObject {
 	}
 	
 	public void render(ShapeRenderer sr) {
-		sr.begin(ShapeType.Filled);
+		sr.begin(ShapeType.Line);
 		sr.setColor(Color.YELLOW);
-		sr.circle(position.x, position.y, r);
+		sr.line(vertices[0][0], vertices[0][1],
+				vertices[1][0], vertices[1][1]);
 		sr.end();
 	}
 }

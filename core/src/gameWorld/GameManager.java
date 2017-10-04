@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import gameObjects.Asteroid;
+import gameObjects.Missile;
 import gameObjects.Rocket;
 
 public class GameManager {
@@ -18,6 +19,8 @@ public class GameManager {
 	private Rocket rocket;
 	private static int numAsteroids;
 	private static ArrayList<Asteroid> asteroids;
+	private static int numMissiles;
+	private static ArrayList<Missile> missiles;
 	
 	private static ArrayList<float[]> intersections;
 	
@@ -40,6 +43,16 @@ public class GameManager {
 		for(int i = 0; i < numAsteroids; i++) {
 			asteroids.get(i).linearEquation();
 		}
+		
+		// This all needs to be in a set missiles method
+		numMissiles = myWorld.getNumMissiles();
+		missiles = new ArrayList<Missile>(numMissiles);
+		
+		for(int i = 0; i < numMissiles; i++) {
+			missiles.add(myWorld.getMissile(i));
+			missiles.get(i).linearEquation();
+		}
+		// --------
 		
 		checkCollisions(); // Checks for intersections between rocket and asteroids
 	}
@@ -86,6 +99,27 @@ public class GameManager {
 					if(xCheck(x, rocketXs, asteroidXs) == true) {
 						// Collision has occurred
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
+						float[] intersection = {x, y};
+						intersections.add(intersection);
+					}
+				}
+				
+				// Asteroids - missiles
+				for(int m = 0; m < numMissiles; m++) { // For each missile
+					float[][] missileVertices = missiles.get(m).getVertices(); // Attributes of current missile
+					float[] missileGradients = missiles.get(m).getGradients();
+					float[] missileYintercepts = missiles.get(m).getYintercepts();
+					
+					float[] missileXs = new float[2];
+					missileXs[0] = missileVertices[0][0];
+					missileXs[1] = missileVertices[1][0];
+					
+					// Solve for x
+					float x = (missileYintercepts[0] - asteroidYintercepts[s]) / (asteroidGradients[s] - missileGradients[0]);
+					
+					if(xCheck(x, missileXs, asteroidXs) == true) {
+						// Collision has occurred
+						float y = (missileGradients[0] * x) + missileYintercepts[0];
 						float[] intersection = {x, y};
 						intersections.add(intersection);
 					}
@@ -142,7 +176,7 @@ public class GameManager {
 		for(int i = 0; i < intersections.size(); i++) {
 			sr.begin(ShapeType.Line);
 			sr.setColor(Color.RED);
-			sr.circle(intersections.get(i)[0], intersections.get(i)[1], 12);
+			sr.circle(intersections.get(i)[0], intersections.get(i)[1], 14);
 			sr.end();
 		}
 		

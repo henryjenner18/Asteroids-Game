@@ -78,8 +78,6 @@ public class GameRenderer { // Renders game objects
 			missiles.get(i).render(shapeRenderer);
 		}
 		
-		
-		
 		myManager.render(shapeRenderer, batch, explosionImage);
 	}
 	

@@ -49,6 +49,7 @@ public class GameWorld { // Updates game objects
 	public static void addMissile() {
 		Missile missile = new Missile();
 		missiles.add(missile);
+		numMissiles = missiles.size();
 	}
 	
 	public static void removeMissile() {

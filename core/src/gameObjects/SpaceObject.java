@@ -49,6 +49,14 @@ public class SpaceObject {
 		}
 	}
 	
+	public float xcoord() {
+		return position.x;
+	}
+	
+	public float ycoord() {
+		return position.y;
+	}
+	
 	public float[][] getVertices() {
 		return vertices;
 	}
