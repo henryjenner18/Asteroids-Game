@@ -57,15 +57,15 @@ public class Missile extends SpaceObject {
 		velocity.setZero(); // Wipes the current velocity vector
 		float radians = (float) Math.toRadians(heading);
 		
-		velocity.x = MathUtils.cos(radians) * delta * 600;
-		velocity.y = MathUtils.sin(radians) * delta * 600;
+		velocity.x = MathUtils.cos(radians) * delta * 800;
+		velocity.y = MathUtils.sin(radians) * delta * 800;
 		
 		velocity.add(rocketVel);
 	}
 	
 	private void wrap() {
 		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();;
+		float h = AsteroidsMain.getHeight();
 		
 		if(position.x < 0) position.x = w;
 		if(position.x > w) position.x = 0;
@@ -79,7 +79,7 @@ public class Missile extends SpaceObject {
 	
 	public void render(ShapeRenderer sr) {
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.YELLOW);
+		sr.setColor(Color.MAGENTA);
 		sr.line(vertices[0][0], vertices[0][1],
 				vertices[1][0], vertices[1][1]);
 		sr.end();

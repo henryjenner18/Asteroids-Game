@@ -44,41 +44,41 @@ public class GameRenderer { // Renders game objects
 		
 		rocket = myWorld.getRocket();
 		
-		numAsteroids = myWorld.getNumAsteroids();
-		asteroids = new ArrayList<Asteroid>(numAsteroids);
-		
-		for(int i = 0; i < numAsteroids; i++) {
-			asteroids.add(myWorld.getAsteroid(i));
-		}
-		
 		spaceImage = new Texture("Infinite-space.jpg");
 		explosionImage = new Texture("explosion.png");
 		batch = new SpriteBatch();
 	}
 	
 	public void render() {
-		drawBackground();		
-
+		drawBackground();
+		
+		setAsteroids();
+		rocket.render(shapeRenderer);
+		setMissiles();
+		
+		myManager.render(shapeRenderer, batch, explosionImage);
+	}
+	
+	private void setAsteroids() {
+		numAsteroids = myWorld.getNumAsteroids();
+		asteroids = new ArrayList<Asteroid>(numAsteroids);
+		
 		for(int i = 0; i < numAsteroids; i++) {
+			asteroids.add(myWorld.getAsteroid(i));
+			asteroids.get(i).linearEquation();
 			asteroids.get(i).render(shapeRenderer);
 		}
-		
-		rocket.render(shapeRenderer);
-		
-		// This all needs to be in a set missiles method
+	}
+	
+	private void setMissiles() {
 		numMissiles = myWorld.getNumMissiles();
 		missiles = new ArrayList<Missile>(numMissiles);
 		
 		for(int i = 0; i < numMissiles; i++) {
 			missiles.add(myWorld.getMissile(i));
-		}
-		// --------
-		
-		for(int i = 0; i < numMissiles; i++) {
+			missiles.get(i).linearEquation();
 			missiles.get(i).render(shapeRenderer);
 		}
-		
-		myManager.render(shapeRenderer, batch, explosionImage);
 	}
 	
 	public void drawBackground() {

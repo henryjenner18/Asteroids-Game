@@ -13,6 +13,8 @@ import main.AsteroidsMain;
 
 public class Asteroid extends SpaceObject {
 	
+	private int size;
+	
 	private float[] angles;
 	private float[] radii;
 	
@@ -22,11 +24,10 @@ public class Asteroid extends SpaceObject {
 	
 	Random rand = new Random();
 	
-	public Asteroid(int size) {
+	public Asteroid(int s, float x, float y) {
+		size = s;
 		setProperties(size);
 		
-		int x = rand.nextInt(AsteroidsMain.getWidth() + 1);
-		int y = rand.nextInt(AsteroidsMain.getHeight() + 1);	
 		position = new Vector2(x, y);
 		
 		velocity = new Vector2();
@@ -131,5 +132,9 @@ public class Asteroid extends SpaceObject {
 		sr.setColor(Color.WHITE);	
 		sr.polygon(polygon);
 		sr.end();
+	}
+	
+	public int getSize() {
+		return size;
 	}
 }

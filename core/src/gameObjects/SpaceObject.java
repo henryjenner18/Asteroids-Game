@@ -49,7 +49,7 @@ public class SpaceObject {
 		}
 	}
 	
-	public float xcoord() {
+	public float xcoord() { // Tidy up names - also found in rocket
 		return position.x;
 	}
 	

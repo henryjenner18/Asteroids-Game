@@ -1,6 +1,9 @@
 package gameWorld;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,28 +26,33 @@ public class GameManager {
 	private static ArrayList<Missile> missiles;
 	
 	private static ArrayList<float[]> intersections;
+	private static ArrayList<Integer> removeMissiles;
+	private static ArrayList<Integer> removeAsteroids;
 	
 	public GameManager(GameWorld world) {
-		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
-		
+		myWorld = world; // Initialise variable with GameWorld object received from GameScreen	
 		rocket = myWorld.getRocket();
+	}
+
+	public void manage() {
+		rocket.linearEquation();	
+		setAsteroids();
+		setMissiles();
 		
+		checkCollisions(); // Checks for intersections between rocket and asteroids
+	}
+	
+	private void setAsteroids() {
 		numAsteroids = myWorld.getNumAsteroids();
 		asteroids = new ArrayList<Asteroid>(numAsteroids);
 		
 		for(int i = 0; i < numAsteroids; i++) {
 			asteroids.add(myWorld.getAsteroid(i));
-		}
-	}
-
-	public void manage() {
-		rocket.linearEquation();
-		
-		for(int i = 0; i < numAsteroids; i++) {
 			asteroids.get(i).linearEquation();
 		}
-		
-		// This all needs to be in a set missiles method
+	}
+	
+	private void setMissiles() {
 		numMissiles = myWorld.getNumMissiles();
 		missiles = new ArrayList<Missile>(numMissiles);
 		
@@ -52,13 +60,12 @@ public class GameManager {
 			missiles.add(myWorld.getMissile(i));
 			missiles.get(i).linearEquation();
 		}
-		// --------
-		
-		checkCollisions(); // Checks for intersections between rocket and asteroids
 	}
 
 	private void checkCollisions() {
 		intersections = new ArrayList<float[]>();
+		removeMissiles = new ArrayList<Integer>();
+		removeAsteroids = new ArrayList<Integer>();
 		
 		for(int a = 0; a < numAsteroids; a++) { // For each asteroid
 			
@@ -96,11 +103,11 @@ public class GameManager {
 					// Solve for x
 					float x = (rocketYintercepts[r] - asteroidYintercepts[s]) / (asteroidGradients[s] - rocketGradients[r]);
 					
-					if(xCheck(x, rocketXs, asteroidXs) == true) {
-						// Collision has occurred
+					if(xCheck(x, rocketXs, asteroidXs) == true) { // Collision has occurred
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
 						float[] intersection = {x, y};
-						intersections.add(intersection);
+						//intersections.add(intersection);		
+						//Blow up asteroid
 					}
 				}
 				
@@ -117,17 +124,27 @@ public class GameManager {
 					// Solve for x
 					float x = (missileYintercepts[0] - asteroidYintercepts[s]) / (asteroidGradients[s] - missileGradients[0]);
 					
-					if(xCheck(x, missileXs, asteroidXs) == true) {
-						// Collision has occurred
+					if(xCheck(x, missileXs, asteroidXs) == true) { // Collision has occurred
 						float y = (missileGradients[0] * x) + missileYintercepts[0];
 						float[] intersection = {x, y};
 						intersections.add(intersection);
+						removeMissiles.add(m);
+						removeAsteroids.add(a);
 					}
 				}
 			}
 		}
+		for(int i = 0; i < intersections.size(); i++) {
+			//System.out.println(intersections.get(i)[0] + ", " + intersections.get(i)[1]);
+			System.out.print(removeMissiles.get(i));
+		}
+		System.out.println("");
 	}
 	
+	/*private void missileHit(int a, int m) {
+		myWorld.splitAsteroid(a, m);
+	}*/
+
 	private boolean xCheck(float x, float[] aXs, float[] bXs) {
 		boolean aCheck = false;
 		boolean bCheck = false;
