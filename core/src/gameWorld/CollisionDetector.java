@@ -100,8 +100,8 @@ public class CollisionDetector {
 					if(xCheck(x, rocketXs, asteroidXs) == true) { // Collision has occurred
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
 						float[] intersection = {x, y};
-						intersections.add(intersection);		
-						//Blow up asteroid
+						intersections.add(intersection);
+						rocket.reset();
 					}
 				}
 				

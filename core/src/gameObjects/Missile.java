@@ -1,5 +1,6 @@
 package gameObjects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -27,7 +28,7 @@ public class Missile extends SpaceObject {
 		rocketVel = new Vector2(Rocket.getVelocity());
 		vertices = new float[2][2];
 		edges = vertices.length;
-		l = 20;
+		l = 30;
 	}
 	
 	public void update(float delta) {
@@ -71,8 +72,9 @@ public class Missile extends SpaceObject {
 	}
 	
 	public void render(ShapeRenderer sr) {
+		Gdx.gl.glLineWidth(5);
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.MAGENTA);
+		sr.setColor(Color.YELLOW);
 		sr.line(vertices[0][0], vertices[0][1],
 				vertices[1][0], vertices[1][1]);
 		sr.end();

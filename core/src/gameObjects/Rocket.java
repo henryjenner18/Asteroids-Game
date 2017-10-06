@@ -33,6 +33,14 @@ public class Rocket extends SpaceObject {
 		terminalVel = 8;
 	}
 	
+	public void reset() {
+		position.x = AsteroidsMain.getWidth() / 2;
+		position.y = AsteroidsMain.getHeight() / 2;
+		velocity.x = 0;
+		velocity.y = 0;
+		heading = 90;
+	}
+	
 	public void update(float delta) {
 		if(thrusting) { // If up key is being pressed
 			thrust(delta); // Run thrust method to apply force

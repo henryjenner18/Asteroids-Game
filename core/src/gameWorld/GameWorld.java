@@ -21,7 +21,7 @@ public class GameWorld { // Updates game objects
 		rocket = new Rocket(80, randHeading, AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
 		
 		asteroids = new ArrayList<Asteroid>();
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 4; i++) {
 			createAsteroid(4, rand.nextInt(AsteroidsMain.getWidth() + 1),
 					rand.nextInt(AsteroidsMain.getHeight() + 1));
 		}	

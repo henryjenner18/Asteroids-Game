@@ -3,6 +3,7 @@ package gameObjects;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -121,15 +122,35 @@ public class Asteroid extends SpaceObject {
 		
 		Arrays.sort(angles); // Order the angles ascending
 	}
-
+	
 	public void render(ShapeRenderer sr) {
+		// Filled Polygon
+		for(int i = 0; i < edges; i++) {
+			sr.begin(ShapeType.Filled);
+			sr.setColor(Color.LIGHT_GRAY);
+			
+			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
+				sr.triangle(vertices[i][0], vertices[i][1],
+						vertices[0][0], vertices[0][1],
+						position.x, position.y);
+				sr.end();
+			} else {
+				sr.triangle(vertices[i][0], vertices[i][1],
+						vertices[i+1][0], vertices[i+1][1],
+						position.x, position.y);
+				sr.end();
+			}
+		}
+		
+		// Polygon outline
 		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
 		for(int i = 0; i < edges; i ++) {
 			polygon[i*2] = vertices[i][0];
 			polygon[(i*2)+1] = vertices[i][1];
 		}
+		Gdx.gl.glLineWidth(1);
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.WHITE);	
+		sr.setColor(Color.BLACK);	
 		sr.polygon(polygon);
 		sr.end();
 	}
