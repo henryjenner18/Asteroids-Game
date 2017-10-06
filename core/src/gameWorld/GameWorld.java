@@ -2,7 +2,6 @@ package gameWorld;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Rocket;
@@ -23,15 +22,14 @@ public class GameWorld { // Updates game objects
 		
 		asteroids = new ArrayList<Asteroid>();
 		for(int i = 0; i < 5; i++) {
-			Asteroid asteroid = new Asteroid(4, rand.nextInt(AsteroidsMain.getWidth() + 1),
-					rand.nextInt(AsteroidsMain.getHeight() + 1)); //rand.nextInt(4) + 1
-			asteroids.add(asteroid);
+			createAsteroid(4, rand.nextInt(AsteroidsMain.getWidth() + 1),
+					rand.nextInt(AsteroidsMain.getHeight() + 1));
 		}	
 		
 		missiles = new ArrayList<Missile>();
 	}
 
-	public void update(float delta) {
+	public void update(float delta) {		
 		rocket.update(delta);
 		
 		for(int i = 0; i < asteroids.size(); i++) {
@@ -43,40 +41,24 @@ public class GameWorld { // Updates game objects
 		}
 	}
 	
-	private void newAsteroid(int s, float x, float y) {
-		if(s >= 1 & s <= 4) {
-			Asteroid asteroid = new Asteroid(s, x, y);
-			asteroids.add(asteroid);
-		}
-	}
-	
-	public void splitAsteroid(int a, int m) {
-		int s = asteroids.get(a).getSize() - 1;
-		float x = asteroids.get(a).xcoord();
-		float y = asteroids.get(a).ycoord();
-		
-		if(s > 0) {
-			for(int i = 0; i < 2; i++) {
-				x += rand.nextInt(20) - 10;
-				y += rand.nextInt(20) - 10; // Refine
-				newAsteroid(s, x, y);
-			}
-		}
-		//System.out.println("Asteroid hit - Length of asteroid list: " + asteroids.size() + ", removing " + a);
-		asteroids.remove(a);
-		
-		//System.out.println("Asteroid hit - Length of missiles list: " + missiles.size() + ", removing " + m);
-		missiles.remove(m); //ASKING IT TO REMOVEINVALID INDEX???!
-	}
-	
-	public static void addMissile() {
+	public static void createMissile() {
 		Missile missile = new Missile();
 		missiles.add(missile);
 	}
 	
-	public static void removeMissile() {
-		//System.out.println("Time out - Length of missiles list: " + missiles.size() + ", removing " + 0);
-		missiles.remove(0); // Need to remove first element of missile array as this will have been the earliest missile to have been fired
+	public void createAsteroid(int s, float x, float y) {
+		Asteroid asteroid = new Asteroid(s, x, y);
+		asteroids.add(asteroid);
+	}
+	
+	public void removeMissile(int i) {
+		missiles.remove(i);
+		System.out.println("Removed missile " + i);
+	}
+	
+	public void removeAsteroid(int i) {
+		asteroids.remove(i);
+		System.out.println("Removed asteroid " + i);
 	}
 	
 	public Rocket getRocket() {

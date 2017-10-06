@@ -1,9 +1,6 @@
 package gameWorld;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,7 +12,7 @@ import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Rocket;
 
-public class GameManager {
+public class CollisionDetector {
 	
 	private GameWorld myWorld;
 	
@@ -26,10 +23,9 @@ public class GameManager {
 	private static ArrayList<Missile> missiles;
 	
 	private static ArrayList<float[]> intersections;
-	private static ArrayList<Integer> removeMissiles;
-	private static ArrayList<Integer> removeAsteroids;
+	private ArrayList<Integer> removeAsteroids;
 	
-	public GameManager(GameWorld world) {
+	public CollisionDetector(GameWorld world) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen	
 		rocket = myWorld.getRocket();
 	}
@@ -38,7 +34,6 @@ public class GameManager {
 		rocket.linearEquation();	
 		setAsteroids();
 		setMissiles();
-		
 		checkCollisions(); // Checks for intersections between rocket and asteroids
 	}
 	
@@ -64,8 +59,7 @@ public class GameManager {
 
 	private void checkCollisions() {
 		intersections = new ArrayList<float[]>();
-		removeMissiles = new ArrayList<Integer>();
-		removeAsteroids = new ArrayList<Integer>();
+		removeAsteroids = new ArrayList<Integer>();	
 		
 		for(int a = 0; a < numAsteroids; a++) { // For each asteroid
 			
@@ -106,7 +100,7 @@ public class GameManager {
 					if(xCheck(x, rocketXs, asteroidXs) == true) { // Collision has occurred
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
 						float[] intersection = {x, y};
-						//intersections.add(intersection);		
+						intersections.add(intersection);		
 						//Blow up asteroid
 					}
 				}
@@ -128,22 +122,13 @@ public class GameManager {
 						float y = (missileGradients[0] * x) + missileYintercepts[0];
 						float[] intersection = {x, y};
 						intersections.add(intersection);
-						removeMissiles.add(m);
+						missiles.get(m).setTimeLeft(0);
 						removeAsteroids.add(a);
 					}
 				}
 			}
 		}
-		for(int i = 0; i < intersections.size(); i++) {
-			//System.out.println(intersections.get(i)[0] + ", " + intersections.get(i)[1]);
-			System.out.print(removeMissiles.get(i));
-		}
-		System.out.println("");
 	}
-	
-	/*private void missileHit(int a, int m) {
-		myWorld.splitAsteroid(a, m);
-	}*/
 
 	private boolean xCheck(float x, float[] aXs, float[] bXs) {
 		boolean aCheck = false;
@@ -208,5 +193,8 @@ public class GameManager {
 	public static ArrayList<float[]> getIntersections() {
 		return intersections;
 	}
-
+	
+	public ArrayList<Integer> getRemoveAsteroids() {
+		return removeAsteroids;
+	}
 }

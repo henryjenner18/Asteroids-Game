@@ -16,7 +16,7 @@ import main.AsteroidsMain;
 public class GameRenderer { // Renders game objects
 	
 	private GameWorld myWorld;
-	private GameManager myManager;
+	private CollisionDetector myManager;
 	private OrthographicCamera cam; // Single plane camera view
 	private ShapeRenderer shapeRenderer;
 	
@@ -30,7 +30,7 @@ public class GameRenderer { // Renders game objects
 	private static int numMissiles;
 	private static ArrayList<Missile> missiles;
 	
-	public GameRenderer(GameWorld world, GameManager manager) {
+	public GameRenderer(GameWorld world, CollisionDetector manager) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
 		myManager = manager;
 		

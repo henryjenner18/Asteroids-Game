@@ -26,7 +26,7 @@ public class InputHandler implements InputProcessor {
 			myRocket.right = true;
 			
 		} else if(keycode == Keys.SPACE) {
-			GameWorld.addMissile();
+			GameWorld.createMissile();
 		}
 		
 		return true;

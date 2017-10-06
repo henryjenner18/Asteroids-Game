@@ -4,7 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import gameHelpers.InputHandler;
-import gameWorld.GameManager;
+import gameWorld.CollisionDetector;
+import gameWorld.DeletionManager;
 import gameWorld.GameRenderer;
 import gameWorld.GameWorld;
 
@@ -12,13 +13,15 @@ public class GameScreen implements Screen { // Implementing methods of the scree
 	// GameScreen class does not do any rendering/updating itself
 	
 	private GameWorld world;
-	private GameManager manager;
+	private CollisionDetector collisionDetector;
+	private DeletionManager deletionManager;
 	private GameRenderer renderer;
 	
 	public GameScreen() {
 		world = new GameWorld(); // Initialise world
-		manager = new GameManager(world); // Initialise manager
-		renderer = new GameRenderer(world, manager); // Initialise renderer; can retrieve objects from world
+		collisionDetector = new CollisionDetector(world); // Initialise collision detector
+		deletionManager = new DeletionManager(world, collisionDetector); // Initialise deletion manager
+		renderer = new GameRenderer(world, collisionDetector); // Initialise renderer; can retrieve objects from world
 		
 		Gdx.input.setInputProcessor(new InputHandler(world.getRocket()));
 	}
@@ -29,7 +32,8 @@ public class GameScreen implements Screen { // Implementing methods of the scree
 	@Override
 	public void render(float delta) { // Renders the game each second; delta is the time since last called
 		world.update(delta); // Updates all game objects
-		manager.manage();
+		collisionDetector.manage();
+		deletionManager.delete();
 		renderer.render(); // Render all game objects
 	}
 
