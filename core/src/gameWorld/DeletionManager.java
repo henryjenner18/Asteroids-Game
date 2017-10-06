@@ -57,6 +57,7 @@ public class DeletionManager {
 		
 		for(int i = 0; i < removeAsteroids.size(); i++) {
 			splitAsteroid(i);
+			System.out.println("Need to remove asteroid " + i);
 			myWorld.removeAsteroid(removeAsteroids.get(i));
 		}
 	}
