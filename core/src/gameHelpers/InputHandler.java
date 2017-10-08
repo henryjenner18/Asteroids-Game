@@ -9,9 +9,11 @@ import gameWorld.GameWorld;
 public class InputHandler implements InputProcessor {
 	
 	private Rocket myRocket;
+	private GameWorld myWorld;
 	
-	public InputHandler(Rocket rocket) {
+	public InputHandler(Rocket rocket, GameWorld world) {
 		myRocket = rocket;
+		myWorld = world;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class InputHandler implements InputProcessor {
 			myRocket.right = true;
 			
 		} else if(keycode == Keys.SPACE) {
-			GameWorld.createMissile();
+			myWorld.createMissile();
 		}
 		
 		return true;

@@ -97,7 +97,7 @@ public class CollisionDetector {
 					// Solve for x
 					float x = (rocketYintercepts[r] - asteroidYintercepts[s]) / (asteroidGradients[s] - rocketGradients[r]);
 					
-					if(xCheck(x, rocketXs, asteroidXs) == true) { // Collision has occurred
+					if(coordRangeCheck(x, rocketXs, asteroidXs) == true) { // Collision has occurred
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
 						float[] intersection = {x, y};
 						intersections.add(intersection);
@@ -111,55 +111,88 @@ public class CollisionDetector {
 					float[] missileGradients = missiles.get(m).getGradients();
 					float[] missileYintercepts = missiles.get(m).getYintercepts();
 					
-					float[] missileXs = new float[2];
-					missileXs[0] = missileVertices[0][0];
-					missileXs[1] = missileVertices[1][0];
+					boolean infinityGradient;
+					if(missileGradients[0] == Double.POSITIVE_INFINITY || missileGradients[0] == Double.NEGATIVE_INFINITY) {
+						infinityGradient = true;
+					} else {
+						infinityGradient = false;
+					}
 					
-					// Solve for x
-					float x = (missileYintercepts[0] - asteroidYintercepts[s]) / (asteroidGradients[s] - missileGradients[0]);
+					float x, y;
+					if(infinityGradient == false) {	
+						x = (missileYintercepts[0] - asteroidYintercepts[s]) / (asteroidGradients[s] - missileGradients[0]);
+						
+						float[] missileXs = new float[2];
+						missileXs[0] = missileVertices[0][0];
+						missileXs[1] = missileVertices[1][0];
 					
-					if(xCheck(x, missileXs, asteroidXs) == true) { // Collision has occurred
-						float y = (missileGradients[0] * x) + missileYintercepts[0];
-						float[] intersection = {x, y};
-						intersections.add(intersection);
-						missiles.get(m).setTimeLeft(0);
-						removeAsteroids.add(a);
+						if(coordRangeCheck(x, missileXs, asteroidXs) == true) { // Collision has occurred
+							y = (missileGradients[0] * x) + missileYintercepts[0];			
+							float[] intersection = {x, y};
+							intersections.add(intersection);
+							missiles.get(m).setTimeLeft(0);
+							removeAsteroids.add(a);
+						}
+						
+					} else if(infinityGradient == true) {
+						x = missileVertices[0][0];
+						y = (asteroidGradients[s] * x) + asteroidYintercepts[s];
+						
+						float[] missileYs = new float[2];
+						missileYs[0] = missileVertices[0][1];
+						missileYs[1] = missileVertices[1][1];
+						
+						float[] asteroidYs = new float[2];
+						asteroidYs[0] = asteroidVertices[s][1];
+						
+						if(s == asteroids.get(a).getEdges() - 1) {
+							asteroidYs[1] = asteroidVertices[0][1];
+						} else {
+							asteroidYs[1] = asteroidVertices[s+1][1];
+						}
+						
+						if(coordRangeCheck(y, missileYs, asteroidYs) == true) { // Collision has occurred		
+							float[] intersection = {x, y};
+							intersections.add(intersection);
+							missiles.get(m).setTimeLeft(0);
+							removeAsteroids.add(a);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	private boolean xCheck(float x, float[] aXs, float[] bXs) {
+	private boolean coordRangeCheck(float c, float[] aCoords, float[] bCoords) {
 		boolean aCheck = false;
 		boolean bCheck = false;
 		
-		if(max2(aXs[0], aXs[1]) == aXs[0]) {
-			if(x <= aXs[0] && x >= aXs[1]) {
-				// Acceptable x for a edge
+		if(max2(aCoords[0], aCoords[1]) == aCoords[0]) {
+			if(c <= aCoords[0] && c >= aCoords[1]) {
+				// Acceptable coord for a edge
 				aCheck = true;
 			}
 		} else {
-			if(x <= aXs[1] && x >= aXs[0]) {
-				// Acceptable x for a edge
+			if(c <= aCoords[1] && c >= aCoords[0]) {
+				// Acceptable coord for a edge
 				aCheck = true;
 			}
 		}
 		
-		if(max2(bXs[0], bXs[1]) == bXs[0]) {
-			if(x <= bXs[0] && x >= bXs[1]) {
-				// Acceptable x for b edge
+		if(max2(bCoords[0], bCoords[1]) == bCoords[0]) {
+			if(c <= bCoords[0] && c >= bCoords[1]) {
+				// Acceptable coord for b edge
 				bCheck = true;
 			}
 		} else {
-			if(x <= bXs[1] && x >= bXs[0]) {
-				// Acceptable x for b edge
+			if(c <= bCoords[1] && c >= bCoords[0]) {
+				// Acceptable coord for b edge
 				bCheck = true;
 			}
 		}
 		
 		if(aCheck == true && bCheck == true) {
-			// Acceptable x for both
+			// Acceptable coord for both
 			return true;
 		} else {
 			return false;

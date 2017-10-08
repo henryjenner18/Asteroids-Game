@@ -14,11 +14,11 @@ public class GameWorld { // Updates game objects
 	public static int numMissiles;
 	private static ArrayList<Missile> missiles;
 	private Random rand;
+	private boolean b; // For alternating missile colour
 	
 	public GameWorld() {
 		rand = new Random(); // Random function
-		int randHeading = rand.nextInt(361); // Random heading between 0-360 degrees
-		rocket = new Rocket(80, randHeading, AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
+		rocket = new Rocket();
 		
 		asteroids = new ArrayList<Asteroid>();
 		for(int i = 0; i < 4; i++) {
@@ -27,6 +27,7 @@ public class GameWorld { // Updates game objects
 		}	
 		
 		missiles = new ArrayList<Missile>();
+		b = true;
 	}
 
 	public void update(float delta) {		
@@ -41,9 +42,10 @@ public class GameWorld { // Updates game objects
 		}
 	}
 	
-	public static void createMissile() {
-		Missile missile = new Missile();
+	public void createMissile() {
+		Missile missile = new Missile(b);
 		missiles.add(missile);
+		b = !b; // Invert boolean variable
 	}
 	
 	public void createAsteroid(int s, float x, float y) {

@@ -4,8 +4,8 @@ import com.badlogic.gdx.Game;
 import screens.GameScreen;
 
 public class AsteroidsMain extends Game { // Main game class
-	private static int width = 1600; // Dimensions used for whole program
-	private static int height = 950;
+	private static int width = 2200; // Dimensions used for whole program
+	private static int height = 1250;
 
 	@Override
 	public void create() {

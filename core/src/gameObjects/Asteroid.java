@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -27,14 +26,14 @@ public class Asteroid extends SpaceObject {
 	
 	public Asteroid(int s, float x, float y) {
 		size = s;
+		dv = rand.nextInt(51);
 		setProperties(size);
 		
 		position = new Vector2(x, y);
 		
 		velocity = new Vector2();
 		heading = rand.nextInt(361);
-		dv = rand.nextInt(31) + 40; // dv between 40 - 70
-		
+	
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];
@@ -72,15 +71,19 @@ public class Asteroid extends SpaceObject {
 	private void setProperties(int size) {
 		int avgRadius = 0;
 		if(size == 4) {
+			dv += 100;
 			avgRadius = 100;
 			edges = 20;
 		} else if(size == 3) {
+			dv += 120;
 			avgRadius = 50;
 			edges = 15;
 		} else if(size == 2) {
+			dv += 140;
 			avgRadius = 30;
 			edges = 12;
 		} else if(size == 1) {
+			dv += 160;
 			avgRadius = 15;
 			edges = 10;
 		}
@@ -127,7 +130,7 @@ public class Asteroid extends SpaceObject {
 		// Filled Polygon
 		for(int i = 0; i < edges; i++) {
 			sr.begin(ShapeType.Filled);
-			sr.setColor(Color.LIGHT_GRAY);
+			sr.setColor(180/255f, 180/255f, 180/255f, 0);
 			
 			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
 				sr.triangle(vertices[i][0], vertices[i][1],
@@ -148,9 +151,9 @@ public class Asteroid extends SpaceObject {
 			polygon[i*2] = vertices[i][0];
 			polygon[(i*2)+1] = vertices[i][1];
 		}
-		Gdx.gl.glLineWidth(1);
+		Gdx.gl.glLineWidth(5);
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.BLACK);	
+		sr.setColor(100/255f, 100/255f, 100/255f, 0);	
 		sr.polygon(polygon);
 		sr.end();
 	}

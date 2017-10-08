@@ -1,6 +1,7 @@
 package gameWorld;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+
 import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Rocket;
@@ -23,6 +26,9 @@ public class GameRenderer { // Renders game objects
 	private Texture spaceImage;
 	private Texture explosionImage;
 	private SpriteBatch batch;
+	
+	private int numStars;
+	private int[][] stars;
 	
 	private Rocket rocket;
 	private static int numAsteroids;
@@ -44,11 +50,25 @@ public class GameRenderer { // Renders game objects
 		
 		rocket = myWorld.getRocket();
 		
+		numStars = 500;
+		stars = new int[numStars][2];
+		generateStars();
+		
 		spaceImage = new Texture("Infinite-space.jpg");
 		explosionImage = new Texture("explosion.png");
 		batch = new SpriteBatch();
 	}
 	
+	private void generateStars() {
+		Random rand = new Random();
+		for(int i = 0; i < numStars; i++) {
+			int x = rand.nextInt(AsteroidsMain.getWidth());
+			int y = rand.nextInt(AsteroidsMain.getHeight());
+			stars[i][0] = x;
+			stars[i][1] = y;
+		}
+	}
+
 	public void render() {
 		drawBackground();
 		
@@ -82,11 +102,18 @@ public class GameRenderer { // Renders game objects
 	}
 	
 	public void drawBackground() {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(10/255f, 10/255f, 10/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		batch.begin();
-		batch.draw(spaceImage, 0, 0, AsteroidsMain.getWidth(), AsteroidsMain.getHeight());
-		batch.end();
+		shapeRenderer.begin(ShapeType.Point);
+		shapeRenderer.setColor(1, 1, 1, 1);
+		for(int i = 0; i < numStars; i++) {
+			shapeRenderer.point(stars[i][0], stars[i][1], 0);
+		}
+		shapeRenderer.end();
+		
+		//batch.begin();
+		//batch.draw(spaceImage, 0, 0, AsteroidsMain.getWidth(), AsteroidsMain.getHeight());
+		//batch.end();
 	}
 }

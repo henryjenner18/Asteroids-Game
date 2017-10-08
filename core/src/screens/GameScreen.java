@@ -23,7 +23,7 @@ public class GameScreen implements Screen { // Implementing methods of the scree
 		deletionManager = new DeletionManager(world, collisionDetector); // Initialise deletion manager
 		renderer = new GameRenderer(world, collisionDetector); // Initialise renderer; can retrieve objects from world
 		
-		Gdx.input.setInputProcessor(new InputHandler(world.getRocket()));
+		Gdx.input.setInputProcessor(new InputHandler(world.getRocket(), world));
 	}
 
 	@Override
