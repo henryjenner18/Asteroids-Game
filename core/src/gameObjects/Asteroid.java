@@ -13,27 +13,26 @@ import main.AsteroidsMain;
 
 public class Asteroid extends SpaceObject {
 	
-	private int size;
-	
 	private float[] angles;
 	private float[] radii;
 	
-	private int maxRadius;
-	private int minRadius;
-	private int dv; // Alteration of velocity constant
+	private double avgRadius;
+	private double area;
+	
+	private int v; // Alteration of velocity constant
 	
 	Random rand = new Random();
 	
-	public Asteroid(int s, float x, float y) {
-		size = s;
-		dv = rand.nextInt(51);
-		setProperties(size);
+	public Asteroid(float x, float y, double newR, int v) {
+		avgRadius = newR;		
+		setProperties();
 		
-		position = new Vector2(x, y);
-		
+		position = new Vector2(x, y);	
 		velocity = new Vector2();
 		heading = rand.nextInt(361);
-	
+		
+		this.v = v;
+		
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];
@@ -54,8 +53,8 @@ public class Asteroid extends SpaceObject {
 		velocity.setZero(); // Wipes the current velocity vector
 		float radians = (float) Math.toRadians(heading);
 		
-		velocity.x = MathUtils.cos(radians) * delta * dv;
-		velocity.y = MathUtils.sin(radians) * delta * dv;
+		velocity.x = MathUtils.cos(radians) * delta * v;
+		velocity.y = MathUtils.sin(radians) * delta * v;
 	}
 	
 	private void wrap() { // Screen wrap
@@ -68,29 +67,16 @@ public class Asteroid extends SpaceObject {
 		if(position.y > h + r) position.y = -r;	
 	}
 	
-	private void setProperties(int size) {
-		int avgRadius = 0;
-		if(size == 4) {
-			dv += 100;
-			avgRadius = 100;
-			edges = 20;
-		} else if(size == 3) {
-			dv += 120;
-			avgRadius = 50;
-			edges = 15;
-		} else if(size == 2) {
-			dv += 140;
-			avgRadius = 30;
-			edges = 12;
-		} else if(size == 1) {
-			dv += 160;
-			avgRadius = 15;
-			edges = 10;
-		}
-		int diff = edges / 2;
-		maxRadius = avgRadius + diff;
-		minRadius = avgRadius - diff;
-		r = maxRadius;
+	private void setProperties() {
+		area = Math.PI * Math.pow(avgRadius, 2);
+		
+		if(avgRadius < 30) { edges = 12; }
+		if(avgRadius >= 30) { edges = 14; }
+		if(avgRadius >= 40) { edges = 15; }
+		if(avgRadius >= 50) { edges = 17; }
+		if(avgRadius >= 60) { edges = 19; }
+		if(avgRadius >= 70) { edges = 20; }
+		if(avgRadius >= 90) { edges = 22; }
 	}
 
 	private void setVertices() {
@@ -108,10 +94,14 @@ public class Asteroid extends SpaceObject {
 	}
 
 	private void generateRadii() {
+		int diff = edges / 2;
+		double maxRadius = avgRadius + diff;
+		double minRadius = avgRadius - diff;
+
 		for(int i = 0; i < edges; i++) {
-			int r = rand.nextInt((maxRadius - minRadius) + 1) + minRadius;
+			double r = (rand.nextInt((int) ((maxRadius - minRadius) + 1)) + minRadius);
 			
-			radii[i] = r;
+			radii[i] = (float) r;
 		}
 	}
 	
@@ -128,7 +118,7 @@ public class Asteroid extends SpaceObject {
 	
 	public void render(ShapeRenderer sr) {
 		// Filled Polygon
-		for(int i = 0; i < edges; i++) {
+		/*for(int i = 0; i < edges; i++) {
 			sr.begin(ShapeType.Filled);
 			sr.setColor(180/255f, 180/255f, 180/255f, 0);
 			
@@ -143,7 +133,7 @@ public class Asteroid extends SpaceObject {
 						position.x, position.y);
 				sr.end();
 			}
-		}
+		}*/
 		
 		// Polygon outline
 		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
@@ -153,12 +143,16 @@ public class Asteroid extends SpaceObject {
 		}
 		Gdx.gl.glLineWidth(5);
 		sr.begin(ShapeType.Line);
-		sr.setColor(100/255f, 100/255f, 100/255f, 0);	
+		//sr.setColor(100/255f, 100/255f, 100/255f, 0);	
 		sr.polygon(polygon);
 		sr.end();
 	}
 	
-	public int getSize() {
-		return size;
+	public double getArea() {
+		return area;
+	}
+	
+	public int getV() {
+		return v;
 	}
 }

@@ -30,7 +30,6 @@ public class DeletionManager {
 		
 		for(int i = 0; i < numMissiles; i++) {
 			if(myWorld.getMissile(i).getTimeLeft() == 0) {
-				System.out.println("Need to remove missile " + i);
 				removeMissiles.add(i);
 			}
 		}
@@ -57,20 +56,20 @@ public class DeletionManager {
 		
 		for(int i = 0; i < removeAsteroids.size(); i++) {
 			splitAsteroid(i);
-			System.out.println("Need to remove asteroid " + i);
 			myWorld.removeAsteroid(removeAsteroids.get(i));
 		}
 	}
 	
 	private void splitAsteroid(int i) {
-		int s = myWorld.getAsteroid(removeAsteroids.get(i)).getSize() - 1;
 		float x = myWorld.getAsteroid(removeAsteroids.get(i)).xcoord();
 		float y = myWorld.getAsteroid(removeAsteroids.get(i)).ycoord();
 		
-		if(s >= 1) {
-			for(int a = 0; a < 2; a++) {
-				myWorld.createAsteroid(s, x, y);
-			}
+		double originalA = myWorld.getAsteroid(removeAsteroids.get(i)).getArea();
+		double newR = Math.sqrt(originalA / (2 * Math.PI));
+		int v = myWorld.getAsteroid(removeAsteroids.get(i)).getV();
+		
+		for(int a = 0; a < 2; a++) {
+			myWorld.createAsteroid(x, y, newR, v);
 		}
 	}
 }

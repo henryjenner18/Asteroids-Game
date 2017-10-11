@@ -18,12 +18,11 @@ public class GameWorld { // Updates game objects
 	
 	public GameWorld() {
 		rand = new Random(); // Random function
-		rocket = new Rocket();
+		rocket = new Rocket(this);
 		
 		asteroids = new ArrayList<Asteroid>();
-		for(int i = 0; i < 4; i++) {
-			createAsteroid(4, rand.nextInt(AsteroidsMain.getWidth() + 1),
-					rand.nextInt(AsteroidsMain.getHeight() + 1));
+		for(int i = 0; i < 1; i++) {
+			spawnAsteroid();
 		}	
 		
 		missiles = new ArrayList<Missile>();
@@ -48,19 +47,40 @@ public class GameWorld { // Updates game objects
 		b = !b; // Invert boolean variable
 	}
 	
-	public void createAsteroid(int s, float x, float y) {
-		Asteroid asteroid = new Asteroid(s, x, y);
-		asteroids.add(asteroid);
+	private void spawnAsteroid() {
+		int f = 5; // Frame size, max hori/vert distance they can be away from the edges
+		float x = 0, y = 0; // Initialise x and y
+		float w = AsteroidsMain.getWidth(), h = AsteroidsMain.getHeight();
+		boolean acceptable = false;
+		
+		while(acceptable == false) { // While acceptable coordinates haven't been found
+			x = rand.nextInt((int) (w + 1));
+			y = rand.nextInt((int) (h + 1));
+			
+			if(x >= f && x <= w - f && y >= f && y <= h - f) { // Check to see if not in frame
+				acceptable = false;
+			} else {
+				acceptable = true;
+			}
+		}
+		int avgR = rand.nextInt(21) + 80;
+		int v = rand.nextInt(101) + 150;
+		createAsteroid(x, y, avgR, v);
+	}
+	
+	public void createAsteroid(float x, float y, double avgR, int v) {
+		if(avgR >= 20) {
+			Asteroid asteroid = new Asteroid(x, y, avgR, v);
+			asteroids.add(asteroid);
+		}	
 	}
 	
 	public void removeMissile(int i) {
 		missiles.remove(i);
-		System.out.println("Removed missile " + i);
 	}
 	
 	public void removeAsteroid(int i) {
 		asteroids.remove(i);
-		System.out.println("Removed asteroid " + i);
 	}
 	
 	public Rocket getRocket() {

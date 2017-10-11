@@ -210,7 +210,7 @@ public class CollisionDetector {
 	public void render(ShapeRenderer sr, SpriteBatch batch, Texture explosionImage) {
 		for(int i = 0; i < intersections.size(); i++) {
 			sr.begin(ShapeType.Line);
-			sr.setColor(Color.RED);
+			//sr.setColor(Color.RED);
 			sr.circle(intersections.get(i)[0], intersections.get(i)[1], 14);
 			sr.end();
 		}
