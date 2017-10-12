@@ -152,7 +152,7 @@ public class Rocket extends SpaceObject {
 	public void render(ShapeRenderer sr) {
 		//Gdx.gl.glEnable(GL20.GL_BLEND); // Allows transparency	
 		// Draw flame
-		/*if(fl == true) {
+		if(fl == true) {
 			// Filled flame
 			sr.begin(ShapeType.Filled);
 			sr.setColor(1, 128/255f, 0, 1);
@@ -169,13 +169,13 @@ public class Rocket extends SpaceObject {
 			}
 			Gdx.gl.glLineWidth(4);
 			sr.begin(ShapeType.Line);
-			//sr.setColor(1, 1, 0, 1);
+			sr.setColor(1, 1, 0, 1);
 			sr.polygon(polygon);
 			sr.end();
-		}*/
+		}
 				
 		// Filled polygon
-		/*sr.begin(ShapeType.Filled);
+		sr.begin(ShapeType.Filled);
 		sr.setColor(60/255f, 200/255f, 255/255f, 0.5f);
 		sr.triangle(vertices[0][0], vertices[0][1],
 				vertices[1][0], vertices[1][1],
@@ -183,7 +183,7 @@ public class Rocket extends SpaceObject {
 		sr.triangle(vertices[0][0], vertices[0][1],
 				vertices[3][0], vertices[3][1],
 				vertices[2][0], vertices[2][1]);
-		sr.end();*/
+		sr.end();
 		
 		// Polygon outline
 		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
@@ -193,7 +193,7 @@ public class Rocket extends SpaceObject {
 		}
 		Gdx.gl.glLineWidth(4);
 		sr.begin(ShapeType.Line);
-		//sr.setColor(Color.MAROON);
+		sr.setColor(Color.MAROON);
 		sr.polygon(polygon);
 		sr.end();
 	}

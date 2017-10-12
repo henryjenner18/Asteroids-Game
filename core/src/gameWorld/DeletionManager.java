@@ -65,7 +65,7 @@ public class DeletionManager {
 		float y = myWorld.getAsteroid(removeAsteroids.get(i)).ycoord();
 		
 		double originalA = myWorld.getAsteroid(removeAsteroids.get(i)).getArea();
-		double newR = Math.sqrt(originalA / (2 * Math.PI));
+		double newR = Math.sqrt(originalA * 0.7 / (2 * Math.PI)); // Some of the asteroid wastes away
 		int v = myWorld.getAsteroid(removeAsteroids.get(i)).getV();
 		
 		for(int a = 0; a < 2; a++) {

@@ -77,7 +77,7 @@ public class Missile extends SpaceObject {
 		Gdx.gl.glLineWidth(5);
 		sr.begin(ShapeType.Line);
 		if(b == true) {
-			//sr.setColor(Color.YELLOW);
+			sr.setColor(Color.YELLOW);
 		} else {
 			//sr.setColor(Color.MAGENTA);
 		}

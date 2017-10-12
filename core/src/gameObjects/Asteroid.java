@@ -118,7 +118,7 @@ public class Asteroid extends SpaceObject {
 	
 	public void render(ShapeRenderer sr) {
 		// Filled Polygon
-		/*for(int i = 0; i < edges; i++) {
+		for(int i = 0; i < edges; i++) {
 			sr.begin(ShapeType.Filled);
 			sr.setColor(180/255f, 180/255f, 180/255f, 0);
 			
@@ -133,7 +133,7 @@ public class Asteroid extends SpaceObject {
 						position.x, position.y);
 				sr.end();
 			}
-		}*/
+		}
 		
 		// Polygon outline
 		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
@@ -143,7 +143,7 @@ public class Asteroid extends SpaceObject {
 		}
 		Gdx.gl.glLineWidth(5);
 		sr.begin(ShapeType.Line);
-		//sr.setColor(100/255f, 100/255f, 100/255f, 0);	
+		sr.setColor(100/255f, 100/255f, 100/255f, 0);	
 		sr.polygon(polygon);
 		sr.end();
 	}

@@ -21,7 +21,7 @@ public class GameWorld { // Updates game objects
 		rocket = new Rocket(this);
 		
 		asteroids = new ArrayList<Asteroid>();
-		for(int i = 0; i < 1; i++) {
+		for(int i = 0; i < 3; i++) {
 			spawnAsteroid();
 		}	
 		
@@ -63,13 +63,13 @@ public class GameWorld { // Updates game objects
 				acceptable = true;
 			}
 		}
-		int avgR = rand.nextInt(21) + 80;
+		int avgR = rand.nextInt(21) + 90;
 		int v = rand.nextInt(101) + 150;
 		createAsteroid(x, y, avgR, v);
 	}
 	
 	public void createAsteroid(float x, float y, double avgR, int v) {
-		if(avgR >= 20) {
+		if(avgR >= 15) {
 			Asteroid asteroid = new Asteroid(x, y, avgR, v);
 			asteroids.add(asteroid);
 		}	
