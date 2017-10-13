@@ -14,9 +14,8 @@ public class Missile extends SpaceObject {
 	private int l;
 	private Vector2 rocketVel;
 	private float timeLeft;
-	private boolean b;
 	
-	public Missile(boolean b) {
+	public Missile() {
 		setTimeLeft(2);
 		
 		heading = Rocket.getHeading();
@@ -30,7 +29,6 @@ public class Missile extends SpaceObject {
 		vertices = new float[2][2];
 		edges = vertices.length;
 		l = 30;
-		this.b = b;
 	}
 	
 	public void update(float delta) {
@@ -76,12 +74,7 @@ public class Missile extends SpaceObject {
 	public void render(ShapeRenderer sr) {
 		Gdx.gl.glLineWidth(5);
 		sr.begin(ShapeType.Line);
-		if(b == true) {
-			sr.setColor(Color.YELLOW);
-		} else {
-			//sr.setColor(Color.MAGENTA);
-		}
-
+		sr.setColor(Color.YELLOW);
 		sr.line(vertices[0][0], vertices[0][1],
 				vertices[1][0], vertices[1][1]);
 		sr.end();
