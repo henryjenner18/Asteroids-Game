@@ -3,8 +3,6 @@ package gameWorld;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -207,20 +205,13 @@ public class CollisionDetector {
 		}
 	}
 	
-	public void render(ShapeRenderer sr, SpriteBatch batch, Texture explosionImage) {
+	public void render(ShapeRenderer sr) {
 		for(int i = 0; i < intersections.size(); i++) {
 			sr.begin(ShapeType.Line);
-			//sr.setColor(Color.RED);
+			sr.setColor(Color.RED);
 			sr.circle(intersections.get(i)[0], intersections.get(i)[1], 14);
 			sr.end();
 		}
-		
-		/*if(intersections.size() > 0) { // An explosion
-			int wh = 190; // Width and height
-			batch.begin();
-			batch.draw(explosionImage, intersections.get(0)[0] - (wh / 2), intersections.get(0)[1] - (wh / 2), wh, wh);
-			batch.end();
-		}*/
 	}
 	
 	public static ArrayList<float[]> getIntersections() {
