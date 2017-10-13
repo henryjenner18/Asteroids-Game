@@ -7,8 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -23,10 +21,6 @@ public class GameRenderer { // Renders game objects
 	private CollisionDetector myManager;
 	private OrthographicCamera cam; // Single plane camera view
 	private ShapeRenderer shapeRenderer;
-	
-	private Texture spaceImage;
-	private Texture explosionImage;
-	private SpriteBatch batch;
 	
 	private int numStars;
 	private int[][] stars;
@@ -54,10 +48,6 @@ public class GameRenderer { // Renders game objects
 		numStars = 500;
 		stars = new int[numStars][2];
 		generateStars();
-		
-		spaceImage = new Texture("Infinite-space.jpg");
-		explosionImage = new Texture("explosion.png");
-		batch = new SpriteBatch();
 	}
 	
 	private void generateStars() {
@@ -78,7 +68,7 @@ public class GameRenderer { // Renders game objects
 		rocket.render(shapeRenderer);
 		setMissiles();
 		
-		myManager.render(shapeRenderer, batch, explosionImage);
+		myManager.render(shapeRenderer);
 	}
 	
 	private void setAsteroids() {
@@ -113,9 +103,5 @@ public class GameRenderer { // Renders game objects
 			shapeRenderer.point(stars[i][0], stars[i][1], 0);
 		}
 		shapeRenderer.end();
-		
-		//batch.begin();
-		//batch.draw(spaceImage, 0, 0, AsteroidsMain.getWidth(), AsteroidsMain.getHeight());
-		//batch.end();
 	}
 }
