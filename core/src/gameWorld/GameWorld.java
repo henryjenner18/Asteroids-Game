@@ -2,8 +2,12 @@ package gameWorld;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.badlogic.gdx.math.Vector2;
+
 import gameObjects.Asteroid;
 import gameObjects.Missile;
+import gameObjects.Particle;
 import gameObjects.Rocket;
 import main.AsteroidsMain;
 
@@ -11,8 +15,8 @@ public class GameWorld { // Updates game objects
 	
 	private Rocket rocket;	
 	private static ArrayList<Asteroid> asteroids;
-	public static int numMissiles;
 	private static ArrayList<Missile> missiles;
+	private static ArrayList<Particle> particles;
 	private Random rand;
 	
 	public GameWorld() {
@@ -25,6 +29,7 @@ public class GameWorld { // Updates game objects
 		}	
 		
 		missiles = new ArrayList<Missile>();
+		particles = new ArrayList<Particle>();
 	}
 
 	public void update(float delta) {		
@@ -37,11 +42,10 @@ public class GameWorld { // Updates game objects
 		for(int i = 0; i < missiles.size(); i++) {
 			missiles.get(i).update(delta);
 		}
-	}
-	
-	public void createMissile() {
-		Missile missile = new Missile();
-		missiles.add(missile);
+		
+		for(int i = 0; i < particles.size(); i++) {
+			particles.get(i).update(delta);
+		}
 	}
 	
 	private void spawnAsteroid() {
@@ -72,6 +76,16 @@ public class GameWorld { // Updates game objects
 		}	
 	}
 	
+	public void createMissile(float x, float y, Vector2 vel, int hg) {
+		Missile missile = new Missile(x, y, vel, hg);
+		missiles.add(missile);
+	}
+	
+	public void createParticle(float x, float y) {
+		Particle particle = new Particle(x, y);
+		particles.add(particle);
+	}
+	
 	public void removeMissile(int i) {
 		missiles.remove(i);
 	}
@@ -98,5 +112,13 @@ public class GameWorld { // Updates game objects
 	
 	public int getNumMissiles() {
 		return missiles.size();
+	}
+	
+	public Particle getParticle(int i) {
+		return particles.get(i);
+	}
+	
+	public int getNumParticles() {
+		return particles.size();
 	}
 }

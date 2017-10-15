@@ -61,8 +61,8 @@ public class DeletionManager {
 	}
 	
 	private void splitAsteroid(int i) {
-		float x = myWorld.getAsteroid(removeAsteroids.get(i)).xcoord();
-		float y = myWorld.getAsteroid(removeAsteroids.get(i)).ycoord();
+		float x = myWorld.getAsteroid(removeAsteroids.get(i)).getX();
+		float y = myWorld.getAsteroid(removeAsteroids.get(i)).getY();
 		
 		double originalA = myWorld.getAsteroid(removeAsteroids.get(i)).getArea();
 		double newR = Math.sqrt(originalA * 0.7 / (2 * Math.PI)); // Some of the asteroid wastes away
@@ -70,6 +70,10 @@ public class DeletionManager {
 		
 		for(int a = 0; a < 2; a++) {
 			myWorld.createAsteroid(x, y, newR, v);
+		}
+		
+		for(int p = 0; p < 3; p++) {
+			myWorld.createParticle(x, y);
 		}
 	}
 }

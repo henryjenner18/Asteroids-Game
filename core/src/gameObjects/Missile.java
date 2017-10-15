@@ -15,17 +15,17 @@ public class Missile extends SpaceObject {
 	private Vector2 rocketVel;
 	private float timeLeft;
 	
-	public Missile() {
+	public Missile(float rockX, float rockY, Vector2 rockVel, int rockH) {
 		setTimeLeft(2);
 		
-		heading = Rocket.getHeading();
+		heading = rockH;
 		float radians = (float) Math.toRadians(heading);
-		float x = Rocket.getX() + MathUtils.cos(radians) * Rocket.getHeight() / 2;
-		float y = Rocket.getY() + MathUtils.sin(radians) * Rocket.getHeight() / 2;
+		float x = rockX + MathUtils.cos(radians) * Rocket.getHeight() / 2;
+		float y = rockY + MathUtils.sin(radians) * Rocket.getHeight() / 2;
 		
 		position = new Vector2(x, y);
 		velocity = new Vector2();
-		rocketVel = new Vector2(Rocket.getVelocity());
+		rocketVel = new Vector2(rockVel);
 		vertices = new float[2][2];
 		edges = vertices.length;
 		l = 30;

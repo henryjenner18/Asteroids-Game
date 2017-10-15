@@ -15,9 +15,6 @@ public class Rocket extends SpaceObject {
 	GameWorld myWorld;
 	
 	private float[][] flame;
-	private static Vector2 position;
-	private static Vector2 velocity;
-	private static int heading;
 	private static int height;
 	private int terminalVel;
 	
@@ -194,22 +191,6 @@ public class Rocket extends SpaceObject {
 		sr.setColor(Color.MAROON);
 		sr.polygon(polygon);
 		sr.end();
-	}
-	
-	public static float getX() {
-		return position.x;
-	}
-		
-	public static float getY() {
-		return position.y;
-	}
-	
-	public static Vector2 getVelocity() {
-		return velocity;
-	}
-	
-	public static int getHeading() {
-		return heading;
 	}
 	
 	public static int getHeight() {

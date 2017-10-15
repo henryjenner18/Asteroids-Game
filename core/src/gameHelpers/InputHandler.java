@@ -2,6 +2,7 @@ package gameHelpers;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
 
 import gameObjects.Rocket;
 import gameWorld.GameWorld;
@@ -28,7 +29,11 @@ public class InputHandler implements InputProcessor {
 			myRocket.right = true;
 			
 		} else if(keycode == Keys.SPACE) {
-			myWorld.createMissile();
+			float x = myRocket.getX(); // Get coordinates of rocket
+			float y = myRocket.getY();
+			Vector2 vel = myRocket.getVelocity();
+			int hg = myRocket.getHeading();
+			myWorld.createMissile(x, y, vel, hg);
 		}
 		
 		return true;

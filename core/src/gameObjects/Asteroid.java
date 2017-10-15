@@ -44,7 +44,6 @@ public class Asteroid extends SpaceObject {
 	public void update(float delta) {
 		move(delta);
 		position.add(velocity);
-		
 		wrap();
 		setVertices();
 	}

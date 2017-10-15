@@ -35,26 +35,31 @@ public class SpaceObject {
 				y2 = vertices[i+1][1];
 			}
 			
-			// Find m of each edge
-			// m = d y / d x = (y1 - y2) / (x1 - x2)
-			m = (y1 - y2) / (x1 - x2);
+			// Find m of each edge	
+			m = (y1 - y2) / (x1 - x2); // m = d y / d x = (y1 - y2) / (x1 - x2)
+				
+			gradients[i] = m; // Place it in the array
 			
-			// Place it in the array
-			gradients[i] = m;
-			
-			// Find y-intercept c
-			// y - y1 = m(x - x1) so y = m(x - x1) + y1; therefore c = (- m * x1) + y1
-			c = (- m * x1) + y1;
+			// Find y-intercept c		
+			c = (- m * x1) + y1; // y - y1 = m(x - x1) so y = m(x - x1) + y1; therefore c = (- m * x1) + y1
 			yIntercepts[i] = c;
 		}
 	}
 	
-	public float xcoord() { // Tidy up names - also found in rocket
+	public float getX() { // Tidy up names - also found in rocket
 		return position.x;
 	}
 	
-	public float ycoord() {
+	public float getY() {
 		return position.y;
+	}
+		
+	public Vector2 getVelocity() {
+		return velocity;
+	}
+	
+	public int getHeading() {
+		return heading;
 	}
 	
 	public float[][] getVertices() {

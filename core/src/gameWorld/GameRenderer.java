@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import gameObjects.Asteroid;
 import gameObjects.Missile;
+import gameObjects.Particle;
 import gameObjects.Rocket;
 import main.AsteroidsMain;
 
@@ -30,6 +31,8 @@ public class GameRenderer { // Renders game objects
 	private static ArrayList<Asteroid> asteroids;
 	private static int numMissiles;
 	private static ArrayList<Missile> missiles;
+	private static int numParticles;
+	private static ArrayList<Particle> particles;
 	
 	public GameRenderer(GameWorld world, CollisionDetector manager) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
@@ -67,6 +70,7 @@ public class GameRenderer { // Renders game objects
 		setAsteroids();
 		rocket.render(shapeRenderer);
 		setMissiles();
+		setParticles();
 		
 		myManager.render(shapeRenderer);
 	}
@@ -90,6 +94,16 @@ public class GameRenderer { // Renders game objects
 			missiles.add(myWorld.getMissile(i));
 			missiles.get(i).linearEquation();
 			missiles.get(i).render(shapeRenderer);
+		}
+	}
+	
+	private void setParticles() {
+		numParticles = myWorld.getNumParticles();
+		particles = new ArrayList<Particle>(numParticles);
+		
+		for(int i = 0; i < numParticles; i++) {
+			particles.add(myWorld.getParticle(i));
+			particles.get(i).render(shapeRenderer);
 		}
 	}
 	
