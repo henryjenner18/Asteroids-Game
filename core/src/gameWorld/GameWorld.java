@@ -14,7 +14,6 @@ public class GameWorld { // Updates game objects
 	public static int numMissiles;
 	private static ArrayList<Missile> missiles;
 	private Random rand;
-	private boolean b; // For alternating missile colour
 	
 	public GameWorld() {
 		rand = new Random(); // Random function
@@ -26,7 +25,6 @@ public class GameWorld { // Updates game objects
 		}	
 		
 		missiles = new ArrayList<Missile>();
-		b = true;
 	}
 
 	public void update(float delta) {		
@@ -42,9 +40,8 @@ public class GameWorld { // Updates game objects
 	}
 	
 	public void createMissile() {
-		Missile missile = new Missile(b);
+		Missile missile = new Missile();
 		missiles.add(missile);
-		b = !b; // Invert boolean variable
 	}
 	
 	private void spawnAsteroid() {

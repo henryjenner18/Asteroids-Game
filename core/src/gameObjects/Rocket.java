@@ -1,7 +1,5 @@
 package gameObjects;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -60,7 +58,7 @@ public class Rocket extends SpaceObject {
 			fl = false;
 		}
 		
-		asteroidsG();
+		//asteroidsG();
 		position.add(velocity); // Add velocity to rocket's position
 		
 		int dh = 4; // Change of heading when key pressed
@@ -71,7 +69,7 @@ public class Rocket extends SpaceObject {
 		setVertices(); // Alter coordinates
 	}
 	
-	private void asteroidsG() {
+	/*private void asteroidsG() {
 		int numAsteroids = myWorld.getNumAsteroids();
 		ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>(numAsteroids);
 		
@@ -83,7 +81,7 @@ public class Rocket extends SpaceObject {
 			
 			float dotProduct = (position.x * asteroid.x) + (position.y * asteroid.y);
 		}
-	}
+	}*/
 
 	private void thrust(float delta) {
 		Vector2 force = new Vector2();
