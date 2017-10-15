@@ -64,14 +64,11 @@ public class GameRenderer { // Renders game objects
 	}
 
 	public void render() {
-		shapeRenderer.setColor(Color.WHITE);
 		drawBackground();
-		
+		setParticles();
 		setAsteroids();
 		rocket.render(shapeRenderer);
 		setMissiles();
-		setParticles();
-		
 		myManager.render(shapeRenderer);
 	}
 	
@@ -112,7 +109,7 @@ public class GameRenderer { // Renders game objects
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		shapeRenderer.begin(ShapeType.Point);
-		shapeRenderer.setColor(1, 1, 1, 1);
+		shapeRenderer.setColor(Color.WHITE);
 		for(int i = 0; i < numStars; i++) {
 			shapeRenderer.point(stars[i][0], stars[i][1], 0);
 		}

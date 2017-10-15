@@ -12,6 +12,7 @@ public class DeletionManager {
 	
 	private ArrayList<Integer> removeMissiles;
 	private ArrayList<Integer> removeAsteroids;
+	private ArrayList<Integer> removeParticles;
 	
 	public DeletionManager(GameWorld world, CollisionDetector collisionDetector) {
 		myWorld = world;
@@ -21,10 +22,29 @@ public class DeletionManager {
 	public void delete() {
 		removeMissiles = new ArrayList<Integer>();
 		removeAsteroids = new ArrayList<Integer>(myCollisionDetector.getRemoveAsteroids());
+		removeParticles = new ArrayList<Integer>();
 		removeMissiles();
 		removeAsteroids();
+		removeParticles();
 	}
 	
+	private void removeParticles() {
+		int numParticles = myWorld.getNumParticles();
+		
+		for(int i = 0; i < numParticles; i++) {
+			if(myWorld.getParticle(i).getTimeLeft() == 0) {
+				removeParticles.add(i);
+			}
+		}
+		
+		Collections.sort(removeParticles);
+		Collections.reverse(removeParticles);
+		
+		for(int i = 0; i < removeParticles.size(); i++) {
+			myWorld.removeParticle(removeParticles.get(i));
+		}
+	}
+
 	private void removeMissiles() {
 		int numMissiles = myWorld.getNumMissiles();
 		

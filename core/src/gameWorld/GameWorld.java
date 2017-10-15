@@ -94,6 +94,10 @@ public class GameWorld { // Updates game objects
 		asteroids.remove(i);
 	}
 	
+	public void removeParticle(int i) {
+		particles.remove(i);
+	}
+	
 	public Rocket getRocket() {
 		return rocket;
 	}
