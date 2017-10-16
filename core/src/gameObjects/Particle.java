@@ -2,6 +2,7 @@ package gameObjects;
 
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,15 +15,16 @@ public class Particle extends SpaceObject {
 	Random rand;
 	private int v;
 	private float timeLeft;
+	private int colour;
 	
 	public Particle(float astX, float astY) {
 		rand = new Random();
-		setTimeLeft((rand.nextFloat() * 1) + 1);
-		System.out.println(timeLeft);
+		setTimeLeft((rand.nextFloat() * 1));
 		position = new Vector2(astX, astY);
 		velocity = new Vector2();
 		heading = rand.nextInt(361);
-		v = rand.nextInt(101) + 150;
+		v = rand.nextInt(101) + 20;
+		colour = rand.nextInt(4);
 	}
 	
 	public void update(float delta) {
@@ -55,8 +57,17 @@ public class Particle extends SpaceObject {
 	
 	public void render(ShapeRenderer sr) {
 		sr.begin(ShapeType.Filled);
-		sr.setColor(180/255f, 180/255f, 180/255f, 0);
-		sr.circle(position.x, position.y, 4);
+		//sr.setColor(180/255f, 180/255f, 180/255f, 0);
+		if(colour == 0) {
+			sr.setColor(Color.ORANGE);
+		} else if(colour == 1) {
+			sr.setColor(Color.YELLOW);
+		} else if(colour == 2) {
+			sr.setColor(Color.GRAY);
+		} else {
+			sr.setColor(Color.CORAL);
+		}
+		sr.circle(position.x, position.y, 1);
 		sr.end();
 	}
 	
