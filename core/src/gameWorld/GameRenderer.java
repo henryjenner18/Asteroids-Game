@@ -69,7 +69,7 @@ public class GameRenderer { // Renders game objects
 		setAsteroids();
 		rocket.render(shapeRenderer);
 		setMissiles();
-		myManager.render(shapeRenderer);
+		//myManager.render(shapeRenderer);
 	}
 	
 	private void setAsteroids() {
