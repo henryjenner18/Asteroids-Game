@@ -3,6 +3,7 @@ package gameWorld;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class DeletionManager {
@@ -85,14 +86,17 @@ public class DeletionManager {
 		float y = myWorld.getAsteroid(removeAsteroids.get(i)).getY();
 		
 		double originalA = myWorld.getAsteroid(removeAsteroids.get(i)).getArea();
-		double newR = Math.sqrt(originalA * 0.7 / (2 * Math.PI)); // Some of the asteroid wastes away
+		double newR = Math.sqrt(originalA * 0.7 / (2 * Math.PI)); // % of asteroid to waste away
 		int v = myWorld.getAsteroid(removeAsteroids.get(i)).getV();
 		
+		Random rand = new Random();
+		int hg = rand.nextInt(361);
 		for(int a = 0; a < 2; a++) {
-			myWorld.createAsteroid(x, y, newR, v);
+			myWorld.createAsteroid(x, y, newR, v, hg);
+			hg += rand.nextInt(161) + 100;
 		}
 		
-		for(int p = 0; p < 3; p++) {
+		for(int p = 0; p < 10; p++) {
 			myWorld.createParticle(x, y);
 		}
 	}
