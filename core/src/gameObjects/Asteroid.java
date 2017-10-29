@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -23,13 +24,13 @@ public class Asteroid extends SpaceObject {
 	
 	Random rand = new Random();
 	
-	public Asteroid(float x, float y, double newR, int v) {
-		avgRadius = newR;		
+	public Asteroid(float x, float y, double r, int v, int hg) {
+		avgRadius = r;		
 		setProperties();
 		
 		position = new Vector2(x, y);	
 		velocity = new Vector2();
-		heading = rand.nextInt(361);
+		heading = hg;
 		
 		this.v = v;
 		
@@ -119,7 +120,7 @@ public class Asteroid extends SpaceObject {
 		// Filled Polygon
 		for(int i = 0; i < edges; i++) {
 			sr.begin(ShapeType.Filled);
-			sr.setColor(180/255f, 180/255f, 180/255f, 0);
+			sr.setColor(Color.LIGHT_GRAY);
 			
 			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
 				sr.triangle(vertices[i][0], vertices[i][1],
