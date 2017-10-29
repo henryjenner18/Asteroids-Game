@@ -18,16 +18,13 @@ public class GameWorld { // Updates game objects
 	private static ArrayList<Missile> missiles;
 	private static ArrayList<Particle> particles;
 	private Random rand;
+	private int n;
 	
 	public GameWorld() {
+		n = 3;
 		rand = new Random(); // Random function
-		rocket = new Rocket(this);
-		
-		asteroids = new ArrayList<Asteroid>();
-		for(int i = 0; i < 3; i++) {
-			spawnAsteroid();
-		}	
-		
+		rocket = new Rocket(this);	
+		asteroids = new ArrayList<Asteroid>();	
 		missiles = new ArrayList<Missile>();
 		particles = new ArrayList<Particle>();
 	}
@@ -45,6 +42,13 @@ public class GameWorld { // Updates game objects
 		
 		for(int i = 0; i < particles.size(); i++) {
 			particles.get(i).update(delta);
+		}
+		
+		if(asteroids.size() == 0) {
+			for(int i = 0; i < n; i++) {
+				spawnAsteroid();
+			}	
+			n++;
 		}
 	}
 	
@@ -66,12 +70,13 @@ public class GameWorld { // Updates game objects
 		}
 		int avgR = rand.nextInt(21) + 90;
 		int v = rand.nextInt(101) + 150;
-		createAsteroid(x, y, avgR, v);
+		int hg = rand.nextInt(361);
+		createAsteroid(x, y, avgR, v, hg);
 	}
 	
-	public void createAsteroid(float x, float y, double avgR, int v) {
+	public void createAsteroid(float x, float y, double avgR, int v, int hg) {
 		if(avgR >= 15) {
-			Asteroid asteroid = new Asteroid(x, y, avgR, v);
+			Asteroid asteroid = new Asteroid(x, y, avgR, v, hg);
 			asteroids.add(asteroid);
 		}	
 	}
