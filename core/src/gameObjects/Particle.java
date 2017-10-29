@@ -12,7 +12,7 @@ import main.AsteroidsMain;
 
 public class Particle extends SpaceObject {
 	
-	Random rand;
+	private Random rand;
 	private int v;
 	private float timeLeft;
 	private int colour;
@@ -23,7 +23,7 @@ public class Particle extends SpaceObject {
 		position = new Vector2(astX, astY);
 		velocity = new Vector2();
 		heading = rand.nextInt(361);
-		v = rand.nextInt(101) + 20;
+		v = rand.nextInt(50) + 100;
 		colour = rand.nextInt(4);
 	}
 	
@@ -57,17 +57,20 @@ public class Particle extends SpaceObject {
 	
 	public void render(ShapeRenderer sr) {
 		sr.begin(ShapeType.Filled);
-		//sr.setColor(180/255f, 180/255f, 180/255f, 0);
 		if(colour == 0) {
 			sr.setColor(Color.ORANGE);
 		} else if(colour == 1) {
 			sr.setColor(Color.YELLOW);
 		} else if(colour == 2) {
-			sr.setColor(Color.GRAY);
-		} else {
 			sr.setColor(Color.CORAL);
+		} else {
+			sr.setColor(Color.LIGHT_GRAY);
 		}
-		sr.circle(position.x, position.y, 1);
+		if(colour == 3) {
+			sr.circle(position.x, position.y, 4);
+		} else {
+			sr.circle(position.x, position.y, 1);
+		}
 		sr.end();
 	}
 	
