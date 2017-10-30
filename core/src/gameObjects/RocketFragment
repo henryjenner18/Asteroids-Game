@@ -1,0 +1,52 @@
+package gameObjects;
+
+import java.util.Random;
+
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+
+import main.AsteroidsMain;
+
+public class RocketFragment extends SpaceObject {
+	private Random rand;
+	private int v;
+	
+	public RocketFragment(float rockX, float rockY) {
+		vertices = new float[3][2]; // 3 vertices with a pair of x and y coordinates each
+		position = new Vector2(rockX, rockY);
+		velocity = new Vector2();
+		heading = rand.nextInt(361);
+		v = rand.nextInt(50) + 100;
+	}
+	
+	public void update(float delta) {
+		move(delta);
+		position.add(velocity);
+		wrap();
+		setVertices(); // Alter coordinates
+	}
+	
+	private void move(float delta) {
+		velocity.setZero(); // Wipes the current velocity vector
+		float radians = (float) Math.toRadians(heading);
+		
+		velocity.x = MathUtils.cos(radians) * delta * v;
+		velocity.y = MathUtils.sin(radians) * delta * v;
+	}
+	
+	private void wrap() { // Screen wrap
+		float w = AsteroidsMain.getWidth();
+		float h = AsteroidsMain.getHeight();;
+		
+		if(position.x < -r) position.x = w + r;
+		if(position.x > w + r) position.x = -r;
+		if(position.y < -r) position.y = h + r;
+		if(position.y > h + r) position.y = -r;	
+	}
+
+	private void setVertices() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
