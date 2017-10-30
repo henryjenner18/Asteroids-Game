@@ -25,7 +25,6 @@ public class Rocket extends SpaceObject {
 	
 	public Rocket(GameWorld world) {
 		myWorld = world;
-		
 		position = new Vector2();
 		velocity = new Vector2();
 		height = 90;
