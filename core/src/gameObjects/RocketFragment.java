@@ -103,5 +103,4 @@ public class RocketFragment extends SpaceObject {
 	public float getTimeLeft() {
 		return timeLeft;
 	}
-
 }
