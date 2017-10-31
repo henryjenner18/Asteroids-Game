@@ -99,6 +99,10 @@ public class CollisionDetector {
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
 						float[] intersection = {x, y};
 						intersections.add(intersection);
+						// Rocket needs to blow up
+						for(int i = 0; i < 3; i++){
+							myWorld.createRocketFragment(x, y);
+						}
 						rocket.reset();
 					}
 				}
