@@ -9,6 +9,7 @@ import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Particle;
 import gameObjects.Rocket;
+import gameObjects.RocketFragment;
 import main.AsteroidsMain;
 
 public class GameWorld { // Updates game objects
@@ -17,6 +18,7 @@ public class GameWorld { // Updates game objects
 	private static ArrayList<Asteroid> asteroids;
 	private static ArrayList<Missile> missiles;
 	private static ArrayList<Particle> particles;
+	private static ArrayList<RocketFragment> rocketFragments;
 	private Random rand;
 	private int n;
 	
@@ -27,6 +29,7 @@ public class GameWorld { // Updates game objects
 		asteroids = new ArrayList<Asteroid>();	
 		missiles = new ArrayList<Missile>();
 		particles = new ArrayList<Particle>();
+		rocketFragments = new ArrayList<RocketFragment>();
 	}
 
 	public void update(float delta) {		
@@ -42,6 +45,10 @@ public class GameWorld { // Updates game objects
 		
 		for(int i = 0; i < particles.size(); i++) {
 			particles.get(i).update(delta);
+		}
+		
+		for(int i = 0; i < rocketFragments.size(); i++) {
+			rocketFragments.get(i).update(delta);
 		}
 		
 		if(asteroids.size() == 0) {
@@ -91,6 +98,13 @@ public class GameWorld { // Updates game objects
 		particles.add(particle);
 	}
 	
+	public void createRocketFragment(float x, float y) {
+		//System.out.println("in create fragment");
+		RocketFragment rocketFragment = new RocketFragment(x, y);
+		//System.out.println("created object");
+		rocketFragments.add(rocketFragment);
+	}
+	
 	public void removeMissile(int i) {
 		missiles.remove(i);
 	}
@@ -129,5 +143,13 @@ public class GameWorld { // Updates game objects
 	
 	public int getNumParticles() {
 		return particles.size();
+	}
+	
+	public RocketFragment getRocketFragment(int i) {
+		return rocketFragments.get(i);
+	}
+	
+	public int getNumRocketFragments() {
+		return rocketFragments.size();
 	}
 }
