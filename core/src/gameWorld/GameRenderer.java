@@ -14,6 +14,7 @@ import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Particle;
 import gameObjects.Rocket;
+import gameObjects.RocketFragment;
 import main.AsteroidsMain;
 
 public class GameRenderer { // Renders game objects
@@ -33,6 +34,8 @@ public class GameRenderer { // Renders game objects
 	private static ArrayList<Missile> missiles;
 	private static int numParticles;
 	private static ArrayList<Particle> particles;
+	private static int numRocketFragments;
+	private static ArrayList<RocketFragment> rocketFragments;
 	
 	public GameRenderer(GameWorld world, CollisionDetector manager) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
@@ -69,9 +72,20 @@ public class GameRenderer { // Renders game objects
 		setAsteroids();
 		rocket.render(shapeRenderer);
 		setMissiles();
+		setRocketFragments();
 		//myManager.render(shapeRenderer);
 	}
 	
+	private void setRocketFragments() {
+		numRocketFragments = myWorld.getNumRocketFragments();
+		rocketFragments = new ArrayList<RocketFragment>(numRocketFragments);
+		
+		for(int i = 0; i < numRocketFragments; i++) {
+			rocketFragments.add(myWorld.getRocketFragment(i));
+			rocketFragments.get(i).render(shapeRenderer);
+		}
+	}
+
 	private void setAsteroids() {
 		numAsteroids = myWorld.getNumAsteroids();
 		asteroids = new ArrayList<Asteroid>(numAsteroids);
