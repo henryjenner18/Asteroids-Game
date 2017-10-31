@@ -12,13 +12,12 @@ import main.AsteroidsMain;
 
 public class Particle extends SpaceObject {
 	
-	private Random rand;
 	private int v;
 	private float timeLeft;
 	private int colour;
 	
 	public Particle(float astX, float astY) {
-		rand = new Random();
+		Random rand = new Random();
 		setTimeLeft((rand.nextFloat() * 1));
 		position = new Vector2(astX, astY);
 		velocity = new Vector2();
