@@ -28,11 +28,15 @@ public class RocketFragment extends SpaceObject {
 		//System.out.println("after heading");
 		v = rand.nextInt(50) + 100;
 		edges = vertices.length;
-		setHeight(40);
+		setHeight(70);
 		//System.out.println("end of constructor");
 	}
 	
 	public void update(float delta) {
+		timeLeft -= delta;
+		if(timeLeft <= 0) {
+			setTimeLeft(0);
+		}
 		move(delta);
 		position.add(velocity);
 		wrap();

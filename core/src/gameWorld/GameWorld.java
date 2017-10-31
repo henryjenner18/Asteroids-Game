@@ -117,6 +117,10 @@ public class GameWorld { // Updates game objects
 		particles.remove(i);
 	}
 	
+	public void removeRocketFragment(int i) {
+		rocketFragments.remove(i);
+	}
+	
 	public Rocket getRocket() {
 		return rocket;
 	}

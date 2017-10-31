@@ -82,7 +82,6 @@ public class CollisionDetector {
 				float[] rocketYintercepts = rocket.getYintercepts();
 				
 				for(int r = 0; r < rocket.getEdges(); r++) { // For each edge of the rocket
-
 					float[] rocketXs = new float[2];
 					rocketXs[0] = rocketVertices[r][0];
 					
@@ -100,7 +99,7 @@ public class CollisionDetector {
 						float[] intersection = {x, y};
 						intersections.add(intersection);
 						// Rocket needs to blow up
-						for(int i = 0; i < 3; i++){
+						for(int i = 0; i < 1; i++){
 							myWorld.createRocketFragment(x, y);
 						}
 						rocket.reset();

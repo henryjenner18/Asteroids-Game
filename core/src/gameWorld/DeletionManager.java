@@ -14,6 +14,7 @@ public class DeletionManager {
 	private ArrayList<Integer> removeMissiles;
 	private ArrayList<Integer> removeAsteroids;
 	private ArrayList<Integer> removeParticles;
+	private ArrayList<Integer> removeRocketFragments;
 	
 	public DeletionManager(GameWorld world, CollisionDetector collisionDetector) {
 		myWorld = world;
@@ -24,11 +25,30 @@ public class DeletionManager {
 		removeMissiles = new ArrayList<Integer>();
 		removeAsteroids = new ArrayList<Integer>(myCollisionDetector.getRemoveAsteroids());
 		removeParticles = new ArrayList<Integer>();
+		removeRocketFragments = new ArrayList<Integer>();
 		removeMissiles();
 		removeAsteroids();
 		removeParticles();
+		removeRocketFragments();
 	}
 	
+	private void removeRocketFragments() {
+		int numRocketFragments = myWorld.getNumRocketFragments();
+		
+		for(int i = 0; i < numRocketFragments; i++) {
+			if(myWorld.getRocketFragment(i).getTimeLeft() == 0) {
+				removeRocketFragments.add(i);
+			}
+		}
+		
+		Collections.sort(removeRocketFragments);
+		Collections.reverse(removeRocketFragments);
+		
+		for(int i = 0; i < removeRocketFragments.size(); i++) {
+			myWorld.removeRocketFragment(removeRocketFragments.get(i));
+		}
+	}
+
 	private void removeParticles() {
 		int numParticles = myWorld.getNumParticles();
 		
