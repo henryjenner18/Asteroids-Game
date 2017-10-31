@@ -19,17 +19,13 @@ public class RocketFragment extends SpaceObject {
 	public RocketFragment(float rockX, float rockY) {
 		Random rand = new Random();
 		setTimeLeft((rand.nextFloat() * 1));
-		//System.out.println("in constructor");
 		vertices = new float[3][2]; // 3 vertices with a pair of x and y coordinates each
 		position = new Vector2(rockX, rockY);
 		velocity = new Vector2();
-		//System.out.println("before heading");
 		heading = rand.nextInt(361);
-		//System.out.println("after heading");
 		v = rand.nextInt(50) + 100;
 		edges = vertices.length;
 		setHeight(70);
-		//System.out.println("end of constructor");
 	}
 	
 	public void update(float delta) {
