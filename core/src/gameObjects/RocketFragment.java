@@ -41,8 +41,7 @@ public class RocketFragment extends SpaceObject {
 	
 	private void move(float delta) {
 		velocity.setZero(); // Wipes the current velocity vector
-		float radians = (float) Math.toRadians(heading);
-		
+		float radians = (float) Math.toRadians(heading);		
 		velocity.x = MathUtils.cos(radians) * delta * v;
 		velocity.y = MathUtils.sin(radians) * delta * v;
 	}
