@@ -1,5 +1,6 @@
 package gameObjects;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -13,19 +14,31 @@ import main.AsteroidsMain;
 
 public class RocketFragment extends SpaceObject {
 	private int v;
-	private int height;
 	private float timeLeft;
 	
+	private float[] angles;
+	private float[] radii;
+	
+	private double avgRadius;
+	
+	Random rand = new Random();
+	
 	public RocketFragment(float rockX, float rockY) {
-		Random rand = new Random();
 		setTimeLeft((rand.nextFloat() * 1));
-		vertices = new float[3][2]; // 3 vertices with a pair of x and y coordinates each
 		position = new Vector2(rockX, rockY);
 		velocity = new Vector2();
+		
 		heading = rand.nextInt(361);
 		v = rand.nextInt(50) + 100;
-		edges = vertices.length;
-		setHeight(70);
+		
+		edges = rand.nextInt(4)+8;
+		angles = new float[edges];
+		radii = new float[edges];
+		vertices = new float[edges][2];
+		avgRadius = 18;
+			
+		generateAngles();
+		generateRadii();
 	}
 	
 	public void update(float delta) {
@@ -57,28 +70,62 @@ public class RocketFragment extends SpaceObject {
 	}
 
 	private void setVertices() {
-		float radians = (float) Math.toRadians(heading);
+		float radians;
 		
-		vertices[0][0] = position.x + MathUtils.cos(radians) * height / 2;
-		vertices[0][1] = position.y + MathUtils.sin(radians) * height / 2;
+		for(int i = 0; i < edges; i ++) {
+			radians = (float) Math.toRadians(angles[i]);
+			
+			// x-coordinate
+			vertices[i][0] = position.x + MathUtils.cos(radians) * radii[i];
+			
+			// y-coordinate
+			vertices[i][1] = position.y + MathUtils.sin(radians) * radii[i];
+		}
+	}
+
+	private void generateRadii() {
+		int diff = edges / 2;
+		double maxRadius = avgRadius + diff;
+		double minRadius = avgRadius - diff;
+
+		for(int i = 0; i < edges; i++) {
+			double r = (rand.nextInt((int) ((maxRadius - minRadius) + 1)) + minRadius);
+			
+			radii[i] = (float) r;
+		}
+	}
+	
+	private void generateAngles() {
+		float a = 360 / edges; // Regular difference between each angle
 		
-		vertices[1][0] = position.x + MathUtils.cos(radians + 3 * MathUtils.PI / 4) * height / 3;
-		vertices[1][1] = position.y + MathUtils.sin(radians + 3 * MathUtils.PI / 4) * height / 3;
-				
-		vertices[2][0] = position.x + MathUtils.cos(radians - 3 * MathUtils.PI / 4) * height / 3;
-		vertices[2][1] = position.y + MathUtils.sin(radians - 3 * MathUtils.PI / 4) * height / 3;
+		for(int i = 0; i < edges; i++) {
+			int da = rand.nextInt(11) - 5; // Generate number between -5, 5
+			angles[i] = (a * i) + da; // Add change to offset angles a little
+		}
+		
+		Arrays.sort(angles); // Order the angles ascending
 	}
 	
 	public void render(ShapeRenderer sr) {
-		// Filled triangle
-		sr.begin(ShapeType.Filled);
-		sr.setColor(60/255f, 200/255f, 255/255f, 0.5f);
-		sr.triangle(vertices[0][0], vertices[0][1],
-				vertices[1][0], vertices[1][1],
-				vertices[2][0], vertices[2][1]);
-		sr.end();
+		// Filled Polygon
+		for(int i = 0; i < edges; i++) {
+			sr.begin(ShapeType.Filled);
+			sr.setColor(60/255f, 200/255f, 255/255f, 0.5f);
+			
+			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
+				sr.triangle(vertices[i][0], vertices[i][1],
+						vertices[0][0], vertices[0][1],
+						position.x, position.y);
+				sr.end();
+			} else {
+				sr.triangle(vertices[i][0], vertices[i][1],
+						vertices[i+1][0], vertices[i+1][1],
+						position.x, position.y);
+				sr.end();
+			}
+		}
 		
-		// Triangle outline
+		// Polygon outline
 		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
 		for(int i = 0; i < edges; i ++) {
 			polygon[i*2] = vertices[i][0];
@@ -89,10 +136,6 @@ public class RocketFragment extends SpaceObject {
 		sr.setColor(Color.MAROON);
 		sr.polygon(polygon);
 		sr.end();
-	}
-	
-	private void setHeight(int h) {
-		height = h;
 	}
 	
 	public void setTimeLeft(float f) {
