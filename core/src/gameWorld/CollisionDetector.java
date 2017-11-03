@@ -99,9 +99,10 @@ public class CollisionDetector {
 						float[] intersection = {x, y};
 						intersections.add(intersection);
 						// Rocket needs to blow up
-						for(int i = 0; i < 1; i++){
+						for(int i = 0; i < rocket.getNumFragments(); i++){
 							myWorld.createRocketFragment(x, y);
 						}
+						removeAsteroids.add(a);
 						rocket.reset();
 					}
 				}
