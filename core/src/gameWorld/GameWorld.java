@@ -99,10 +99,10 @@ public class GameWorld { // Updates game objects
 	}
 	
 	public void createRocketFragment(float x, float y) {
-		//System.out.println("in create fragment");
-		RocketFragment rocketFragment = new RocketFragment(x, y);
-		//System.out.println("created object");
-		rocketFragments.add(rocketFragment);
+		if(rocketFragments.size() < rocket.getNumFragments()) {
+			RocketFragment rocketFragment = new RocketFragment(x, y);
+			rocketFragments.add(rocketFragment);
+		}
 	}
 	
 	public void removeMissile(int i) {
