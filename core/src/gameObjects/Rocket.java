@@ -1,5 +1,7 @@
 package gameObjects;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -17,11 +19,14 @@ public class Rocket extends SpaceObject {
 	private float[][] flame;
 	private static int height;
 	private int terminalVel;
+	private int numFragments;
 	
 	public boolean thrusting;
 	public boolean left;
 	public boolean right;
 	private boolean fl;
+	
+	Random rand = new Random();
 	
 	public Rocket(GameWorld world) {
 		myWorld = world;
@@ -44,6 +49,7 @@ public class Rocket extends SpaceObject {
 		velocity.x = 0;
 		velocity.y = 0;
 		heading = 90;
+		numFragments = rand.nextInt(2) + 3;
 	}
 	
 	public void update(float delta) {
@@ -194,5 +200,9 @@ public class Rocket extends SpaceObject {
 	
 	public static int getHeight() {
 		return height;
+	}
+	
+	public int getNumFragments() {
+		return numFragments;
 	}
 }
