@@ -15,9 +15,10 @@ public class Particle extends SpaceObject {
 	private int v;
 	private float timeLeft;
 	private int colour;
+	Random rand;
 	
 	public Particle(float astX, float astY) {
-		Random rand = new Random();
+		rand = new Random();
 		setTimeLeft((rand.nextFloat() * 1));
 		position = new Vector2(astX, astY);
 		velocity = new Vector2();

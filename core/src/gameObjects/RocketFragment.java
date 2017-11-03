@@ -13,30 +13,27 @@ import com.badlogic.gdx.math.Vector2;
 import main.AsteroidsMain;
 
 public class RocketFragment extends SpaceObject {
+	
 	private int v;
 	private float timeLeft;
-	
 	private float[] angles;
 	private float[] radii;
-	
 	private double avgRadius;
-	
-	Random rand = new Random();
+	Random rand;
 	
 	public RocketFragment(float rockX, float rockY) {
-		setTimeLeft((rand.nextFloat() * 1));
+		rand = new Random();
 		position = new Vector2(rockX, rockY);
-		velocity = new Vector2();
-		
+		velocity = new Vector2();	
 		heading = rand.nextInt(361);
-		v = rand.nextInt(50) + 100;
-		
-		edges = rand.nextInt(4)+8;
+		v = rand.nextInt(50) + 100;	
+		edges = rand.nextInt(2)+5;
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];
 		avgRadius = 18;
-			
+		
+		setTimeLeft((rand.nextFloat() * 1));
 		generateAngles();
 		generateRadii();
 	}
@@ -84,7 +81,7 @@ public class RocketFragment extends SpaceObject {
 	}
 
 	private void generateRadii() {
-		int diff = edges / 2;
+		int diff = 3 * (edges / 4);
 		double maxRadius = avgRadius + diff;
 		double minRadius = avgRadius - diff;
 

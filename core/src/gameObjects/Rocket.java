@@ -25,10 +25,10 @@ public class Rocket extends SpaceObject {
 	public boolean left;
 	public boolean right;
 	private boolean fl;
-	
-	Random rand = new Random();
+	Random rand;
 	
 	public Rocket(GameWorld world) {
+		rand = new Random();
 		myWorld = world;
 		position = new Vector2();
 		velocity = new Vector2();
@@ -39,7 +39,7 @@ public class Rocket extends SpaceObject {
 		flame = new float[3][2];
 		fl = false;
 		edges = vertices.length;
-		terminalVel = 8;
+		terminalVel = 10;
 		reset();
 	}
 	
