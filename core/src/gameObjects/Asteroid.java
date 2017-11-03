@@ -21,7 +21,6 @@ public class Asteroid extends SpaceObject {
 	private double area;
 	
 	private int v; // Alteration of velocity constant
-	
 	Random rand = new Random();
 	
 	public Asteroid(float x, float y, double r, int v, int hg) {
