@@ -1,5 +1,6 @@
 package gameObjects;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -60,7 +61,9 @@ public class Rocket extends SpaceObject {
 			fl = false;
 		}
 		
-		//asteroidsG();
+		asteroidsG(delta);
+		terminalVelCheck(); // Adjust velocity if resultant is exceeding terminal velocity
+		
 		position.add(velocity); // Add velocity to rocket's position
 		
 		int dh = 4; // Change of heading when key pressed
@@ -71,19 +74,40 @@ public class Rocket extends SpaceObject {
 		setVertices(); // Alter coordinates
 	}
 	
-	/*private void asteroidsG() {
+	private void asteroidsG(float delta) {
 		int numAsteroids = myWorld.getNumAsteroids();
 		ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>(numAsteroids);
 		
-		for(int i = 0; i < numAsteroids; i++) {
-			asteroids.add(myWorld.getAsteroid(i));
+		for(int a = 0; a < numAsteroids; a++) {
+			asteroids.add(myWorld.getAsteroid(a));
 			Vector2 gForce = new Vector2();
-			Vector2 asteroid = new Vector2(asteroids.get(i).xcoord(), asteroids.get(i).ycoord());
-			//System.out.println(asteroidCoords.x + ", " + asteroidCoords.y);
+			Vector2 asteroid = new Vector2(asteroids.get(a).getX(), asteroids.get(a).getY());
 			
-			float dotProduct = (position.x * asteroid.x) + (position.y * asteroid.y);
+			/*float dotProduct = (position.x * asteroid.x) + (position.y * asteroid.y);
+			double magR = Math.sqrt((Math.pow(position.x, 2) + (Math.pow(position.y, 2))));
+			double magA = Math.sqrt((Math.pow(asteroid.x, 2) + (Math.pow(asteroid.y, 2))));
+			
+			double x = dotProduct / (magR * magA);		
+			double a = Math.acos(x) * (180 / Math.PI);
+			
+			System.out.println(a);*/
+			
+			float i = asteroid.x - position.x;
+			float j = asteroid.y - position.y;
+			
+			double theta = Math.atan(j / i) * (180 / Math.PI);
+			if(position.x > asteroid.x) {
+				theta += 180;
+			}
+			System.out.println(theta);
+			
+			float radians = (float) Math.toRadians(theta);
+			double f = 0.3;
+			gForce.x = (float) (MathUtils.cos(radians) * delta * f);
+			gForce.y = (float) (MathUtils.sin(radians) * delta * f);
+			velocity.add(gForce);
 		}
-	}*/
+	}
 
 	private void thrust(float delta) {
 		Vector2 force = new Vector2();
@@ -92,9 +116,7 @@ public class Rocket extends SpaceObject {
 		force.x = MathUtils.cos(radians) * delta * 10;
 		force.y = MathUtils.sin(radians) * delta * 10;
 		
-		velocity.add(force);
-		
-		terminalVelCheck(); // Adjust velocity if resultant is exceeding terminal velocity
+		velocity.add(force);	
 	}
 	
 	private void terminalVelCheck() {
