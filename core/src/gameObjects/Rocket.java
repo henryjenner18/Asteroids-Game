@@ -61,9 +61,8 @@ public class Rocket extends SpaceObject {
 			fl = false;
 		}
 		
-		asteroidsG(delta);
+		asteroidsG(delta); // Apply gravitational forces due to asteroids
 		terminalVelCheck(); // Adjust velocity if resultant is exceeding terminal velocity
-		
 		position.add(velocity); // Add velocity to rocket's position
 		
 		int dh = 4; // Change of heading when key pressed
@@ -83,28 +82,20 @@ public class Rocket extends SpaceObject {
 			Vector2 gForce = new Vector2();
 			Vector2 asteroid = new Vector2(asteroids.get(a).getX(), asteroids.get(a).getY());
 			
-			/*float dotProduct = (position.x * asteroid.x) + (position.y * asteroid.y);
-			double magR = Math.sqrt((Math.pow(position.x, 2) + (Math.pow(position.y, 2))));
-			double magA = Math.sqrt((Math.pow(asteroid.x, 2) + (Math.pow(asteroid.y, 2))));
-			
-			double x = dotProduct / (magR * magA);		
-			double a = Math.acos(x) * (180 / Math.PI);
-			
-			System.out.println(a);*/
-			
 			float i = asteroid.x - position.x;
 			float j = asteroid.y - position.y;
+			double r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
 			
 			double theta = Math.atan(j / i) * (180 / Math.PI);
 			if(position.x > asteroid.x) {
 				theta += 180;
 			}
-			System.out.println(theta);
 			
-			float radians = (float) Math.toRadians(theta);
-			double f = 0.3;
-			gForce.x = (float) (MathUtils.cos(radians) * delta * f);
-			gForce.y = (float) (MathUtils.sin(radians) * delta * f);
+			double mag = 2 * asteroids.get(a).getArea() / Math.pow(r, 2); // Representation of gravitational force equation, F = GMm / r^2
+			
+			float radians = (float) Math.toRadians(theta);		
+			gForce.x = (float) (MathUtils.cos(radians) * delta * mag);
+			gForce.y = (float) (MathUtils.sin(radians) * delta * mag);
 			velocity.add(gForce);
 		}
 	}
