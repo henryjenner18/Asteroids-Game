@@ -154,4 +154,8 @@ public class Asteroid extends SpaceObject {
 	public int getV() {
 		return v;
 	}
+	
+	public double getAvgRadius() {
+		return avgRadius;
+	}
 }
