@@ -27,7 +27,7 @@ public class RocketFragment extends SpaceObject {
 		velocity = new Vector2();	
 		heading = rand.nextInt(361);
 		v = rand.nextInt(50) + 100;	
-		edges = rand.nextInt(2)+5;
+		edges = rand.nextInt(4)+3;
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];
@@ -81,7 +81,7 @@ public class RocketFragment extends SpaceObject {
 	}
 
 	private void generateRadii() {
-		int diff = 3 * (edges / 4);
+		int diff = edges;
 		double maxRadius = avgRadius + diff;
 		double minRadius = avgRadius - diff;
 
