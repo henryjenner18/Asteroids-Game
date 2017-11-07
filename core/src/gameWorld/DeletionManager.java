@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import screens.GameScreen;
+
 public class DeletionManager {
 	
 	private GameWorld myWorld;
@@ -16,9 +18,12 @@ public class DeletionManager {
 	private ArrayList<Integer> removeParticles;
 	private ArrayList<Integer> removeRocketFragments;
 	
+	private int smallCount;
+	
 	public DeletionManager(GameWorld world, CollisionDetector collisionDetector) {
 		myWorld = world;
 		myCollisionDetector = collisionDetector;
+		smallCount = 0;
 	}
 
 	public void delete() {
@@ -96,8 +101,26 @@ public class DeletionManager {
 		Collections.reverse(removeAsteroids);
 		
 		for(int i = 0; i < removeAsteroids.size(); i++) {
+			int avgRadius = (int) myWorld.getAsteroid(removeAsteroids.get(i)).getAvgRadius();	
+			int score = 0;
+			if(avgRadius < 30) {score = 100; smallCount++; }
+			if(avgRadius >= 30) { score = 80; }
+			if(avgRadius >= 40) { score = 70; }
+			if(avgRadius >= 50) { score = 60; }
+			if(avgRadius >= 60) { score = 40; }
+			if(avgRadius >= 70) { score = 30; }
+			if(avgRadius >= 90) { score = 20; }
+			
+			//System.out.println("Score: " + score);
+			GameScreen.changeScore(score);
 			splitAsteroid(i);
 			myWorld.removeAsteroid(removeAsteroids.get(i));
+			System.out.println(smallCount);
+			if(smallCount == 8) {
+				//myWorld.spawnAsteroid();
+				System.out.println("new due to small count");
+				smallCount = 0;
+			}
 		}
 	}
 	
