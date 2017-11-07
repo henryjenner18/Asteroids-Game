@@ -59,7 +59,7 @@ public class GameWorld { // Updates game objects
 		}
 	}
 	
-	private void spawnAsteroid() {
+	public void spawnAsteroid() {
 		int f = 5; // Frame size, max hori/vert distance they can be away from the edges
 		float x = 0, y = 0; // Initialise x and y
 		float w = AsteroidsMain.getWidth(), h = AsteroidsMain.getHeight();
@@ -75,7 +75,7 @@ public class GameWorld { // Updates game objects
 				acceptable = true;
 			}
 		}
-		int avgR = rand.nextInt(21) + 90;
+		int avgR = rand.nextInt(31) + 90;
 		int v = rand.nextInt(101) + 150;
 		int hg = rand.nextInt(361);
 		createAsteroid(x, y, avgR, v, hg);
