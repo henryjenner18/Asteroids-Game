@@ -16,6 +16,7 @@ public class GameScreen implements Screen { // Implementing methods of the scree
 	private CollisionDetector collisionDetector;
 	private DeletionManager deletionManager;
 	private GameRenderer renderer;
+	private static int score;
 	
 	public GameScreen() {
 		world = new GameWorld(); // Initialise world
@@ -24,18 +25,25 @@ public class GameScreen implements Screen { // Implementing methods of the scree
 		renderer = new GameRenderer(world, collisionDetector); // Initialise renderer; can retrieve objects from world
 		
 		Gdx.input.setInputProcessor(new InputHandler(world.getRocket(), world));
+		
+		score = 0;
 	}
-
-	@Override
-	public void show() {}
+	
+	public static void changeScore(int p) {
+		score += p;
+	}
 
 	@Override
 	public void render(float delta) { // Renders the game each second; delta is the time since last called
 		world.update(delta); // Updates all game objects
 		collisionDetector.manage();
 		deletionManager.delete();
+		//System.out.println(score);
 		renderer.render(); // Render all game objects
 	}
+	
+	@Override
+	public void show() {}
 
 	@Override
 	public void resize(int width, int height) {}
