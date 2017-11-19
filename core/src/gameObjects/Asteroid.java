@@ -58,7 +58,7 @@ public class Asteroid extends SpaceObject {
 	
 	private void wrap() { // Screen wrap
 		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();;
+		float h = AsteroidsMain.getHeight();
 		
 		if(position.x < -r) position.x = w + r;
 		if(position.x > w + r) position.x = -r;
@@ -142,7 +142,7 @@ public class Asteroid extends SpaceObject {
 		}
 		Gdx.gl.glLineWidth(5);
 		sr.begin(ShapeType.Line);
-		sr.setColor(100/255f, 100/255f, 100/255f, 0);	
+		sr.setColor(Color.DARK_GRAY);	
 		sr.polygon(polygon);
 		sr.end();
 	}
@@ -153,9 +153,5 @@ public class Asteroid extends SpaceObject {
 	
 	public int getV() {
 		return v;
-	}
-	
-	public double getAvgRadius() {
-		return avgRadius;
 	}
 }
