@@ -91,7 +91,7 @@ public class Rocket extends SpaceObject {
 				theta += 180;
 			}
 			
-			double mag = 2 * asteroids.get(a).getArea() / Math.pow(r, 2); // Representation of gravitational force equation, F = GMm / r^2
+			double mag = 3 * asteroids.get(a).getArea() / Math.pow(r, 2); // Representation of gravitational force equation, F = GMm / r^2
 			
 			float radians = (float) Math.toRadians(theta);		
 			gForce.x = (float) (MathUtils.cos(radians) * delta * mag);
@@ -121,7 +121,7 @@ public class Rocket extends SpaceObject {
 	
 	private void wrap() { // Screen wrap
 		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();;
+		float h = AsteroidsMain.getHeight();
 		
 		if(position.x < -r) position.x = w + r;
 		if(position.x > w + r) position.x = -r;
