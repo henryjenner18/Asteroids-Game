@@ -15,6 +15,7 @@ import gameObjects.Missile;
 import gameObjects.Particle;
 import gameObjects.Rocket;
 import gameObjects.RocketFragment;
+import gameObjects.UFO;
 import main.AsteroidsMain;
 
 public class GameRenderer { // Renders game objects
@@ -37,6 +38,8 @@ public class GameRenderer { // Renders game objects
 	private static int numRocketFragments;
 	private static ArrayList<RocketFragment> rocketFragments;
 	
+	private UFO ufo;
+	
 	public GameRenderer(GameWorld world, CollisionDetector manager) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
 		myManager = manager;
@@ -54,6 +57,8 @@ public class GameRenderer { // Renders game objects
 		numStars = 500;
 		stars = new int[numStars][2];
 		generateStars();
+		
+		ufo = myWorld.getUFO();
 	}
 	
 	private void generateStars() {
@@ -74,6 +79,8 @@ public class GameRenderer { // Renders game objects
 		setMissiles();
 		setRocketFragments();
 		//myManager.render(shapeRenderer);
+		
+		ufo.render(shapeRenderer);
 	}
 	
 	private void setRocketFragments() {
@@ -119,7 +126,7 @@ public class GameRenderer { // Renders game objects
 	}
 	
 	public void drawBackground() {
-		Gdx.gl.glClearColor(10/255f, 10/255f, 10/255f, 1);
+		Gdx.gl.glClearColor(13/255f, 0/255f, 26/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		shapeRenderer.begin(ShapeType.Point);
