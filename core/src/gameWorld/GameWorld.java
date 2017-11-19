@@ -34,7 +34,7 @@ public class GameWorld { // Updates game objects
 		particles = new ArrayList<Particle>();
 		rocketFragments = new ArrayList<RocketFragment>();
 		
-		ufo = new UFO(300, 600);
+		ufo = new UFO(300, 900);
 	}
 
 	public void update(float delta) {		
