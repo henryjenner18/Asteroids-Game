@@ -10,6 +10,7 @@ import gameObjects.Missile;
 import gameObjects.Particle;
 import gameObjects.Rocket;
 import gameObjects.RocketFragment;
+import gameObjects.UFO;
 import main.AsteroidsMain;
 
 public class GameWorld { // Updates game objects
@@ -22,6 +23,8 @@ public class GameWorld { // Updates game objects
 	private Random rand;
 	private int n;
 	
+	private UFO ufo;
+	
 	public GameWorld() {
 		n = 3;
 		rand = new Random(); // Random function
@@ -30,6 +33,8 @@ public class GameWorld { // Updates game objects
 		missiles = new ArrayList<Missile>();
 		particles = new ArrayList<Particle>();
 		rocketFragments = new ArrayList<RocketFragment>();
+		
+		ufo = new UFO(300, 600);
 	}
 
 	public void update(float delta) {		
@@ -57,9 +62,11 @@ public class GameWorld { // Updates game objects
 			}	
 			n++;
 		}
+		
+		ufo.update(delta);
 	}
 	
-	public void spawnAsteroid() {
+	private void spawnAsteroid() {
 		int f = 5; // Frame size, max hori/vert distance they can be away from the edges
 		float x = 0, y = 0; // Initialise x and y
 		float w = AsteroidsMain.getWidth(), h = AsteroidsMain.getHeight();
@@ -75,7 +82,7 @@ public class GameWorld { // Updates game objects
 				acceptable = true;
 			}
 		}
-		int avgR = rand.nextInt(31) + 90;
+		int avgR = rand.nextInt(21) + 90;
 		int v = rand.nextInt(101) + 150;
 		int hg = rand.nextInt(361);
 		createAsteroid(x, y, avgR, v, hg);
@@ -155,5 +162,9 @@ public class GameWorld { // Updates game objects
 	
 	public int getNumRocketFragments() {
 		return rocketFragments.size();
+	}
+	
+	public UFO getUFO() {
+		return ufo;
 	}
 }
