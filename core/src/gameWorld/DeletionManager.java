@@ -115,10 +115,10 @@ public class DeletionManager {
 			GameScreen.changeScore(score);
 			splitAsteroid(i);
 			myWorld.removeAsteroid(removeAsteroids.get(i));
-			System.out.println(smallCount);
+			//System.out.println(smallCount);
 			if(smallCount == 8) {
 				//myWorld.spawnAsteroid();
-				System.out.println("new due to small count");
+				//System.out.println("new due to small count");
 				smallCount = 0;
 			}
 		}
