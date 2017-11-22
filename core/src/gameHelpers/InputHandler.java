@@ -1,11 +1,14 @@
 package gameHelpers;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 
 import gameObjects.Rocket;
 import gameWorld.GameWorld;
+import main.AsteroidsMain;
 
 public class InputHandler implements InputProcessor {
 	
@@ -36,7 +39,10 @@ public class InputHandler implements InputProcessor {
 			myWorld.createMissile(x, y, vel, hg);
 		
 		} else if(keycode == Keys.A) {
-			myWorld.createUFO(300, 300);
+			Random rand = new Random();
+			float x = rand.nextInt(2200);
+			float y = rand.nextInt(1250);
+			myWorld.createUFO(x, y);
 		}
 		
 		return true;

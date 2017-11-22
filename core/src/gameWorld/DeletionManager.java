@@ -49,6 +49,14 @@ public class DeletionManager {
 		Collections.reverse(removeUFOs);
 		
 		for(int i = 0; i < removeUFOs.size(); i++) {
+			
+			float x = myWorld.getUFO(removeUFOs.get(i)).getX();
+			float y = myWorld.getUFO(removeUFOs.get(i)).getY();
+			
+			for(int p = 0; p < 10; p++) {
+				myWorld.createParticle(x, y);
+			}
+			
 			myWorld.removeUFO(removeUFOs.get(i));
 		}
 	}

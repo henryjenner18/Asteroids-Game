@@ -1,5 +1,7 @@
 package gameObjects;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -9,11 +11,14 @@ import com.badlogic.gdx.math.Vector2;
 import main.AsteroidsMain;
 
 public class UFO extends SpaceObject {
-	private float width, height;
+	
+	private float width, height, dv;
+	Random rand = new Random();
 	
 	public UFO(float x, float y) {
 		position = new Vector2(x, y);
 		velocity = new Vector2();
+		dv = rand.nextInt(31) - 15;
 		edges = 8;
 		vertices = new float[edges][2];
 		width = 100;
@@ -29,7 +34,7 @@ public class UFO extends SpaceObject {
 	
 	private void move(float delta) {
 		velocity.setZero(); // Wipes the current velocity vector
-		velocity.x = delta * 100;
+		velocity.x = delta * 20 * dv;
 	}
 	
 	private void wrap() { // Screen wrap
