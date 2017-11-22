@@ -37,8 +37,8 @@ public class GameRenderer { // Renders game objects
 	private static ArrayList<Particle> particles;
 	private static int numRocketFragments;
 	private static ArrayList<RocketFragment> rocketFragments;
-	
-	private UFO ufo;
+	private static int numUFOs;
+	private static ArrayList<UFO> ufos;
 	
 	public GameRenderer(GameWorld world, CollisionDetector manager) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
@@ -57,8 +57,6 @@ public class GameRenderer { // Renders game objects
 		numStars = 500;
 		stars = new int[numStars][2];
 		generateStars();
-		
-		ufo = myWorld.getUFO();
 	}
 	
 	private void generateStars() {
@@ -76,11 +74,20 @@ public class GameRenderer { // Renders game objects
 		setParticles();
 		setAsteroids();
 		rocket.render(shapeRenderer);
+		setUFOs();
 		setMissiles();
 		setRocketFragments();
 		//myManager.render(shapeRenderer);
+	}
+	
+	private void setUFOs() {
+		numUFOs = myWorld.getNumUFOs();
+		ufos = new ArrayList<UFO>(numUFOs);
 		
-		ufo.render(shapeRenderer);
+		for(int i = 0; i < numUFOs; i++) {
+			ufos.add(myWorld.getUFO(i));
+			ufos.get(i).render(shapeRenderer);
+		}
 	}
 	
 	private void setRocketFragments() {

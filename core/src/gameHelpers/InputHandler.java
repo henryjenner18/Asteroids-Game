@@ -34,6 +34,9 @@ public class InputHandler implements InputProcessor {
 			Vector2 vel = myRocket.getVelocity();
 			int hg = myRocket.getHeading();
 			myWorld.createMissile(x, y, vel, hg);
+		
+		} else if(keycode == Keys.A) {
+			myWorld.createUFO(300, 300);
 		}
 		
 		return true;

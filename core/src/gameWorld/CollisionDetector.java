@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Rocket;
+import gameObjects.UFO;
 
 public class CollisionDetector {
 	
@@ -19,9 +20,12 @@ public class CollisionDetector {
 	private static ArrayList<Asteroid> asteroids;
 	private static int numMissiles;
 	private static ArrayList<Missile> missiles;
+	private static int numUFOs;
+	private static ArrayList<UFO> ufos;
 	
-	private static ArrayList<float[]> intersections;
+	//private static ArrayList<float[]> intersections;
 	private ArrayList<Integer> removeAsteroids;
+	private ArrayList<Integer> removeUFOs;
 	
 	public CollisionDetector(GameWorld world) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen	
@@ -32,7 +36,8 @@ public class CollisionDetector {
 		rocket.linearEquation();	
 		setAsteroids();
 		setMissiles();
-		checkCollisions(); // Checks for intersections between rocket and asteroids
+		setUFOs();
+		checkCollisions();
 	}
 	
 	private void setAsteroids() {
@@ -54,10 +59,26 @@ public class CollisionDetector {
 			missiles.get(i).linearEquation();
 		}
 	}
+	
+	private void setUFOs() {
+		numUFOs = myWorld.getNumUFOs();
+		ufos = new ArrayList<UFO>(numUFOs);
+		
+		for(int i = 0; i < numUFOs; i++) {
+			ufos.add(myWorld.getUFO(i));
+			ufos.get(i).linearEquation();
+		}
+	}
 
 	private void checkCollisions() {
-		intersections = new ArrayList<float[]>();
+		//intersections = new ArrayList<float[]>();
 		removeAsteroids = new ArrayList<Integer>();	
+		removeUFOs = new ArrayList<Integer>();
+		
+		// Asteroid collisions
+		float[][] rocketVertices = rocket.getVertices(); // Attributes of the rocket
+		float[] rocketGradients = rocket.getGradients();
+		float[] rocketYintercepts = rocket.getYintercepts();
 		
 		for(int a = 0; a < numAsteroids; a++) { // For each asteroid
 			
@@ -77,10 +98,6 @@ public class CollisionDetector {
 				}
 				
 				// Asteroids - rocket
-				float[][] rocketVertices = rocket.getVertices(); // Attributes of the rocket
-				float[] rocketGradients = rocket.getGradients();
-				float[] rocketYintercepts = rocket.getYintercepts();
-				
 				for(int r = 0; r < rocket.getEdges(); r++) { // For each edge of the rocket
 					float[] rocketXs = new float[2];
 					rocketXs[0] = rocketVertices[r][0];
@@ -97,7 +114,7 @@ public class CollisionDetector {
 					if(coordRangeCheck(x, rocketXs, asteroidXs) == true) { // Collision has occurred
 						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
 						float[] intersection = {x, y};
-						intersections.add(intersection);
+						//intersections.add(intersection);
 						// Rocket needs to blow up
 						for(int i = 0; i < rocket.getNumFragments(); i++){
 							myWorld.createRocketFragment(x, y);
@@ -130,8 +147,8 @@ public class CollisionDetector {
 					
 						if(coordRangeCheck(x, missileXs, asteroidXs) == true) { // Collision has occurred
 							y = (missileGradients[0] * x) + missileYintercepts[0];			
-							float[] intersection = {x, y};
-							intersections.add(intersection);
+							//float[] intersection = {x, y};
+							//intersections.add(intersection);
 							missiles.get(m).setTimeLeft(0);
 							removeAsteroids.add(a);
 						}
@@ -155,9 +172,84 @@ public class CollisionDetector {
 						
 						if(coordRangeCheck(y, missileYs, asteroidYs) == true) { // Collision has occurred		
 							float[] intersection = {x, y};
-							intersections.add(intersection);
+							//intersections.add(intersection);
 							missiles.get(m).setTimeLeft(0);
 							removeAsteroids.add(a);
+						}
+					}
+				}				
+			}
+		}
+		
+		// UFO collisions
+		for(int u = 0; u < numUFOs; u++) {
+			
+			float[][] ufoVertices = ufos.get(u).getVertices(); // Attributes of current ufo
+			float[] ufoGradients = ufos.get(u).getGradients();
+			float[] ufoYintercepts = ufos.get(u).getYintercepts();
+			
+			for(int s = 0; s < ufos.get(u).getEdges(); s++) { // For each edge of the ufo
+				
+				float[] ufoXs = new float[2];
+				ufoXs[0] = ufoVertices[s][0];
+				
+				if(s == ufos.get(u).getEdges() - 1) {
+					ufoXs[1] = ufoVertices[0][0];
+				} else {
+					ufoXs[1] = ufoVertices[s+1][0];
+				}
+				
+				// UFOs - missiles
+				for(int m = 0; m < numMissiles; m++) { // For each missile
+					float[][] missileVertices = missiles.get(m).getVertices(); // Attributes of current missile
+					float[] missileGradients = missiles.get(m).getGradients();
+					float[] missileYintercepts = missiles.get(m).getYintercepts();
+					
+					boolean infinityGradient;
+					if(missileGradients[0] == Double.POSITIVE_INFINITY || missileGradients[0] == Double.NEGATIVE_INFINITY) {
+						infinityGradient = true;
+					} else {
+						infinityGradient = false;
+					}
+					
+					float x, y;
+					if(infinityGradient == false) {	
+						x = (missileYintercepts[0] - ufoYintercepts[s]) / (ufoGradients[s] - missileGradients[0]);
+						
+						float[] missileXs = new float[2];
+						missileXs[0] = missileVertices[0][0];
+						missileXs[1] = missileVertices[1][0];
+					
+						if(coordRangeCheck(x, missileXs, ufoXs) == true) { // Collision has occurred
+							y = (missileGradients[0] * x) + missileYintercepts[0];			
+							//float[] intersection = {x, y};
+							//intersections.add(intersection);
+							missiles.get(m).setTimeLeft(0);
+							removeUFOs.add(u);
+						}
+						
+					} else if(infinityGradient == true) {
+						x = missileVertices[0][0];
+						y = (ufoGradients[s] * x) + ufoYintercepts[s];
+						
+						float[] missileYs = new float[2];
+						missileYs[0] = missileVertices[0][1];
+						missileYs[1] = missileVertices[1][1];
+						
+						float[] ufoYs = new float[2];
+						ufoYs[0] = ufoVertices[s][1];
+						
+						if(s == ufos.get(u).getEdges() - 1) {
+							ufoYs[1] = ufoVertices[0][1];
+						} else {
+							ufoYs[1] = ufoVertices[s+1][1];
+						}
+						
+						if(coordRangeCheck(y, missileYs, ufoYs) == true) { // Collision has occurred		
+							float[] intersection = {x, y};
+							//intersections.add(intersection);
+							missiles.get(m).setTimeLeft(0);
+							removeUFOs.add(u);
 						}
 					}
 				}
@@ -209,20 +301,24 @@ public class CollisionDetector {
 		}
 	}
 	
-	public void render(ShapeRenderer sr) {
+	/*public void render(ShapeRenderer sr) {
 		for(int i = 0; i < intersections.size(); i++) {
 			sr.begin(ShapeType.Line);
 			sr.setColor(Color.RED);
 			sr.circle(intersections.get(i)[0], intersections.get(i)[1], 14);
 			sr.end();
 		}
-	}
+	}*/
 	
-	public static ArrayList<float[]> getIntersections() {
+	/*public static ArrayList<float[]> getIntersections() {
 		return intersections;
-	}
+	}*/
 	
 	public ArrayList<Integer> getRemoveAsteroids() {
 		return removeAsteroids;
+	}
+	
+	public ArrayList<Integer> getRemoveUFOs() {
+		return removeUFOs;
 	}
 }

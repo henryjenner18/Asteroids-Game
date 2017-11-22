@@ -20,6 +20,7 @@ public class GameWorld { // Updates game objects
 	private static ArrayList<Missile> missiles;
 	private static ArrayList<Particle> particles;
 	private static ArrayList<RocketFragment> rocketFragments;
+	private static ArrayList<UFO> ufos;
 	private Random rand;
 	private int n;
 	
@@ -28,13 +29,12 @@ public class GameWorld { // Updates game objects
 	public GameWorld() {
 		n = 3;
 		rand = new Random(); // Random function
-		rocket = new Rocket(this);	
+		rocket = new Rocket(this);
 		asteroids = new ArrayList<Asteroid>();	
 		missiles = new ArrayList<Missile>();
 		particles = new ArrayList<Particle>();
 		rocketFragments = new ArrayList<RocketFragment>();
-		
-		ufo = new UFO(300, 900);
+		ufos = new ArrayList<UFO>();
 	}
 
 	public void update(float delta) {		
@@ -56,14 +56,16 @@ public class GameWorld { // Updates game objects
 			rocketFragments.get(i).update(delta);
 		}
 		
+		for(int i = 0; i < ufos.size(); i++) {
+			ufos.get(i).update(delta);
+		}
+		
 		if(asteroids.size() == 0) {
 			for(int i = 0; i < n; i++) {
 				spawnAsteroid();
 			}	
 			n++;
 		}
-		
-		ufo.update(delta);
 	}
 	
 	private void spawnAsteroid() {
@@ -112,6 +114,11 @@ public class GameWorld { // Updates game objects
 		}
 	}
 	
+	public void createUFO(float x, float y) {
+		UFO ufo = new UFO(x, y);
+		ufos.add(ufo);
+	}
+	
 	public void removeMissile(int i) {
 		missiles.remove(i);
 	}
@@ -126,6 +133,10 @@ public class GameWorld { // Updates game objects
 	
 	public void removeRocketFragment(int i) {
 		rocketFragments.remove(i);
+	}
+	
+	public void removeUFO(int i) {
+		ufos.remove(i);
 	}
 	
 	public Rocket getRocket() {
@@ -164,7 +175,11 @@ public class GameWorld { // Updates game objects
 		return rocketFragments.size();
 	}
 	
-	public UFO getUFO() {
-		return ufo;
+	public UFO getUFO(int i) {
+		return ufos.get(i);
+	}
+	
+	public int getNumUFOs() {
+		return ufos.size();
 	}
 }

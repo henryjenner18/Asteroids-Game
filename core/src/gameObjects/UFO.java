@@ -73,7 +73,7 @@ public class UFO extends SpaceObject {
 		// Filled Polygon
 		for(int i = 0; i < edges; i++) {
 			sr.begin(ShapeType.Filled);
-			sr.setColor(51/255f, 51/255f, 255/255f, 1);
+			sr.setColor(Color.RED);
 					
 			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
 				sr.triangle(vertices[i][0], vertices[i][1],

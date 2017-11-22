@@ -17,6 +17,7 @@ public class DeletionManager {
 	private ArrayList<Integer> removeAsteroids;
 	private ArrayList<Integer> removeParticles;
 	private ArrayList<Integer> removeRocketFragments;
+	private ArrayList<Integer> removeUFOs;
 	
 	private int smallCount;
 	
@@ -31,10 +32,25 @@ public class DeletionManager {
 		removeAsteroids = new ArrayList<Integer>(myCollisionDetector.getRemoveAsteroids());
 		removeParticles = new ArrayList<Integer>();
 		removeRocketFragments = new ArrayList<Integer>();
+		removeUFOs = new ArrayList<Integer>(myCollisionDetector.getRemoveUFOs());
 		removeMissiles();
 		removeAsteroids();
 		removeParticles();
 		removeRocketFragments();
+		removeUFOs();
+	}
+	
+	private void removeUFOs() {
+		Set<Integer> noDuplicates = new HashSet<Integer>();
+		noDuplicates.addAll(removeUFOs);
+		removeUFOs.clear();
+		removeUFOs.addAll(noDuplicates);
+		Collections.sort(removeUFOs);
+		Collections.reverse(removeUFOs);
+		
+		for(int i = 0; i < removeUFOs.size(); i++) {
+			myWorld.removeUFO(removeUFOs.get(i));
+		}
 	}
 	
 	private void removeRocketFragments() {
