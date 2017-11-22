@@ -21,6 +21,8 @@ public class Asteroid extends SpaceObject {
 	private double area;
 	
 	private int v; // Alteration of velocity constant
+	private double dr; // Change in angle each frame
+	private float rotation; // Change from initial heading
 	Random rand = new Random();
 	
 	public Asteroid(float x, float y, double r, int v, int hg) {
@@ -30,13 +32,15 @@ public class Asteroid extends SpaceObject {
 		position = new Vector2(x, y);	
 		velocity = new Vector2();
 		heading = hg;
+		rotation = 0;
+		dr = rand.nextInt(21) - 20;
 		
 		this.v = v;
 		
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];
-			
+
 		generateAngles();
 		generateRadii();
 	}
@@ -44,8 +48,13 @@ public class Asteroid extends SpaceObject {
 	public void update(float delta) {
 		move(delta);
 		position.add(velocity);
+		rotate(delta);
 		wrap();
 		setVertices();
+	}
+	
+	private void rotate(float delta) {
+		rotation += dr * delta * 2;
 	}
 	
 	private void move(float delta) {
@@ -82,7 +91,7 @@ public class Asteroid extends SpaceObject {
 		float radians;
 		
 		for(int i = 0; i < edges; i ++) {
-			radians = (float) Math.toRadians(angles[i]);
+			radians = (float) Math.toRadians(angles[i] + rotation);
 			
 			// x-coordinate
 			vertices[i][0] = position.x + MathUtils.cos(radians) * radii[i];
