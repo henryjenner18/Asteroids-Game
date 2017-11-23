@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -41,7 +40,20 @@ public class Rocket extends SpaceObject {
 		fl = false;
 		edges = vertices.length;
 		terminalVel = 10;
+		setColours();
 		reset();
+	}
+	
+	private void setColours() {
+		fillColour = new int[3];
+		fillColour[0] = 60;
+		fillColour[1] = 200;
+		fillColour[2] = 255;
+		
+		lineColour = new int[3];
+		lineColour[0] = 220;
+		lineColour[1] = 20;
+		lineColour[2] = 60;
 	}
 	
 	public void reset() {
@@ -189,7 +201,7 @@ public class Rocket extends SpaceObject {
 				
 		// Filled polygon
 		sr.begin(ShapeType.Filled);
-		sr.setColor(60/255f, 200/255f, 255/255f, 0.5f);
+		sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
 		sr.triangle(vertices[0][0], vertices[0][1],
 				vertices[1][0], vertices[1][1],
 				vertices[2][0], vertices[2][1]);
@@ -206,7 +218,7 @@ public class Rocket extends SpaceObject {
 		}
 		Gdx.gl.glLineWidth(4);
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.MAROON);
+		sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 		sr.polygon(polygon);
 		sr.end();
 	}

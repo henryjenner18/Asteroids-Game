@@ -15,6 +15,9 @@ public class SpaceObject {
 	private float[] gradients; // Array for gradients of the edges
 	private float[] yIntercepts; // Array for y-intercepts of the edges
 	
+	protected int numFragments;
+	protected int[] fillColour, lineColour;
+	
 	public void linearEquation() {
 		gradients = new float[edges]; // Set to the number of edges in the polygon
 		yIntercepts = new float[edges];
@@ -76,5 +79,13 @@ public class SpaceObject {
 	
 	public float[] getYintercepts() {
 		return yIntercepts;
+	}
+	
+	public int[] getFillColour() {
+		return fillColour;
+	}
+	
+	public int[] getLineColour() {
+		return lineColour;
 	}
 }

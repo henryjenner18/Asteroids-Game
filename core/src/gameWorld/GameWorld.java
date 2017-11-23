@@ -9,7 +9,7 @@ import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Particle;
 import gameObjects.Rocket;
-import gameObjects.RocketFragment;
+import gameObjects.Fragment;
 import gameObjects.UFO;
 import main.AsteroidsMain;
 
@@ -19,12 +19,10 @@ public class GameWorld { // Updates game objects
 	private static ArrayList<Asteroid> asteroids;
 	private static ArrayList<Missile> missiles;
 	private static ArrayList<Particle> particles;
-	private static ArrayList<RocketFragment> rocketFragments;
+	private static ArrayList<Fragment> rocketFragments;
 	private static ArrayList<UFO> ufos;
 	private Random rand;
 	private int n;
-	
-	private UFO ufo;
 	
 	public GameWorld() {
 		n = 3;
@@ -33,7 +31,7 @@ public class GameWorld { // Updates game objects
 		asteroids = new ArrayList<Asteroid>();	
 		missiles = new ArrayList<Missile>();
 		particles = new ArrayList<Particle>();
-		rocketFragments = new ArrayList<RocketFragment>();
+		rocketFragments = new ArrayList<Fragment>();
 		ufos = new ArrayList<UFO>();
 	}
 
@@ -107,11 +105,15 @@ public class GameWorld { // Updates game objects
 		particles.add(particle);
 	}
 	
-	public void createRocketFragment(float x, float y) {
+	public void createRocketFragment(float x, float y, int[] fillColour, int[] lineColour) {
 		if(rocketFragments.size() < rocket.getNumFragments()) {
-			RocketFragment rocketFragment = new RocketFragment(x, y);
-			rocketFragments.add(rocketFragment);
+			createFragment(x, y, fillColour, lineColour);
 		}
+	}
+	
+	public void createFragment(float x, float y, int[] fillColour, int[] lineColour) {
+		Fragment fragment = new Fragment(x, y, fillColour, lineColour);
+		rocketFragments.add(fragment);
 	}
 	
 	public void createUFO(float x, float y) {
@@ -167,7 +169,7 @@ public class GameWorld { // Updates game objects
 		return particles.size();
 	}
 	
-	public RocketFragment getRocketFragment(int i) {
+	public Fragment getRocketFragment(int i) {
 		return rocketFragments.get(i);
 	}
 	

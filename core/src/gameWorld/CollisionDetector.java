@@ -1,11 +1,6 @@
 package gameWorld;
 
 import java.util.ArrayList;
-
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-
 import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Rocket;
@@ -23,7 +18,6 @@ public class CollisionDetector {
 	private static int numUFOs;
 	private static ArrayList<UFO> ufos;
 	
-	//private static ArrayList<float[]> intersections;
 	private ArrayList<Integer> removeAsteroids;
 	private ArrayList<Integer> removeUFOs;
 	
@@ -112,12 +106,10 @@ public class CollisionDetector {
 					float x = (rocketYintercepts[r] - asteroidYintercepts[s]) / (asteroidGradients[s] - rocketGradients[r]);
 					
 					if(coordRangeCheck(x, rocketXs, asteroidXs) == true) { // Collision has occurred
-						float y = (rocketGradients[r] * x) + rocketYintercepts[r];// Calculate y with x
-						float[] intersection = {x, y};
-						//intersections.add(intersection);
-						// Rocket needs to blow up
+						float y = (rocketGradients[r] * x) + rocketYintercepts[r]; // Calculate y with x
+
 						for(int i = 0; i < rocket.getNumFragments(); i++){
-							myWorld.createRocketFragment(x, y);
+							myWorld.createRocketFragment(x, y, rocket.getFillColour(), rocket.getLineColour());
 						}
 						removeAsteroids.add(a);
 						rocket.reset();
@@ -171,8 +163,6 @@ public class CollisionDetector {
 						}
 						
 						if(coordRangeCheck(y, missileYs, asteroidYs) == true) { // Collision has occurred		
-							float[] intersection = {x, y};
-							//intersections.add(intersection);
 							missiles.get(m).setTimeLeft(0);
 							removeAsteroids.add(a);
 						}
@@ -226,6 +216,9 @@ public class CollisionDetector {
 							//intersections.add(intersection);
 							missiles.get(m).setTimeLeft(0);
 							removeUFOs.add(u);
+							for(int i = 0; i < ufos.get(u).getNumFragments(); i++){
+								myWorld.createFragment(x, y, ufos.get(u).getFillColour(), ufos.get(u).getLineColour());
+							}
 						}
 						
 					} else if(infinityGradient == true) {
@@ -246,10 +239,11 @@ public class CollisionDetector {
 						}
 						
 						if(coordRangeCheck(y, missileYs, ufoYs) == true) { // Collision has occurred		
-							float[] intersection = {x, y};
-							//intersections.add(intersection);
 							missiles.get(m).setTimeLeft(0);
 							removeUFOs.add(u);
+							for(int i = 0; i < ufos.get(u).getNumFragments(); i++){
+								myWorld.createFragment(x, y, ufos.get(u).getFillColour(), ufos.get(u).getLineColour());
+							}
 						}
 					}
 				}

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import main.AsteroidsMain;
 
-public class RocketFragment extends SpaceObject {
+public class Fragment extends SpaceObject {
 	
 	private int v;
 	private float timeLeft;
@@ -21,7 +20,7 @@ public class RocketFragment extends SpaceObject {
 	private double avgRadius;
 	Random rand;
 	
-	public RocketFragment(float rockX, float rockY) {
+	public Fragment(float rockX, float rockY, int[] fillColour, int[] lineColour) {
 		rand = new Random();
 		position = new Vector2(rockX, rockY);
 		velocity = new Vector2();	
@@ -36,6 +35,12 @@ public class RocketFragment extends SpaceObject {
 		setTimeLeft((rand.nextFloat() * 1));
 		generateAngles();
 		generateRadii();
+		setColours(fillColour, lineColour);
+	}
+	
+	private void setColours(int[] fillColour, int[] lineColour) {
+		this.fillColour = fillColour;
+		this.lineColour = lineColour;
 	}
 	
 	public void update(float delta) {
@@ -107,7 +112,7 @@ public class RocketFragment extends SpaceObject {
 		// Filled Polygon
 		for(int i = 0; i < edges; i++) {
 			sr.begin(ShapeType.Filled);
-			sr.setColor(60/255f, 200/255f, 255/255f, 0.5f);
+			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
 			
 			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
 				sr.triangle(vertices[i][0], vertices[i][1],
@@ -130,7 +135,7 @@ public class RocketFragment extends SpaceObject {
 		}
 		Gdx.gl.glLineWidth(4);
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.MAROON);
+		sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 		sr.polygon(polygon);
 		sr.end();
 	}

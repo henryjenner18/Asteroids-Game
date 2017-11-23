@@ -3,7 +3,6 @@ package gameObjects;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +12,7 @@ import main.AsteroidsMain;
 public class UFO extends SpaceObject {
 	
 	private float width, height, dv;
+	
 	Random rand = new Random();
 	
 	public UFO(float x, float y) {
@@ -23,6 +23,8 @@ public class UFO extends SpaceObject {
 		vertices = new float[edges][2];
 		width = 100;
 		height = (float) (width * 0.5);
+		numFragments = rand.nextInt(2) + 2;
+		setColours();
 	}
 	
 	public void update(float delta) {
@@ -35,6 +37,18 @@ public class UFO extends SpaceObject {
 	private void move(float delta) {
 		velocity.setZero(); // Wipes the current velocity vector
 		velocity.x = delta * 20 * dv;
+	}
+	
+	private void setColours() {
+		fillColour = new int[3];
+		fillColour[0] = 147;
+		fillColour[1] = 112;
+		fillColour[2] = 219;
+		
+		lineColour = new int[3];
+		lineColour[0] = 0;
+		lineColour[1] = 250;
+		lineColour[2] = 150;
 	}
 	
 	private void wrap() { // Screen wrap
@@ -78,7 +92,7 @@ public class UFO extends SpaceObject {
 		// Filled Polygon
 		for(int i = 0; i < edges; i++) {
 			sr.begin(ShapeType.Filled);
-			sr.setColor(Color.RED);
+			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
 					
 			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
 				sr.triangle(vertices[i][0], vertices[i][1],
@@ -101,16 +115,19 @@ public class UFO extends SpaceObject {
 		}
 		Gdx.gl.glLineWidth(2);
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.LIGHT_GRAY);
+		sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 		sr.polygon(polygon);
 		sr.end();
 		
 		// Horizontal lines
-		Gdx.gl.glLineWidth(3);
+		Gdx.gl.glLineWidth(4);
 		sr.begin(ShapeType.Line);
-		sr.setColor(Color.LIME);
 		sr.line(vertices[0][0], vertices[0][1], vertices[5][0], vertices[5][1]);
 		sr.line(vertices[1][0], vertices[1][1], vertices[4][0], vertices[4][1]);
 		sr.end();
+	}
+	
+	public int getNumFragments() {
+		return numFragments;
 	}
 }

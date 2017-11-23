@@ -54,7 +54,7 @@ public class Asteroid extends SpaceObject {
 	}
 	
 	private void rotate(float delta) {
-		rotation += dr * delta * 2;
+		rotation += dr * delta;
 	}
 	
 	private void move(float delta) {

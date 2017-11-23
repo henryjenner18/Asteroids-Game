@@ -14,14 +14,13 @@ import gameObjects.Asteroid;
 import gameObjects.Missile;
 import gameObjects.Particle;
 import gameObjects.Rocket;
-import gameObjects.RocketFragment;
+import gameObjects.Fragment;
 import gameObjects.UFO;
 import main.AsteroidsMain;
 
 public class GameRenderer { // Renders game objects
 	
 	private GameWorld myWorld;
-	private CollisionDetector myManager;
 	private OrthographicCamera cam; // Single plane camera view
 	private ShapeRenderer shapeRenderer;
 	
@@ -36,14 +35,12 @@ public class GameRenderer { // Renders game objects
 	private static int numParticles;
 	private static ArrayList<Particle> particles;
 	private static int numRocketFragments;
-	private static ArrayList<RocketFragment> rocketFragments;
+	private static ArrayList<Fragment> rocketFragments;
 	private static int numUFOs;
 	private static ArrayList<UFO> ufos;
 	
 	public GameRenderer(GameWorld world, CollisionDetector manager) {
 		myWorld = world; // Initialise variable with GameWorld object received from GameScreen
-		myManager = manager;
-		
 		// Setting size of projection to resolution in Main and translating to move origin to bottom left
 		cam = new OrthographicCamera(AsteroidsMain.getWidth(), AsteroidsMain.getHeight());
 		cam.translate(AsteroidsMain.getWidth() / 2, AsteroidsMain.getHeight() / 2);
@@ -92,7 +89,7 @@ public class GameRenderer { // Renders game objects
 	
 	private void setRocketFragments() {
 		numRocketFragments = myWorld.getNumRocketFragments();
-		rocketFragments = new ArrayList<RocketFragment>(numRocketFragments);
+		rocketFragments = new ArrayList<Fragment>(numRocketFragments);
 		
 		for(int i = 0; i < numRocketFragments; i++) {
 			rocketFragments.add(myWorld.getRocketFragment(i));
