@@ -65,7 +65,6 @@ public class CollisionDetector {
 	}
 
 	private void checkCollisions() {
-		//intersections = new ArrayList<float[]>();
 		removeAsteroids = new ArrayList<Integer>();	
 		removeUFOs = new ArrayList<Integer>();
 		
@@ -189,6 +188,36 @@ public class CollisionDetector {
 					ufoXs[1] = ufoVertices[s+1][0];
 				}
 				
+				// UFOs - rocket
+				for(int r = 0; r < rocket.getEdges(); r++) { // For each edge of the rocket
+					float[] rocketXs = new float[2];
+					rocketXs[0] = rocketVertices[r][0];
+					
+					if(r == rocket.getEdges() - 1) {
+						rocketXs[1] = rocketVertices[0][0];
+					} else {
+						rocketXs[1] = rocketVertices[r+1][0];
+					}
+					
+					// Solve for x
+					float x = (rocketYintercepts[r] - ufoYintercepts[s]) / (ufoGradients[s] - rocketGradients[r]);
+					
+					if(coordRangeCheck(x, rocketXs, ufoXs) == true) { // Collision has occurred
+						float y = (rocketGradients[r] * x) + rocketYintercepts[r]; // Calculate y with x
+
+						for(int i = 0; i < rocket.getNumFragments(); i++){
+							myWorld.createRocketFragment(x, y, rocket.getFillColour(), rocket.getLineColour());
+						}
+						
+						for(int i = 0; i < ufos.get(u).getNumFragments(); i++){
+							myWorld.createFragment(x, y, ufos.get(u).getFillColour(), ufos.get(u).getLineColour());
+						}
+						
+						removeUFOs.add(u);
+						rocket.reset();
+					}
+				}
+				
 				// UFOs - missiles
 				for(int m = 0; m < numMissiles; m++) { // For each missile
 					float[][] missileVertices = missiles.get(m).getVertices(); // Attributes of current missile
@@ -205,15 +234,12 @@ public class CollisionDetector {
 					float x, y;
 					if(infinityGradient == false) {	
 						x = (missileYintercepts[0] - ufoYintercepts[s]) / (ufoGradients[s] - missileGradients[0]);
-						
 						float[] missileXs = new float[2];
 						missileXs[0] = missileVertices[0][0];
 						missileXs[1] = missileVertices[1][0];
 					
 						if(coordRangeCheck(x, missileXs, ufoXs) == true) { // Collision has occurred
 							y = (missileGradients[0] * x) + missileYintercepts[0];			
-							//float[] intersection = {x, y};
-							//intersections.add(intersection);
 							missiles.get(m).setTimeLeft(0);
 							removeUFOs.add(u);
 							for(int i = 0; i < ufos.get(u).getNumFragments(); i++){

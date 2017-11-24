@@ -64,6 +64,13 @@ public class GameWorld { // Updates game objects
 			}	
 			n++;
 		}
+		
+		if(ufos.size() == 0) {
+			Random rand = new Random();
+			float x = rand.nextInt(2200);
+			float y = rand.nextInt(1250);
+			createUFO(x, y);
+		}
 	}
 	
 	private void spawnAsteroid() {
