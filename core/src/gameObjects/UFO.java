@@ -12,7 +12,6 @@ public class UFO extends SpaceObject {
 	private World world;
 	private float height, dv, countdown;
 	private int terminalVel;
-	private double theta;
 	Random rand = new Random();
 	
 	public UFO(World world, float x, float y) {
@@ -54,7 +53,6 @@ public class UFO extends SpaceObject {
 		moveTowardsRocket(delta);
 		terminalVelCheck();
 		position.add(velocity);
-		//missile(delta);
 		wrap();
 		setVertices();
 		checkCountdown(delta);
@@ -147,7 +145,7 @@ public class UFO extends SpaceObject {
 			float j = rocket.y - position.y;
 			double r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
 			
-			theta = Math.atan(j / i) * (180 / Math.PI);
+			double theta = Math.atan(j / i) * (180 / Math.PI);
 			if(position.x > rocket.x) {
 				theta += 180;
 			}
@@ -159,8 +157,8 @@ public class UFO extends SpaceObject {
 			force.y = (float) (MathUtils.sin(radians) * mag);
 			
 			if(r <= 700) {
-				force.x = force.x * -1;
-				force.y = force.y * -1;
+				force.x = force.x * -2;
+				force.y = force.y * -2;
 			}
 			velocity.add(force);
 		}
