@@ -1,96 +1,67 @@
 package gameObjects;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import gameWorld.GameWorld;
-import main.AsteroidsMain;
+import gameManagers.World;
+import main.Main;
 
 public class Rocket extends SpaceObject {
 	
-	GameWorld myWorld;
-	
+	private World world;
 	private float[][] flame;
-	private static int height;
-	private int terminalVel;
-	private int numFragments;
+	private int[] flameFillColour, flameLineColour;
+	private int height, dh, terminalVel, maxMissiles;
+	private boolean thrusting, left, right, flameOn;
 	
-	public boolean thrusting;
-	public boolean left;
-	public boolean right;
-	private boolean fl;
-	Random rand;
-	
-	public Rocket(GameWorld world) {
-		rand = new Random();
-		myWorld = world;
+	public Rocket(World world) {
+		this.world = world;
 		position = new Vector2();
 		velocity = new Vector2();
+		vertices = new float[4][2];
+		flame = new float[3][2];
 		height = 90;
 		r = height / 2;
-		heading = 90;
-		vertices = new float[4][2]; // 4 vertices with a pair of x and y coordinates each
-		flame = new float[3][2];
-		fl = false;
 		edges = vertices.length;
+		dh = 4;
 		terminalVel = 10;
+		maxMissiles = 8;
+		flameOn = false;
 		setColours();
 		reset();
 	}
 	
-	private void setColours() {
-		fillColour = new int[3];
-		fillColour[0] = 60;
-		fillColour[1] = 200;
-		fillColour[2] = 255;
-		
-		lineColour = new int[3];
-		lineColour[0] = 220;
-		lineColour[1] = 20;
-		lineColour[2] = 60;
-	}
-	
-	public void reset() {
-		position.x = AsteroidsMain.getWidth() / 2;
-		position.y = AsteroidsMain.getHeight() / 2;
-		velocity.x = 0;
-		velocity.y = 0;
-		heading = 90;
-		numFragments = rand.nextInt(2) + 3;
-	}
-	
 	public void update(float delta) {
-		if(thrusting) { // If up key is being pressed
-			thrust(delta); // Run thrust method to apply force
-			fl = !fl;
-		} else {
-			fl = false;
-		}
+		checkThrust(delta);
+		asteroidsG(delta);
+		terminalVelCheck();
+		position.add(velocity);
 		
-		asteroidsG(delta); // Apply gravitational forces due to asteroids
-		terminalVelCheck(); // Adjust velocity if resultant is exceeding terminal velocity
-		position.add(velocity); // Add velocity to rocket's position
-		
-		int dh = 4; // Change of heading when key pressed
 		if(left) heading += dh;
 		if(right) heading -= dh;
 		
-		wrap();	// Check if rocket has hit edges
-		setVertices(); // Alter coordinates
+		wrap();
+		setVertices();
+	}
+	
+	private void checkThrust(float delta) {
+		if(thrusting) {
+			thrust(delta);
+			flameOn = !flameOn;
+
+		} else {
+			flameOn = false;
+		}
 	}
 	
 	private void asteroidsG(float delta) {
-		int numAsteroids = myWorld.getNumAsteroids();
+		int numAsteroids = world.getNumAsteroids();
 		ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>(numAsteroids);
 		
 		for(int a = 0; a < numAsteroids; a++) {
-			asteroids.add(myWorld.getAsteroid(a));
+			asteroids.add(world.getAsteroid(a));
 			Vector2 gForce = new Vector2();
 			Vector2 asteroid = new Vector2(asteroids.get(a).getX(), asteroids.get(a).getY());
 			
@@ -111,7 +82,7 @@ public class Rocket extends SpaceObject {
 			velocity.add(gForce);
 		}
 	}
-
+	
 	private void thrust(float delta) {
 		Vector2 force = new Vector2();
 		float radians = (float) Math.toRadians(heading);
@@ -130,15 +101,40 @@ public class Rocket extends SpaceObject {
 			velocity.y = (float) ((velocity.y / resultantVel) * terminalVel);
 		}
 	}
+
+	public void reset() {
+		position.x = Main.getWidth() / 2;
+		position.y = Main.getHeight() / 2;
+		velocity.x = 0;
+		velocity.y = 0;
+		heading = 90;
+	}
 	
-	private void wrap() { // Screen wrap
-		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();
+	private void setColours() {
+		fillColour = new int[3];
+		fillColour[0] = 51;
+		fillColour[1] = 204;
+		fillColour[2] = 255;
 		
-		if(position.x < -r) position.x = w + r;
-		if(position.x > w + r) position.x = -r;
-		if(position.y < -r) position.y = h + r;
-		if(position.y > h + r) position.y = -r;	
+		lineColour = new int[3];
+		lineColour[0] = 242;
+		lineColour[1] = 39;
+		lineColour[2] = 100;
+		
+		missileColour = new int[3];
+		missileColour[0] = 255;
+		missileColour[1] = 255;
+		missileColour[2] = 0;
+		
+		flameFillColour = new int[3];
+		flameFillColour[0] = 255;
+		flameFillColour[1] = 128;
+		flameFillColour[2] = 0;
+		
+		flameLineColour = new int[3];
+		flameLineColour[0] = 255;
+		flameLineColour[1] = 255;
+		flameLineColour[2] = 0;
 	}
 	
 	private void setVertices() {
@@ -155,13 +151,11 @@ public class Rocket extends SpaceObject {
 				
 		vertices[3][0] = position.x + MathUtils.cos(radians - 3 * MathUtils.PI / 4) * height / 3;
 		vertices[3][1] = position.y + MathUtils.sin(radians - 3 * MathUtils.PI / 4) * height / 3;
-		
-		setFire();
+		setFlame();
 	}
 	
-	private void setFire() {
-		float radians;
-		radians = (float) Math.toRadians(heading - 90);
+	private void setFlame() {
+		float radians = (float) Math.toRadians(heading - 90);
 		flame[0][0] = position.x + MathUtils.cos(radians) * height / 6;
 		flame[0][1] = position.y + MathUtils.sin(radians) * height / 6;
 		
@@ -174,60 +168,39 @@ public class Rocket extends SpaceObject {
 		flame[2][1] = position.y + MathUtils.sin(radians) * height / 2;
 	}
 	
-	public void render(ShapeRenderer sr) {
-		//Gdx.gl.glEnable(GL20.GL_BLEND); // Allows transparency	
-		// Draw flame
-		if(fl == true) {
-			// Filled flame
-			sr.begin(ShapeType.Filled);
-			sr.setColor(1, 128/255f, 0, 1);
-			sr.triangle(flame[0][0], flame[0][1],
-					flame[1][0], flame[1][1],
-					flame[2][0], flame[2][1]);
-			sr.end();
-			
-			// Flame outline
-			float[] polygon = new float[flame.length * 2]; // Shape renderer polygon function only takes in 1D array
-			for(int i = 0; i < flame.length; i ++) {
-				polygon[i*2] = flame[i][0];
-				polygon[(i*2)+1] = flame[i][1];
-			}
-			Gdx.gl.glLineWidth(4);
-			sr.begin(ShapeType.Line);
-			sr.setColor(1, 1, 0, 1);
-			sr.polygon(polygon);
-			sr.end();
-		}
-				
-		// Filled polygon
-		sr.begin(ShapeType.Filled);
-		sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-		sr.triangle(vertices[0][0], vertices[0][1],
-				vertices[1][0], vertices[1][1],
-				vertices[2][0], vertices[2][1]);
-		sr.triangle(vertices[0][0], vertices[0][1],
-				vertices[3][0], vertices[3][1],
-				vertices[2][0], vertices[2][1]);
-		sr.end();
-		
-		// Polygon outline
-		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
-		for(int i = 0; i < edges; i ++) {
-			polygon[i*2] = vertices[i][0];
-			polygon[(i*2)+1] = vertices[i][1];
-		}
-		Gdx.gl.glLineWidth(4);
-		sr.begin(ShapeType.Line);
-		sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-		sr.polygon(polygon);
-		sr.end();
+	public void setThrusting() {
+		thrusting = !thrusting;
 	}
 	
-	public static int getHeight() {
+	public void setLeft() {
+		left = !left;
+	}
+	
+	public void setRight() {
+		right = !right;
+	}
+	
+	public int[] getFlameFillColour() {
+		return flameFillColour;
+	}
+	
+	public int[] getFlameLineColour() {
+		return flameLineColour;
+	}
+	
+	public int getHeight() {
 		return height;
 	}
 	
-	public int getNumFragments() {
-		return numFragments;
+	public int getMaxMissiles() {
+		return maxMissiles;
+	}
+	
+	public float[][] getFlameVertices() {
+		return flame;
+	}
+	
+	public boolean getFlameOn() {
+		return flameOn;
 	}
 }

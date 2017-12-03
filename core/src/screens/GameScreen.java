@@ -4,60 +4,68 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import gameHelpers.InputHandler;
-import gameWorld.CollisionDetector;
-import gameWorld.DeletionManager;
-import gameWorld.GameRenderer;
-import gameWorld.GameWorld;
+import gameManagers.CollisionDetector;
+import gameManagers.Renderer;
+import gameManagers.SpaceManager;
+import gameManagers.World;
 
-public class GameScreen implements Screen { // Implementing methods of the screen interface
-	// GameScreen class does not do any rendering/updating itself
+public class GameScreen implements Screen {
 	
-	private GameWorld world;
+	private World world;
 	private CollisionDetector collisionDetector;
-	private DeletionManager deletionManager;
-	private GameRenderer renderer;
-	private static int score;
+	private SpaceManager spaceManager;
+	private Renderer renderer;
 	
 	public GameScreen() {
-		world = new GameWorld(); // Initialise world
-		collisionDetector = new CollisionDetector(world); // Initialise collision detector
-		deletionManager = new DeletionManager(world, collisionDetector); // Initialise deletion manager
-		renderer = new GameRenderer(world, collisionDetector); // Initialise renderer; can retrieve objects from world
-		
-		Gdx.input.setInputProcessor(new InputHandler(world.getRocket(), world));
-		
-		score = 0;
-	}
-	
-	public static void changeScore(int p) {
-		score += p;
+		world = new World();
+		collisionDetector = new CollisionDetector(world);
+		spaceManager = new SpaceManager(world, collisionDetector);
+		renderer = new Renderer(world);
+		Gdx.input.setInputProcessor(new InputHandler(world, world.getRocket(0)));
 	}
 
 	@Override
-	public void render(float delta) { // Renders the game each second; delta is the time since last called
-		world.update(delta); // Updates all game objects
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(float delta) {
+		world.update(delta);
 		collisionDetector.manage();
-		deletionManager.delete();
-		//System.out.println(score);
-		renderer.render(); // Render all game objects
+		spaceManager.manage();
+		renderer.render();
 	}
-	
-	@Override
-	public void show() {}
 
 	@Override
-	public void resize(int width, int height) {}
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public void pause() {}
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public void resume() {}
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public void hide() {}
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public void dispose() {}
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

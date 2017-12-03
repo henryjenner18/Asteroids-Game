@@ -1,22 +1,24 @@
 package gameObjects;
 
+import java.util.Random;
+
 import com.badlogic.gdx.math.Vector2;
+
+import main.Main;
 
 public class SpaceObject {
 	
-	protected Vector2 position;
-	protected Vector2 velocity;
-	protected int heading;
-	protected int r;
-	
+	protected Vector2 position, velocity;
 	protected float[][] vertices;
-	protected int edges; // Also identical to number of vertices; vertices[0].length
+	private float[] gradients, yIntercepts;
+	protected int[] fillColour, lineColour, missileColour;
+	double heading;
+	protected int edges, r, vMult;
+	Random rand = new Random();
 	
-	private float[] gradients; // Array for gradients of the edges
-	private float[] yIntercepts; // Array for y-intercepts of the edges
-	
-	protected int numFragments;
-	protected int[] fillColour, lineColour;
+	public SpaceObject() {
+		vMult = 900;
+	}
 	
 	public void linearEquation() {
 		gradients = new float[edges]; // Set to the number of edges in the polygon
@@ -49,7 +51,23 @@ public class SpaceObject {
 		}
 	}
 	
-	public float getX() { // Tidy up names - also found in rocket
+	protected void wrap() { // Screen wrap
+		float w = Main.getWidth();
+		float h = Main.getHeight();
+		
+		if(position.x < -r) position.x = w + r;
+		if(position.x > w + r) position.x = -r;
+		if(position.y < -r) position.y = h + r;
+		if(position.y > h + r) position.y = -r;	
+	}
+	
+	protected float randFloatInRange(double d, double max) {
+		float x = (float) (d + (rand.nextFloat() * (max - d)));
+		
+		return x;
+	}
+	
+	public float getX() {
 		return position.x;
 	}
 	
@@ -61,16 +79,12 @@ public class SpaceObject {
 		return velocity;
 	}
 	
-	public int getHeading() {
+	public double getHeading() {
 		return heading;
 	}
 	
 	public float[][] getVertices() {
 		return vertices;
-	}
-	
-	public int getEdges() {
-		return edges;
 	}
 	
 	public float[] getGradients() {
@@ -81,11 +95,23 @@ public class SpaceObject {
 		return yIntercepts;
 	}
 	
+	public int getEdges() {
+		return edges;
+	}
+	
 	public int[] getFillColour() {
 		return fillColour;
 	}
 	
 	public int[] getLineColour() {
 		return lineColour;
+	}
+	
+	public int[] getMissileColour() {
+		return missileColour;
+	}
+	
+	public int getVMult() {
+		return vMult;
 	}
 }

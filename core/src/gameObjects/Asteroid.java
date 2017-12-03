@@ -3,54 +3,68 @@ package gameObjects;
 import java.util.Arrays;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import main.AsteroidsMain;
+import gameManagers.World;
 
 public class Asteroid extends SpaceObject {
 	
+	private World world;
 	private float[] angles;
 	private float[] radii;
-	
-	private double avgRadius;
+	private float r;
 	private double area;
-	
-	private int v; // Alteration of velocity constant
-	private double dr; // Change in angle each frame
-	private float rotation; // Change from initial heading
+	private float rotation;
+	private int v, dr;
 	Random rand = new Random();
 	
-	public Asteroid(float x, float y, double r, int v, int hg) {
-		avgRadius = r;		
-		setProperties();
-		
+	public Asteroid(World world, float x, float y, float r, int v, int hg) {
+		this.world = world;
 		position = new Vector2(x, y);	
 		velocity = new Vector2();
+		this.r = r;				
+		this.v = v;
 		heading = hg;
 		rotation = 0;
-		dr = rand.nextInt(21) - 20;
-		
-		this.v = v;
-		
+		dr = rand.nextInt(21) - 20;	
+		setProperties();
 		angles = new float[edges];
 		radii = new float[edges];
-		vertices = new float[edges][2];
-
+		vertices = new float[edges][2];	
 		generateAngles();
 		generateRadii();
+		setColours();
 	}
 	
+	private void setColours() {
+		fillColour = new int[3];
+		fillColour[0] = 222;
+		fillColour[1] = 212;
+		fillColour[2] = 206;
+		
+		lineColour = new int[3];
+		lineColour[0] = 108;
+		lineColour[1] = 108;
+		lineColour[2] = 108;
+	}
+
 	public void update(float delta) {
 		move(delta);
 		position.add(velocity);
 		rotate(delta);
 		wrap();
 		setVertices();
+	}
+	
+	public void split() {
+		float newR = (float) Math.sqrt((area * 0.7) / (2 * Math.PI));
+		int newHg = rand.nextInt(361);
+		
+		for(int i = 0; i < 2; i++) {
+			world.spawnAsteroid(world, position.x, position.y, newR, v, newHg);
+			newHg += rand.nextInt(161) + 100;
+		}
 	}
 	
 	private void rotate(float delta) {
@@ -65,26 +79,16 @@ public class Asteroid extends SpaceObject {
 		velocity.y = MathUtils.sin(radians) * delta * v;
 	}
 	
-	private void wrap() { // Screen wrap
-		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();
-		
-		if(position.x < -r) position.x = w + r;
-		if(position.x > w + r) position.x = -r;
-		if(position.y < -r) position.y = h + r;
-		if(position.y > h + r) position.y = -r;	
-	}
-	
 	private void setProperties() {
-		area = Math.PI * Math.pow(avgRadius, 2);
+		area = Math.PI * Math.pow(r, 2);
 		
-		if(avgRadius < 30) { edges = 12; }
-		if(avgRadius >= 30) { edges = 14; }
-		if(avgRadius >= 40) { edges = 15; }
-		if(avgRadius >= 50) { edges = 17; }
-		if(avgRadius >= 60) { edges = 19; }
-		if(avgRadius >= 70) { edges = 20; }
-		if(avgRadius >= 90) { edges = 22; }
+		if(r < 30) { edges = 12; }
+		if(r >= 30) { edges = 14; }
+		if(r >= 40) { edges = 15; }
+		if(r >= 50) { edges = 17; }
+		if(r >= 60) { edges = 19; }
+		if(r >= 70) { edges = 20; }
+		if(r >= 90) { edges = 22; }
 	}
 
 	private void setVertices() {
@@ -103,8 +107,8 @@ public class Asteroid extends SpaceObject {
 
 	private void generateRadii() {
 		int diff = edges / 2;
-		double maxRadius = avgRadius + diff;
-		double minRadius = avgRadius - diff;
+		double maxRadius = r + diff;
+		double minRadius = r - diff;
 
 		for(int i = 0; i < edges; i++) {
 			double r = (rand.nextInt((int) ((maxRadius - minRadius) + 1)) + minRadius);
@@ -124,38 +128,6 @@ public class Asteroid extends SpaceObject {
 		Arrays.sort(angles); // Order the angles ascending
 	}
 	
-	public void render(ShapeRenderer sr) {
-		// Filled Polygon
-		for(int i = 0; i < edges; i++) {
-			sr.begin(ShapeType.Filled);
-			sr.setColor(Color.LIGHT_GRAY);
-			
-			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
-				sr.triangle(vertices[i][0], vertices[i][1],
-						vertices[0][0], vertices[0][1],
-						position.x, position.y);
-				sr.end();
-			} else {
-				sr.triangle(vertices[i][0], vertices[i][1],
-						vertices[i+1][0], vertices[i+1][1],
-						position.x, position.y);
-				sr.end();
-			}
-		}
-		
-		// Polygon outline
-		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
-		for(int i = 0; i < edges; i ++) {
-			polygon[i*2] = vertices[i][0];
-			polygon[(i*2)+1] = vertices[i][1];
-		}
-		Gdx.gl.glLineWidth(5);
-		sr.begin(ShapeType.Line);
-		sr.setColor(Color.DARK_GRAY);	
-		sr.polygon(polygon);
-		sr.end();
-	}
-	
 	public double getArea() {
 		return area;
 	}
@@ -165,6 +137,7 @@ public class Asteroid extends SpaceObject {
 	}
 	
 	public double getAvgRadius() {
-		return avgRadius;
+		return r;
 	}
 }
+

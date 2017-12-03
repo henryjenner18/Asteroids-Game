@@ -1,34 +1,30 @@
 package gameObjects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import main.AsteroidsMain;
-
 public class Missile extends SpaceObject {
 	
-	private int l;
-	private Vector2 rocketVel;
+	private int height, vMult;
+	private Vector2 objVelocity;
 	private float timeLeft;
+	private char creator;
 	
-	public Missile(float rockX, float rockY, Vector2 rockVel, int rockH) {
-		setTimeLeft(2);
-		
-		heading = rockH;
+	public Missile(char creator, float objX, float objY, double heading, int objHeight, Vector2 objVelocity, int vMult, int[] colour) {
+		setTimeLeft(2);	
+		this.creator = creator;
+		this.heading = heading;
 		float radians = (float) Math.toRadians(heading);
-		float x = rockX + MathUtils.cos(radians) * Rocket.getHeight() / 2;
-		float y = rockY + MathUtils.sin(radians) * Rocket.getHeight() / 2;
-		
+		float x = objX + MathUtils.cos(radians) * objHeight / 2;
+		float y = objY + MathUtils.sin(radians) * objHeight / 2;	
 		position = new Vector2(x, y);
 		velocity = new Vector2();
-		rocketVel = new Vector2(rockVel);
+		this.objVelocity = objVelocity;
 		vertices = new float[2][2];
+		this.vMult = vMult;
 		edges = vertices.length;
-		l = 30;
+		height = 30;
+		lineColour = colour;
 	}
 	
 	public void update(float delta) {
@@ -47,37 +43,19 @@ public class Missile extends SpaceObject {
 		
 		vertices[0][0] = position.x;
 		vertices[0][1] = position.y;
-		vertices[1][0] = position.x + MathUtils.cos(radians) * l;
-		vertices[1][1] = position.y + MathUtils.sin(radians) * l;
+		vertices[1][0] = position.x + MathUtils.cos(radians) * height;
+		vertices[1][1] = position.y + MathUtils.sin(radians) * height;
 	}
 	
 	private void move(float delta) {
 		velocity.setZero(); // Wipes the current velocity vector
 		float radians = (float) Math.toRadians(heading);
 		
-		velocity.x = MathUtils.cos(radians) * delta * 800;
-		velocity.y = MathUtils.sin(radians) * delta * 800;
+		velocity.x = MathUtils.cos(radians) * delta * vMult;
+		velocity.y = MathUtils.sin(radians) * delta * vMult;
+		//System.out.println(Math.sqrt(Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2)));
 		
-		velocity.add(rocketVel);
-	}
-	
-	private void wrap() {
-		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();
-		
-		if(position.x < 0) position.x = w;
-		if(position.x > w) position.x = 0;
-		if(position.y < 0) position.y = h;
-		if(position.y > h) position.y = 0;	
-	}
-	
-	public void render(ShapeRenderer sr) {
-		Gdx.gl.glLineWidth(5);
-		sr.begin(ShapeType.Line);
-		sr.setColor(Color.YELLOW);
-		sr.line(vertices[0][0], vertices[0][1],
-				vertices[1][0], vertices[1][1]);
-		sr.end();
+		velocity.add(objVelocity);
 	}
 	
 	public void setTimeLeft(int i) {
@@ -86,5 +64,9 @@ public class Missile extends SpaceObject {
 	
 	public float getTimeLeft() {
 		return timeLeft;
+	}
+	
+	public char getCreator() {
+		return creator;
 	}
 }

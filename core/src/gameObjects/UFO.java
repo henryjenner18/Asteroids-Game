@@ -2,132 +2,202 @@ package gameObjects;
 
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import main.AsteroidsMain;
+import gameManagers.World;
 
 public class UFO extends SpaceObject {
 	
-	private float width, height, dv;
-	
+	private World world;
+	private float height, dv, countdown;
+	private int terminalVel;
+	private double theta;
 	Random rand = new Random();
 	
-	public UFO(float x, float y) {
+	public UFO(World world, float x, float y) {
+		this.world = world;
 		position = new Vector2(x, y);
 		velocity = new Vector2();
-		dv = rand.nextInt(31) - 15;
 		edges = 8;
 		vertices = new float[edges][2];
-		width = 100;
-		height = (float) (width * 0.5);
-		numFragments = rand.nextInt(2) + 2;
+		r = 50;
+		height = r;
+		dv = 0;
+		while(dv == 0) {
+			dv = rand.nextInt(5) - 2;
+		}
+		terminalVel = 6;
+		resetCountdown();
 		setColours();
-	}
-	
-	public void update(float delta) {
-		move(delta);
-		position.add(velocity);
-		wrap();
-		setVertices();
-	}
-	
-	private void move(float delta) {
-		velocity.setZero(); // Wipes the current velocity vector
-		velocity.x = delta * 20 * dv;
 	}
 	
 	private void setColours() {
 		fillColour = new int[3];
-		fillColour[0] = 147;
-		fillColour[1] = 112;
-		fillColour[2] = 219;
+		fillColour[0] = 130;
+		fillColour[1] = 57;
+		fillColour[2] = 255;
 		
 		lineColour = new int[3];
-		lineColour[0] = 0;
-		lineColour[1] = 250;
-		lineColour[2] = 150;
+		lineColour[0] = 162;
+		lineColour[1] = 255;
+		lineColour[2] = 115;
+		
+		missileColour = new int[3];
+		missileColour[0] = 0;
+		missileColour[1] = 245;
+		missileColour[2] = 0;
+	}
+
+	public void update(float delta) {
+		countdown -= delta;
+		moveTowardsRocket(delta);
+		terminalVelCheck();
+		position.add(velocity);
+		//missile(delta);
+		wrap();
+		setVertices();
+		checkCountdown(delta);
 	}
 	
-	private void wrap() { // Screen wrap
-		float w = AsteroidsMain.getWidth();
-		float h = AsteroidsMain.getHeight();
-		r = (int) (width / 2);
+	private void missile(float delta) {
+		Rocket target = world.getRocket(0);	
+		Vector2 targetPos = new Vector2(target.getX(), target.getY());
+		Vector2 targetVel = target.getVelocity();	
 		
-		if(position.x < -r) position.x = w + r;
-		if(position.x > w + r) position.x = -r;
-		if(position.y < -r) position.y = h + r;
-		if(position.y > h + r) position.y = -r;	
+		Vector2 origPos = position;
+		Vector2 origVel = velocity;		
+		
+		double missileSpeed = delta * vMult;
+		
+		Vector2 relPos = new Vector2(targetPos.x - origPos.x, targetPos.y - origPos.y);
+		Vector2 relVel = new Vector2(targetVel.x - origVel.x, targetVel.y - origVel.y);
+		
+		double a = dotProduct(relVel, relVel) - Math.pow(missileSpeed, 2);
+		double b = dotProduct(relPos, relVel) * 2;
+		double c = dotProduct(relPos, relPos);
+		
+		double D = Math.pow(b, 2) - (4 * a * c);
+		//System.out.println(D);
+		
+		if(D >= 0) { // There are real root(s)
+			double t;
+			
+			if(D == 0) { // One repeated real root
+				t = -b / (2 * a);
+			} else { // Two real roots
+				double q = Math.sqrt(D); // Let q equal the square root of the discriminant
+				double r0 = (-b - q) / (2 * a);
+				double r1 = (-b + q) / (2 * a);
+				//System.out.println(r0 + ", " + r1);
+				
+				if(r0 > 0) { // We know r0 > r1, but need to find the smallest positive root
+					t = r0;
+				} else {
+					t = r1;
+				}
+			}
+			
+			double vx = (relPos.x / t) + relVel.x;
+			double vy = (relPos.y / t) + relVel.y;
+			
+			//double r = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+			//System.out.println(missileSpeed + ", " + r);
+			
+			double alpha = Math.toDegrees(Math.atan(vy / vx));
+			if(origPos.x > targetPos.x) {
+				alpha += 180;
+			}
+			//System.out.println(alpha);
+			shootMissile(alpha);
+		}
+	}
+	
+	private double dotProduct(Vector2 a, Vector2 b) {
+		double dotP = (a.x * b.x) + (a.y * b.y);
+		return dotP;
+	}
+	
+	
+	
+	private void shootMissile(double heading) {
+		world.spawnMissile('u', position.x, position.y, heading, 0, velocity, vMult, missileColour);
+	}
+	
+	private void checkCountdown(float delta) {
+		if(countdown <= 0) {
+			missile(delta);
+			resetCountdown();
+		}
+	}
+	
+	private void resetCountdown() {
+		countdown = 3;
+	}
+	
+	private void moveTowardsRocket(float delta) {
+		int numRockets = world.getNumRockets();
+		
+		for(int a = 0; a < numRockets; a++) {
+			Rocket rk = world.getRocket(a);
+			Vector2 force = new Vector2();
+			Vector2 rocket = new Vector2(rk.getX(), rk.getY());
+			
+			float i = rocket.x - position.x;
+			float j = rocket.y - position.y;
+			double r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
+			
+			theta = Math.atan(j / i) * (180 / Math.PI);
+			if(position.x > rocket.x) {
+				theta += 180;
+			}
+			
+			double mag = Math.pow(r, 2) * Math.pow(delta, 4);
+				
+			float radians = (float) Math.toRadians(theta);		
+			force.x = (float) (MathUtils.cos(radians) * mag);
+			force.y = (float) (MathUtils.sin(radians) * mag);
+			
+			if(r <= 700) {
+				force.x = force.x * -1;
+				force.y = force.y * -1;
+			}
+			velocity.add(force);
+		}
+	}
+	
+	private void terminalVelCheck() {
+		double resultantVel = Math.sqrt(Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2)); // Pythagoras' theorem
+		
+		if(resultantVel > terminalVel) {
+			velocity.x = (float) ((velocity.x / resultantVel) * terminalVel); // Reduce x and y components
+			velocity.y = (float) ((velocity.y / resultantVel) * terminalVel);
+		}
 	}
 	
 	private void setVertices() {
-		vertices[0][0] = position.x - width/2;
+		vertices[0][0] = position.x - r;
 		vertices[0][1] = position.y;
 		
-		vertices[5][0] = position.x + width/2;
+		vertices[5][0] = position.x + r;
 		vertices[5][1] = position.y;
 		
-		vertices[1][0] = position.x - width/5;
+		vertices[1][0] = position.x - 2*r/5;
 		vertices[1][1] = position.y + height/3;
 		
-		vertices[4][0] = position.x + width/5;
+		vertices[4][0] = position.x + 2*r/5;
 		vertices[4][1] = position.y + height/3;
 		
-		vertices[7][0] = position.x - width/5;
+		vertices[7][0] = position.x - 2*r/5;
 		vertices[7][1] = position.y - height/3;
 		
-		vertices[6][0] = position.x + width/5;
+		vertices[6][0] = position.x + 2*r/5;
 		vertices[6][1] = position.y - height/3;
 		
-		vertices[2][0] = position.x - width/8;
+		vertices[2][0] = position.x - r/4;
 		vertices[2][1] = (float) (position.y + 2.1*height/3);
 		
-		vertices[3][0] = position.x + width/8;
-		vertices[3][1] = (float) (position.y + 2.1*height/3);
-	}
-	
-	public void render(ShapeRenderer sr) {
-		// Filled Polygon
-		for(int i = 0; i < edges; i++) {
-			sr.begin(ShapeType.Filled);
-			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-					
-			if(i == edges - 1) { // Final vertex - need to make triangle with the first vertex
-				sr.triangle(vertices[i][0], vertices[i][1],
-						vertices[0][0], vertices[0][1],
-						position.x, position.y);
-				sr.end();
-			} else {
-				sr.triangle(vertices[i][0], vertices[i][1],
-						vertices[i+1][0], vertices[i+1][1],
-						position.x, position.y);
-				sr.end();
-			}
-		}
-				
-		// Polygon outline
-		float[] polygon = new float[edges * 2]; // Shape renderer polygon function only takes in 1D array
-		for(int i = 0; i < edges; i ++) {
-			polygon[i*2] = vertices[i][0];
-			polygon[(i*2)+1] = vertices[i][1];
-		}
-		Gdx.gl.glLineWidth(2);
-		sr.begin(ShapeType.Line);
-		sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-		sr.polygon(polygon);
-		sr.end();
-		
-		// Horizontal lines
-		Gdx.gl.glLineWidth(4);
-		sr.begin(ShapeType.Line);
-		sr.line(vertices[0][0], vertices[0][1], vertices[5][0], vertices[5][1]);
-		sr.line(vertices[1][0], vertices[1][1], vertices[4][0], vertices[4][1]);
-		sr.end();
-	}
-	
-	public int getNumFragments() {
-		return numFragments;
+		vertices[3][0] = position.x + r/4;
+		vertices[3][1] = (float) (position.y + 2.1*height/3);		
 	}
 }
