@@ -59,55 +59,59 @@ public class UFO extends SpaceObject {
 	}
 	
 	private void missile(float delta) {
-		Rocket target = world.getRocket(0);	
-		Vector2 targetPos = new Vector2(target.getX(), target.getY());
-		Vector2 targetVel = target.getVelocity();	
+		int numRockets = world.getNumRockets();
 		
-		Vector2 origPos = position;
-		Vector2 origVel = velocity;		
-		
-		double missileSpeed = delta * vMult;
-		
-		Vector2 relPos = new Vector2(targetPos.x - origPos.x, targetPos.y - origPos.y);
-		Vector2 relVel = new Vector2(targetVel.x - origVel.x, targetVel.y - origVel.y);
-		
-		double a = dotProduct(relVel, relVel) - Math.pow(missileSpeed, 2);
-		double b = dotProduct(relPos, relVel) * 2;
-		double c = dotProduct(relPos, relPos);
-		
-		double D = Math.pow(b, 2) - (4 * a * c);
-		//System.out.println(D);
-		
-		if(D >= 0) { // There are real root(s)
-			double t;
+		for(int i = 0; i < numRockets; i++) {
+			Rocket target = world.getRocket(0);	
+			Vector2 targetPos = new Vector2(target.getX(), target.getY());
+			Vector2 targetVel = target.getVelocity();	
 			
-			if(D == 0) { // One repeated real root
-				t = -b / (2 * a);
-			} else { // Two real roots
-				double q = Math.sqrt(D); // Let q equal the square root of the discriminant
-				double r0 = (-b - q) / (2 * a);
-				double r1 = (-b + q) / (2 * a);
-				//System.out.println(r0 + ", " + r1);
+			Vector2 origPos = position;
+			Vector2 origVel = velocity;		
+			
+			double missileSpeed = delta * vMult;
+			
+			Vector2 relPos = new Vector2(targetPos.x - origPos.x, targetPos.y - origPos.y);
+			Vector2 relVel = new Vector2(targetVel.x - origVel.x, targetVel.y - origVel.y);
+			
+			double a = dotProduct(relVel, relVel) - Math.pow(missileSpeed, 2);
+			double b = dotProduct(relPos, relVel) * 2;
+			double c = dotProduct(relPos, relPos);
+			
+			double D = Math.pow(b, 2) - (4 * a * c);
+			//System.out.println(D);
+			
+			if(D >= 0) { // There are real root(s)
+				double t;
 				
-				if(r0 > 0) { // We know r0 > r1, but need to find the smallest positive root
-					t = r0;
-				} else {
-					t = r1;
+				if(D == 0) { // One repeated real root
+					t = -b / (2 * a);
+				} else { // Two real roots
+					double q = Math.sqrt(D); // Let q equal the square root of the discriminant
+					double r0 = (-b - q) / (2 * a);
+					double r1 = (-b + q) / (2 * a);
+					//System.out.println(r0 + ", " + r1);
+					
+					if(r0 > 0) { // We know r0 > r1, but need to find the smallest positive root
+						t = r0;
+					} else {
+						t = r1;
+					}
 				}
+				
+				double vx = (relPos.x / t) + relVel.x;
+				double vy = (relPos.y / t) + relVel.y;
+				
+				//double r = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+				//System.out.println(missileSpeed + ", " + r);
+				
+				double alpha = Math.toDegrees(Math.atan(vy / vx));
+				if(origPos.x > targetPos.x) {
+					alpha += 180;
+				}
+	
+				shootMissile(alpha);
 			}
-			
-			double vx = (relPos.x / t) + relVel.x;
-			double vy = (relPos.y / t) + relVel.y;
-			
-			//double r = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
-			//System.out.println(missileSpeed + ", " + r);
-			
-			double alpha = Math.toDegrees(Math.atan(vy / vx));
-			if(origPos.x > targetPos.x) {
-				alpha += 180;
-			}
-			//System.out.println(alpha);
-			shootMissile(alpha);
 		}
 	}
 	

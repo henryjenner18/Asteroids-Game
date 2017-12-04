@@ -28,9 +28,12 @@ public class InputHandler implements InputProcessor {
 			rocket.setRight();
 			
 		} else if(keycode == Keys.SPACE) {
-			world.spawnMissile('r', rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getVMult(), rocket.getMissileColour());
+			if(rocket.getAlive() == true) {
+				world.spawnMissile('r', rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getVMult(), rocket.getMissileColour());	
+			}
+		} else {
+			world.spawnUFO();
 		}
-		
 		return true;
 	}
 

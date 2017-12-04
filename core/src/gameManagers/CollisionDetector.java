@@ -30,6 +30,7 @@ public class CollisionDetector {
 		checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');
 		checkForCollisions(world.getMissiles(), 'm', world.getUFOs(), 'u');
 		checkForCollisions(world.getMissiles(), 'm', world.getMissiles(), 'm');
+		//checkForCollisions(world.getUFOs(), 'u', world.getUFOs(), 'u');
 	}
 	
 	public void checkForCollisions(ArrayList<?> obj1, char obj1Type, ArrayList<?> obj2, char obj2Type) {

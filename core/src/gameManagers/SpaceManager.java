@@ -44,7 +44,10 @@ public class SpaceManager {
 			int[] fillColour = world.getRocket(i).getFillColour();
 			int[] lineColour = world.getRocket(i).getLineColour();
 			world.spawnFragments(x, y, fillColour, lineColour);
-			world.getRocket(i).reset();
+			//world.getRocket(i).reset();
+			world.getRocket(i).setAlive();
+			world.removeRocket(i);
+			world.startRocketRespawnTimer();
 		}
 	}
 	

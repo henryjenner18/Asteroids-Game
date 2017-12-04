@@ -1,9 +1,7 @@
 package screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
-import gameHelpers.InputHandler;
 import gameManagers.CollisionDetector;
 import gameManagers.Renderer;
 import gameManagers.SpaceManager;
@@ -21,7 +19,6 @@ public class GameScreen implements Screen {
 		collisionDetector = new CollisionDetector(world);
 		spaceManager = new SpaceManager(world, collisionDetector);
 		renderer = new Renderer(world);
-		Gdx.input.setInputProcessor(new InputHandler(world, world.getRocket(0)));
 	}
 
 	@Override

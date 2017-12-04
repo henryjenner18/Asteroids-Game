@@ -14,7 +14,7 @@ public class Rocket extends SpaceObject {
 	private float[][] flame;
 	private int[] flameFillColour, flameLineColour;
 	private int height, dh, terminalVel, maxMissiles;
-	private boolean thrusting, left, right, flameOn;
+	private boolean thrusting, left, right, flameOn, alive;
 	
 	public Rocket(World world) {
 		this.world = world;
@@ -29,6 +29,7 @@ public class Rocket extends SpaceObject {
 		terminalVel = 10;
 		maxMissiles = 8;
 		flameOn = false;
+		alive = true;
 		setColours();
 		reset();
 	}
@@ -180,6 +181,10 @@ public class Rocket extends SpaceObject {
 		right = !right;
 	}
 	
+	public void setAlive() {
+		alive = !alive;
+	}
+	
 	public int[] getFlameFillColour() {
 		return flameFillColour;
 	}
@@ -202,5 +207,9 @@ public class Rocket extends SpaceObject {
 	
 	public boolean getFlameOn() {
 		return flameOn;
+	}
+	
+	public boolean getAlive() {
+		return alive;
 	}
 }

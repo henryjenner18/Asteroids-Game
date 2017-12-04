@@ -3,8 +3,10 @@ package gameManagers;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
+import gameHelpers.InputHandler;
 import gameObjects.Asteroid;
 import gameObjects.Fragment;
 import gameObjects.Missile;
@@ -21,6 +23,8 @@ public class World {
 	private ArrayList<UFO> ufos;
 	private ArrayList<Fragment> fragments;
 	private ArrayList<Spark> sparks;
+	private float rocketRespawnTimer;
+	private boolean countdownRocketRespawn;
 	Random rand = new Random();
 	
 	public World() {
@@ -30,18 +34,31 @@ public class World {
 		ufos = new ArrayList<UFO>();
 		fragments = new ArrayList<Fragment>();
 		sparks = new ArrayList<Spark>();
+		rocketRespawnTimer = 2;
+		countdownRocketRespawn = false;
 		spawnRocket();
+	}
+	
+	private void checkTimer(float delta) {
+		if(rocketRespawnTimer > 0 && countdownRocketRespawn == true) {
+			rocketRespawnTimer -= delta;
+			
+		} else if(rocketRespawnTimer <= 0) {
+			spawnRocket();
+			rocketRespawnTimer = 2;
+			countdownRocketRespawn = false;
+		}
+	}
+	
+	public void startRocketRespawnTimer() {
+		countdownRocketRespawn = true;	
 	}
 
 	public void update(float delta) {
 		if(asteroids.size() == 0) {
-			for(int i = 0; i < 3; i++) {
-				//newAsteroid();
+			for(int i = 0; i < 5; i++) {
+				newAsteroid();
 			}
-		}
-		
-		if(ufos.size() == 0) {
-			spawnUFO();
 		}
 		
 		for(int i = 0; i < rockets.size(); i++) {
@@ -67,6 +84,8 @@ public class World {
 		for(int i = 0; i < sparks.size(); i++) {
 			sparks.get(i).update(delta);
 		}
+		
+		checkTimer(delta);
 	}
 	
 	public void spawnFragments(float x, float y, int[] fillColour, int[] lineColour) {
@@ -132,6 +151,7 @@ public class World {
 	private void spawnRocket() {
 		Rocket rocket = new Rocket(this);
 		rockets.add(rocket);
+		Gdx.input.setInputProcessor(new InputHandler(this, rocket));
 	}
 	
 	public void spawnSparks(float x, float y) {
@@ -139,6 +159,10 @@ public class World {
 			Spark spark = new Spark(x, y);
 			sparks.add(spark);
 		}
+	}
+	
+	public void removeRocket(int i) {
+		rockets.remove(i);
 	}
 	
 	public void removeAsteroid(int i) {
