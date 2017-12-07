@@ -18,22 +18,24 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if(keycode == Keys.UP) {
-			rocket.setThrusting();
-			
-		} else if(keycode == Keys.LEFT) {
-			rocket.setLeft();
-			
-		} else if(keycode == Keys.RIGHT) {
-			rocket.setRight();
-			
-		} else if(keycode == Keys.SPACE) {
-			if(rocket.getAlive() == true) {
-				world.spawnMissile('r', rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getVMult(), rocket.getMissileColour());	
+		if(world.getNumRockets() > 0) {
+			if(keycode == Keys.UP) {
+				rocket.setThrusting();
+				
+			} else if(keycode == Keys.LEFT) {
+				rocket.setLeft();
+				
+			} else if(keycode == Keys.RIGHT) {
+				rocket.setRight();
+				
+			} else if(keycode == Keys.SPACE) {
+				world.spawnMissile('r', rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getMissileV(), rocket.getMissileColour());	
+
+			} else {
+				world.spawnUFO();
 			}
-		} else {
-			world.spawnUFO();
 		}
+		
 		return true;
 	}
 

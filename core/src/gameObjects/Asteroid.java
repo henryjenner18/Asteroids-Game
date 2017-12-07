@@ -39,9 +39,9 @@ public class Asteroid extends SpaceObject {
 	
 	private void setColours() {
 		fillColour = new int[3];
-		fillColour[0] = 204;
-		fillColour[1] = 204;
-		fillColour[2] = 204;
+		fillColour[0] = 184;
+		fillColour[1] = 184;
+		fillColour[2] = 184;
 		
 		lineColour = new int[3];
 		lineColour[0] = 108;

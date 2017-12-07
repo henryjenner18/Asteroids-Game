@@ -69,7 +69,7 @@ public class UFO extends SpaceObject {
 			Vector2 origPos = position;
 			Vector2 origVel = velocity;		
 			
-			double missileSpeed = delta * vMult;
+			double missileSpeed = delta * missileV;
 			
 			Vector2 relPos = new Vector2(targetPos.x - origPos.x, targetPos.y - origPos.y);
 			Vector2 relVel = new Vector2(targetVel.x - origVel.x, targetVel.y - origVel.y);
@@ -123,7 +123,7 @@ public class UFO extends SpaceObject {
 	
 	
 	private void shootMissile(double heading) {
-		world.spawnMissile('u', position.x, position.y, heading, 0, velocity, vMult, missileColour);
+		world.spawnMissile('u', position.x, position.y, heading, 0, velocity, missileV, missileColour);
 	}
 	
 	private void checkCountdown(float delta) {

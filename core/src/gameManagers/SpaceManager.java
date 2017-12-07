@@ -36,7 +36,7 @@ public class SpaceManager {
 	}
 	
 	private void resolveRockets() {
-		ArrayList<Integer> objs = sortArrayList(colDet.getRocketsToReset());
+		ArrayList<Integer> objs = sortArrayList(colDet.getRocketsToRemove());
 		
 		for(int i = 0; i < objs.size(); i++) {
 			float x = world.getRocket(i).getX();
@@ -44,8 +44,6 @@ public class SpaceManager {
 			int[] fillColour = world.getRocket(i).getFillColour();
 			int[] lineColour = world.getRocket(i).getLineColour();
 			world.spawnFragments(x, y, fillColour, lineColour);
-			//world.getRocket(i).reset();
-			world.getRocket(i).setAlive();
 			world.removeRocket(i);
 			world.startRocketRespawnTimer();
 		}
@@ -57,7 +55,6 @@ public class SpaceManager {
 		for(int i = 0; i < objs.size(); i++) {
 			world.getAsteroid(objs.get(i)).split();
 			world.removeAsteroid(objs.get(i));
-			//System.out.println("removed a " + i);
 		}
 	}
 	
@@ -76,7 +73,6 @@ public class SpaceManager {
 		
 		for(int i = 0; i < objs.size(); i++) {
 			world.removeMissile(objs.get(i));
-			//System.out.println("removed m " + i);
 		}
 	}
 	
@@ -90,7 +86,6 @@ public class SpaceManager {
 			int[] lineColour = world.getUFO(i).getLineColour();
 			world.spawnFragments(x, y, fillColour, lineColour);
 			world.removeUFO(objs.get(i));
-			//System.out.println("removed u " + i);
 		}
 	}
 	
@@ -109,7 +104,6 @@ public class SpaceManager {
 		
 		for(int i = 0; i < objs.size(); i++) {
 			world.removeFragment(objs.get(i));
-			//System.out.println("removed f " + i);
 		}
 	}
 	

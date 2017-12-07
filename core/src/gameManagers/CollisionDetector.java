@@ -7,7 +7,7 @@ import gameObjects.SpaceObject;
 public class CollisionDetector {
 	
 	private World world;
-	private ArrayList<Integer> rocketsToReset;
+	private ArrayList<Integer> rocketsToRemove;
 	private ArrayList<Integer> asteroidsToRemove;
 	private ArrayList<Integer> missilesToRemove;
 	private ArrayList<Integer> UFOsToRemove;
@@ -19,7 +19,7 @@ public class CollisionDetector {
 
 	public void manage() {
 		f++;
-		rocketsToReset = new ArrayList<Integer>();
+		rocketsToRemove = new ArrayList<Integer>();
 		asteroidsToRemove = new ArrayList<Integer>();
 		missilesToRemove = new ArrayList<Integer>();
 		UFOsToRemove = new ArrayList<Integer>();
@@ -136,7 +136,7 @@ public class CollisionDetector {
 
 	private void addObjectToList(char z, int i) {
 		switch(z) {
-		case 'r': rocketsToReset.add(i);
+		case 'r': rocketsToRemove.add(i);
 			break;
 				
 		case 'a': asteroidsToRemove.add(i);
@@ -229,8 +229,8 @@ public class CollisionDetector {
 			return false;
 	}
 	
-	public ArrayList<Integer> getRocketsToReset() {
-		return rocketsToReset;
+	public ArrayList<Integer> getRocketsToRemove() {
+		return rocketsToRemove;
 	}
 	
 	public ArrayList<Integer> getAsteroidsToRemove() {

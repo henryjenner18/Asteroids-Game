@@ -3,10 +3,8 @@ package gameManagers;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
-import gameHelpers.InputHandler;
 import gameObjects.Asteroid;
 import gameObjects.Fragment;
 import gameObjects.Missile;
@@ -151,7 +149,6 @@ public class World {
 	private void spawnRocket() {
 		Rocket rocket = new Rocket(this);
 		rockets.add(rocket);
-		Gdx.input.setInputProcessor(new InputHandler(this, rocket));
 	}
 	
 	public void spawnSparks(float x, float y) {

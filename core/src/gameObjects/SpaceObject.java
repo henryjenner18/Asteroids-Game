@@ -10,14 +10,14 @@ public class SpaceObject {
 	
 	protected Vector2 position, velocity;
 	protected float[][] vertices;
-	private float[] gradients, yIntercepts;
+	protected float[] gradients, yIntercepts;
 	protected int[] fillColour, lineColour, missileColour;
-	double heading;
-	protected int edges, r, vMult;
+	protected double heading;
+	protected int edges, r, missileV;
 	Random rand = new Random();
 	
 	public SpaceObject() {
-		vMult = 900;
+		missileV = 900;
 	}
 	
 	public void linearEquation() {
@@ -111,7 +111,7 @@ public class SpaceObject {
 		return missileColour;
 	}
 	
-	public int getVMult() {
-		return vMult;
+	public int getMissileV() {
+		return missileV;
 	}
 }
