@@ -10,7 +10,7 @@ public class Missile extends SpaceObject {
 	private float timeLeft;
 	private char creator;
 	
-	public Missile(char creator, float objX, float objY, double heading, int objHeight, Vector2 objVelocity, int vMult, int[] colour) {
+	public Missile(char creator, float objX, float objY, double heading, int objHeight, Vector2 objVelocity, int vMult, int[] colour) { //
 		setTimeLeft(2);	
 		this.creator = creator;
 		this.heading = heading;
