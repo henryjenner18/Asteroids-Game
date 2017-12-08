@@ -20,12 +20,14 @@ public class Rocket extends SpaceObject {
 	
 	public Rocket(World world) {
 		this.world = world;
+		left = false;
+		right = false;
 		Gdx.input.setInputProcessor(new InputHandler(world, this));
 		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
 		velocity = new Vector2(0, 0);
 		vertices = new float[4][2];
 		flame = new float[3][2];
-		height = 90;
+		height = 90; 
 		heading = 90;
 		r = height / 2;
 		edges = vertices.length;
@@ -163,16 +165,16 @@ public class Rocket extends SpaceObject {
 		flame[2][1] = position.y + MathUtils.sin(radians) * height / 2;
 	}
 	
-	public void setThrusting() {
-		thrusting = !thrusting;
+	public void setThrusting(boolean b) {
+		thrusting = b;
 	}
 	
-	public void setLeft() {
-		left = !left;
+	public void setLeft(boolean b) {
+		left = b;
 	}
 	
-	public void setRight() {
-		right = !right;
+	public void setRight(boolean b) {
+		right = b;
 	}
 	
 	public int[] getFlameFillColour() {

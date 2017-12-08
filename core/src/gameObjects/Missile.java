@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Missile extends SpaceObject {
 	
 	private int height, vMult;
-	private Vector2 objVelocity;
+	final Vector2 objVelocity;
 	private float timeLeft;
 	private char creator;
 	
@@ -53,8 +53,7 @@ public class Missile extends SpaceObject {
 		
 		velocity.x = MathUtils.cos(radians) * delta * vMult;
 		velocity.y = MathUtils.sin(radians) * delta * vMult;
-		//System.out.println(Math.sqrt(Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2)));
-		
+		System.out.println(objVelocity);
 		velocity.add(objVelocity);
 	}
 	
