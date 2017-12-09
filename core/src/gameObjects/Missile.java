@@ -10,8 +10,8 @@ public class Missile extends SpaceObject {
 	private float timeLeft;
 	private char creator;
 	
-	public Missile(char creator, float objX, float objY, double heading, int objHeight, Vector2 objVelocity, int vMult, int[] colour) { //
-		setTimeLeft(2);	
+	public Missile(char creator, float objX, float objY, double heading, int objHeight, Vector2 objVelocity, int vMult, int[] colour) {
+		setTimeLeft(20);	
 		this.creator = creator;
 		this.heading = heading;
 		float radians = (float) Math.toRadians(heading);
@@ -19,7 +19,7 @@ public class Missile extends SpaceObject {
 		float y = objY + MathUtils.sin(radians) * objHeight / 2;	
 		position = new Vector2(x, y);
 		velocity = new Vector2();
-		this.objVelocity = objVelocity;
+		this.objVelocity = new Vector2(objVelocity.x, objVelocity.y);
 		vertices = new float[2][2];
 		this.vMult = vMult;
 		edges = vertices.length;
@@ -53,7 +53,6 @@ public class Missile extends SpaceObject {
 		
 		velocity.x = MathUtils.cos(radians) * delta * vMult;
 		velocity.y = MathUtils.sin(radians) * delta * vMult;
-		System.out.println(objVelocity);
 		velocity.add(objVelocity);
 	}
 	
