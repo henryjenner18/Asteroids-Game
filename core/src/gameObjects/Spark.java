@@ -5,13 +5,16 @@ import java.util.Random;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import gameManagers.World;
+
 public class Spark extends SpaceObject {
 	
 	private int v, colour;
 	private float timeLeft;
 	Random rand = new Random();
 	
-	public Spark(float x, float y) {
+	public Spark(World world, float x, float y) {
+		super(world);
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		setTimeLeft(rand.nextFloat() * rand.nextFloat());

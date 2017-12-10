@@ -4,19 +4,22 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+import gameManagers.World;
 import main.Main;
 
 public class SpaceObject {
 	
+	protected World world;
 	protected Vector2 position, velocity;
 	protected float[][] vertices;
 	protected float[] gradients, yIntercepts;
 	protected int[] fillColour, lineColour, missileColour;
 	protected double heading;
-	protected int edges, r, missileV;
+	protected int edges, r, missileV, score;
 	Random rand = new Random();
 	
-	public SpaceObject() {
+	public SpaceObject(World world) {
+		this.world = world;
 		missileV = 900;
 	}
 	
@@ -61,8 +64,8 @@ public class SpaceObject {
 		if(position.y > h + r) position.y = -r;	
 	}
 	
-	protected float randFloatInRange(double d, double max) {
-		float x = (float) (d + (rand.nextFloat() * (max - d)));
+	protected float randFloatInRange(double min, double max) {
+		float x = (float) (min + (rand.nextFloat() * (max - min)));
 		
 		return x;
 	}
@@ -113,5 +116,9 @@ public class SpaceObject {
 	
 	public int getMissileV() {
 		return missileV;
+	}
+	
+	public int getScore() {
+		return score;
 	}
 }

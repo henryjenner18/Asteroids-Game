@@ -12,14 +12,13 @@ import main.Main;
 
 public class Rocket extends SpaceObject {
 	
-	private World world;
 	private float[][] flame;
 	private int[] flameFillColour, flameLineColour;
 	private int height, dh, terminalVel, maxMissiles;
 	private boolean thrusting, left, right, flameOn;
 	
 	public Rocket(World world) {
-		this.world = world;
+		super(world);
 		left = false;
 		right = false;
 		Gdx.input.setInputProcessor(new InputHandler(world, this));
@@ -110,13 +109,13 @@ public class Rocket extends SpaceObject {
 	private void setColours() {
 		fillColour = new int[3];
 		fillColour[0] = 51;
-		fillColour[1] = 204;
+		fillColour[1] = 153;
 		fillColour[2] = 255;
 		
 		lineColour = new int[3];
-		lineColour[0] = 242;
-		lineColour[1] = 39;
-		lineColour[2] = 100;
+		lineColour[0] = 255;
+		lineColour[1] = 51;
+		lineColour[2] = 51;
 		
 		missileColour = new int[3];
 		missileColour[0] = 255;

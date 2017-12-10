@@ -9,13 +9,12 @@ import gameManagers.World;
 
 public class UFO extends SpaceObject {
 	
-	private World world;
 	private float height, dv, countdown;
 	private int terminalVel;
 	Random rand = new Random();
 	
 	public UFO(World world, float x, float y) {
-		this.world = world;
+		super(world);
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		edges = 8;
@@ -27,15 +26,16 @@ public class UFO extends SpaceObject {
 			dv = rand.nextInt(5) - 2;
 		}
 		terminalVel = 6;
+		score = 500;
 		resetCountdown();
 		setColours();
 	}
 	
 	private void setColours() {
 		fillColour = new int[3];
-		fillColour[0] = 130;
-		fillColour[1] = 57;
-		fillColour[2] = 255;
+		fillColour[0] = 153;
+		fillColour[1] = 0;
+		fillColour[2] = 204;
 		
 		lineColour = new int[3];
 		lineColour[0] = 162;
@@ -79,7 +79,6 @@ public class UFO extends SpaceObject {
 			double c = dotProduct(relPos, relPos);
 			
 			double D = Math.pow(b, 2) - (4 * a * c);
-			//System.out.println(D);
 			
 			if(D >= 0) { // There are real root(s)
 				double t;
@@ -101,9 +100,6 @@ public class UFO extends SpaceObject {
 				
 				double vx = (relPos.x / t) + relVel.x;
 				double vy = (relPos.y / t) + relVel.y;
-				
-				//double r = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
-				//System.out.println(missileSpeed + ", " + r);
 				
 				double alpha = Math.toDegrees(Math.atan(vy / vx));
 				if(origPos.x > targetPos.x) {

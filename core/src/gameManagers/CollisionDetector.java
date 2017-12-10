@@ -11,14 +11,12 @@ public class CollisionDetector {
 	private ArrayList<Integer> asteroidsToRemove;
 	private ArrayList<Integer> missilesToRemove;
 	private ArrayList<Integer> UFOsToRemove;
-	int f=0;
 	
 	public CollisionDetector(World world) {
 		this.world = world;
 	}
 
 	public void manage() {
-		f++;
 		rocketsToRemove = new ArrayList<Integer>();
 		asteroidsToRemove = new ArrayList<Integer>();
 		missilesToRemove = new ArrayList<Integer>();
@@ -124,6 +122,21 @@ public class CollisionDetector {
 			
 		} else if(obj1Type == 'u' && obj2Type == 'm') {
 			if(world.getMissile(obj2Index).getCreator() == 'u') {
+				return false;
+			} else {
+				return true;
+			}
+		
+		} else if(obj1Type == 'm' && obj2Type == 'r') {
+			
+			if(world.getMissile(obj1Index).getCreator() == 'r') {
+				return false;
+			} else {
+				return true;
+			}
+				
+		} else if(obj1Type == 'r' && obj2Type == 'm') {
+			if(world.getMissile(obj2Index).getCreator() == 'r') {
 				return false;
 			} else {
 				return true;

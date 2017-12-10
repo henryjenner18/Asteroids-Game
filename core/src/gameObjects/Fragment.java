@@ -6,6 +6,8 @@ import java.util.Random;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import gameManagers.World;
+
 public class Fragment extends SpaceObject {
 	
 	private int v;
@@ -15,7 +17,8 @@ public class Fragment extends SpaceObject {
 	private double avgRadius;
 	Random rand;
 	
-	public Fragment(float x, float y, int[] fillColour, int[] lineColour) {
+	public Fragment(World world, float x, float y, int[] fillColour, int[] lineColour) {
+		super(world);
 		rand = new Random();
 		position = new Vector2(x, y);
 		velocity = new Vector2();	

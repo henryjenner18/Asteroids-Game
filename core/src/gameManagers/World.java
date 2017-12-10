@@ -21,8 +21,10 @@ public class World {
 	private ArrayList<UFO> ufos;
 	private ArrayList<Fragment> fragments;
 	private ArrayList<Spark> sparks;
-	private float rocketRespawnTimer;
+	private float rocketRespawnTimer, ufoSpawnTimer;
 	private boolean countdownRocketRespawn;
+	
+	private int score, level, lives;
 	Random rand = new Random();
 	
 	public World() {
@@ -34,10 +36,13 @@ public class World {
 		sparks = new ArrayList<Spark>();
 		rocketRespawnTimer = 2;
 		countdownRocketRespawn = false;
+		ufoSpawnTimer = 20;
+		score = level = 0;
+		lives = 3;
 		spawnRocket();
 	}
 	
-	private void checkTimer(float delta) {
+	private void checkTimers(float delta) {
 		if(rocketRespawnTimer > 0 && countdownRocketRespawn == true) {
 			rocketRespawnTimer -= delta;
 			
@@ -46,6 +51,12 @@ public class World {
 			rocketRespawnTimer = 2;
 			countdownRocketRespawn = false;
 		}
+		
+		ufoSpawnTimer -= delta;
+		if(ufoSpawnTimer <= 0) {
+			spawnUFO();
+			ufoSpawnTimer = 20;
+		}
 	}
 	
 	public void startRocketRespawnTimer() {
@@ -53,9 +64,12 @@ public class World {
 	}
 
 	public void update(float delta) {
-		if(asteroids.size() == 0) {
-			for(int i = 0; i < 5; i++) {
-				//newAsteroid();
+		checkTimers(delta);
+		
+		if(asteroids.size() == 0 && ufos.size() == 0) {
+			level++;
+			for(int i = 0; i < level + 1; i++) {
+				newAsteroid();
 			}
 		}
 		
@@ -82,13 +96,11 @@ public class World {
 		for(int i = 0; i < sparks.size(); i++) {
 			sparks.get(i).update(delta);
 		}
-		
-		checkTimer(delta);
 	}
 	
 	public void spawnFragments(float x, float y, int[] fillColour, int[] lineColour) {
 		for(int i = 0; i < 3; i++) {
-			Fragment fragment = new Fragment(x, y, fillColour, lineColour);
+			Fragment fragment = new Fragment(this, x, y, fillColour, lineColour);
 			fragments.add(fragment);
 		}
 	}
@@ -122,14 +134,14 @@ public class World {
 	}
 	
 	public void spawnAsteroid(World world, float x, float y, float r, int v, int hg) {
-		if(r >= 15) {
+		if(r >= 20) {
 			Asteroid asteroid = new Asteroid(world , x, y, r, v, hg);
 			asteroids.add(asteroid);
 		}	
 	}
 	
 	public void spawnMissile(char creator, float x, float y, double heading, int height, Vector2 velocity, int vMult, int[] colour) {
-		Missile missile = new Missile(creator, x, y, heading, height, velocity, vMult, colour);
+		Missile missile = new Missile(this, creator, x, y, heading, height, velocity, vMult, colour);
 		missiles.add(missile);
 	}
 	
@@ -153,10 +165,28 @@ public class World {
 	
 	public void spawnSparks(float x, float y) {
 		for(int i = 0; i < rand.nextInt(11) + 25; i++) {
-			Spark spark = new Spark(x, y);
+			Spark spark = new Spark(this, x, y);
 			sparks.add(spark);
 		}
 	}
+	
+	public void addScore(int s) {
+		score += s;
+	}
+	
+	public void loseLife() {
+		if(lives > 0) {
+			lives--;
+		}
+	}
+	
+	/*public void addHealth(int h) {
+		health += h;
+		if(health <= 0) {
+			health = 0;
+			countdownRocketRespawn = false;
+		}
+	}*/
 	
 	public void removeRocket(int i) {
 		rockets.remove(i);
@@ -252,5 +282,17 @@ public class World {
 	
 	public int getNumSparks() {
 		return sparks.size();
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public int getLevel() {
+		return level;
+	}
+	
+	public int getLives() {
+		return lives;
 	}
 }

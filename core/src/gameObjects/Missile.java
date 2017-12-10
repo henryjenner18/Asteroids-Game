@@ -3,6 +3,8 @@ package gameObjects;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import gameManagers.World;
+
 public class Missile extends SpaceObject {
 	
 	private int height, vMult;
@@ -10,8 +12,9 @@ public class Missile extends SpaceObject {
 	private float timeLeft;
 	private char creator;
 	
-	public Missile(char creator, float objX, float objY, double heading, int objHeight, Vector2 objVelocity, int vMult, int[] colour) {
-		setTimeLeft(20);	
+	public Missile(World world, char creator, float objX, float objY, double heading, int objHeight, Vector2 objVelocity, int vMult, int[] colour) {
+		super(world);
+		setTimeLeft((float) 1.5);
 		this.creator = creator;
 		this.heading = heading;
 		float radians = (float) Math.toRadians(heading);
@@ -56,8 +59,8 @@ public class Missile extends SpaceObject {
 		velocity.add(objVelocity);
 	}
 	
-	public void setTimeLeft(int i) {
-		timeLeft = i;
+	public void setTimeLeft(float t) {
+		timeLeft = t;
 	}
 	
 	public float getTimeLeft() {

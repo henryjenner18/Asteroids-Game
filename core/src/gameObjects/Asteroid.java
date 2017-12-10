@@ -10,7 +10,6 @@ import gameManagers.World;
 
 public class Asteroid extends SpaceObject {
 	
-	private World world;
 	private float[] angles;
 	private float[] radii;
 	private float r;
@@ -20,7 +19,7 @@ public class Asteroid extends SpaceObject {
 	Random rand = new Random();
 	
 	public Asteroid(World world, float x, float y, float r, int v, int hg) {
-		this.world = world;
+		super(world);
 		position = new Vector2(x, y);	
 		velocity = new Vector2();
 		this.r = r;				
@@ -32,6 +31,7 @@ public class Asteroid extends SpaceObject {
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];	
+		score = (int) (120 - r);
 		generateAngles();
 		generateRadii();
 		setColours();
@@ -59,11 +59,19 @@ public class Asteroid extends SpaceObject {
 	
 	public void split() {
 		float newR = (float) Math.sqrt((area * 0.7) / (2 * Math.PI));
-		int newHg = rand.nextInt(361);
+		int newHg = rand.nextInt(181);
+		
+		double dx = newR * 1.3;
+		double dy = newR * 1.3;
 		
 		for(int i = 0; i < 2; i++) {
-			world.spawnAsteroid(world, position.x, position.y, newR, v, newHg);
-			newHg += rand.nextInt(161) + 100;
+			float radians = (float) Math.toRadians(newHg);
+			float x = (float) (MathUtils.cos(radians) * dx);
+			float y = (float) (MathUtils.cos(radians) * dy);
+
+			world.spawnAsteroid(world, position.x + x, position.y + y, newR, v, newHg);
+			
+			newHg += randFloatInRange(160, 200);
 		}
 	}
 	

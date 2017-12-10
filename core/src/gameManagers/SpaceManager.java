@@ -46,6 +46,7 @@ public class SpaceManager {
 			world.spawnFragments(x, y, fillColour, lineColour);
 			world.removeRocket(i);
 			world.startRocketRespawnTimer();
+			world.loseLife();
 		}
 	}
 	
@@ -53,6 +54,8 @@ public class SpaceManager {
 		ArrayList<Integer> objs = sortArrayList(colDet.getAsteroidsToRemove());
 				
 		for(int i = 0; i < objs.size(); i++) {
+			int score = world.getAsteroid(objs.get(i)).getScore();
+			world.addScore(score);
 			world.getAsteroid(objs.get(i)).split();
 			world.removeAsteroid(objs.get(i));
 		}
@@ -80,6 +83,9 @@ public class SpaceManager {
 		ArrayList<Integer> objs = sortArrayList(colDet.getUFOsToRemove());
 				
 		for(int i = 0; i < objs.size(); i++) {
+			int score = world.getUFO(objs.get(i)).getScore();
+			world.addScore(score);
+			
 			float x = world.getUFO(i).getX();
 			float y = world.getUFO(i).getY();
 			int[] fillColour = world.getUFO(i).getFillColour();
