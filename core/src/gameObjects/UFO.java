@@ -33,18 +33,18 @@ public class UFO extends SpaceObject {
 	
 	private void setColours() {
 		fillColour = new int[3];
-		fillColour[0] = 153;
-		fillColour[1] = 0;
-		fillColour[2] = 204;
+		fillColour[0] = 14;
+		fillColour[1] = 33;
+		fillColour[2] = 84;
 		
 		lineColour = new int[3];
-		lineColour[0] = 162;
+		lineColour[0] = 102;
 		lineColour[1] = 255;
-		lineColour[2] = 115;
+		lineColour[2] = 102;
 		
 		missileColour = new int[3];
-		missileColour[0] = 0;
-		missileColour[1] = 245;
+		missileColour[0] = 255;
+		missileColour[1] = 0;
 		missileColour[2] = 0;
 	}
 
