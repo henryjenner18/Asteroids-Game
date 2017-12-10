@@ -10,8 +10,8 @@ import gameManagers.World;
 
 public class Fragment extends SpaceObject {
 	
-	private int v;
-	private float timeLeft;
+	private int v, dr;
+	private float timeLeft, rotation;
 	private float[] angles;
 	private float[] radii;
 	private double avgRadius;
@@ -29,15 +29,12 @@ public class Fragment extends SpaceObject {
 		radii = new float[edges];
 		vertices = new float[edges][2];
 		avgRadius = 18;
+		rotation = 0;
+		dr = rand.nextInt(31) - 10;
 		setTimeLeft(randFloatInRange(1.5, 2));
 		generateAngles();
 		generateRadii();
 		setColours(fillColour, lineColour);
-	}
-	
-	private void setColours(int[] fillColour, int[] lineColour) {
-		this.fillColour = fillColour;
-		this.lineColour = lineColour;
 	}
 	
 	public void update(float delta) {
@@ -47,8 +44,9 @@ public class Fragment extends SpaceObject {
 		}
 		move(delta);
 		position.add(velocity);
+		rotate(delta);
 		wrap();
-		setVertices(); // Alter coordinates
+		setVertices();
 	}
 	
 	private void move(float delta) {
@@ -57,12 +55,21 @@ public class Fragment extends SpaceObject {
 		velocity.x = MathUtils.cos(radians) * delta * v;
 		velocity.y = MathUtils.sin(radians) * delta * v;
 	}
+	
+	private void rotate(float delta) {
+		rotation += dr * delta;
+	}
+	
+	private void setColours(int[] fillColour, int[] lineColour) {
+		this.fillColour = fillColour;
+		this.lineColour = lineColour;
+	}
 
 	private void setVertices() {
 		float radians;
 		
 		for(int i = 0; i < edges; i ++) {
-			radians = (float) Math.toRadians(angles[i]);
+			radians = (float) Math.toRadians(angles[i] + rotation);
 			
 			// x-coordinate
 			vertices[i][0] = position.x + MathUtils.cos(radians) * radii[i];
