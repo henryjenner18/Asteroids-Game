@@ -41,13 +41,6 @@ public class Renderer {
 
 	public void render() {
 		drawBackground();
-		
-		float fw = w / 3;
-		float fh = h / 3;
-		sr.begin(ShapeType.Line);
-		sr.rect(fw, fh, w - 2*fw, h - 2*fh);
-		sr.end();
-		
 		drawSparks();
 		drawFragments();
 		drawAsteroids();
@@ -75,18 +68,18 @@ public class Renderer {
 
 		font.draw(batch, level, w - width - 10, h - 10);
 		
-		// Lives
+		/*// Lives
 		int lvs = world.getLives();
 		String lives = "Lives: " + lvs;
 		
 		layout.setText(font, lives);
 		float height = layout.height;
-		font.draw(batch, lives, 10, height + 10);
+		font.draw(batch, lives, 10, height + 10);*/
 		batch.end();
 		
 		
 		// Health bar
-		/*int rectW = 250;
+		int rectW = 250;
 		int rectH = 40;
 		
 		float health = world.getHealth();
@@ -96,14 +89,15 @@ public class Renderer {
 		int R = (int) ((255 * (100 - health)) / 100);
 		sr.begin(ShapeType.Filled);
 		sr.setColor(R/255f, G/255f, 0/255f, 1);
-		sr.rect(10, (rectH / 2)+10, healthW, rectH);
+		sr.rect(10, 10, healthW, rectH);
 		sr.end();
 		
 		sr.begin(ShapeType.Line);
-		sr.setColor(1, 1, 1, 1);
-		sr.rect(10, (rectH / 2)+10, rectW, rectH);
+		sr.setColor(80/255f, 220/255f, 240/255f, 1);
+		sr.rect(10, 10, rectW, rectH);
 		sr.end();
-		Gdx.gl.glEnable(GL20.GL_BLEND);
+
+		/*Gdx.gl.glEnable(GL20.GL_BLEND);
 		sr.begin(ShapeType.Filled);
 		sr.setColor(1, 1, 1, 0.5f);
 		sr.triangle(200, 500, 215, 540, 230, 500);

@@ -24,7 +24,7 @@ public class World {
 	private float rocketSpawnTimer, ufoSpawnTimer;
 	private boolean countdownRocketRespawn;
 	
-	private int score, level, lives;
+	private int score, level, health, lives;
 	Random rand = new Random();
 	
 	public World() {
@@ -37,6 +37,7 @@ public class World {
 		rocketSpawnTimer = 2;
 		countdownRocketRespawn = false;
 		ufoSpawnTimer = 20;
+		health = 100;
 		score = level = 0;
 		lives = 3;
 		spawnRocket();
@@ -53,7 +54,7 @@ public class World {
 		ufoSpawnTimer -= delta;
 		if(ufoSpawnTimer <= 0) {
 			spawnUFO();
-			ufoSpawnTimer = 10;
+			ufoSpawnTimer = 20;
 		}
 	}
 	
@@ -157,10 +158,9 @@ public class World {
 	}
 	
 	private void spawnRocket() {
-		// Check if centre is clear
 		boolean clear = true;
 		
-		int w = Main.getWidth(); // replace with global
+		int w = Main.getWidth(); // replace with global variable
 		int h = Main.getHeight();
 		
 		float fw = w / 3;
@@ -211,6 +211,10 @@ public class World {
 		if(lives > 0) {
 			lives--;
 		}
+	}
+	
+	public void setHealth(int h) {
+		health = h;
 	}
 	
 	/*public void addHealth(int h) {
@@ -327,5 +331,9 @@ public class World {
 	
 	public int getLives() {
 		return lives;
+	}
+
+	public int getHealth() {
+		return health;
 	}
 }
