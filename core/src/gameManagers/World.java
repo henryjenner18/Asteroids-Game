@@ -21,7 +21,7 @@ public class World {
 	private ArrayList<UFO> ufos;
 	private ArrayList<Fragment> fragments;
 	private ArrayList<Spark> sparks;
-	private float rocketRespawnTimer, ufoSpawnTimer;
+	private float rocketSpawnTimer, ufoSpawnTimer;
 	private boolean countdownRocketRespawn;
 	
 	private int score, level, lives;
@@ -34,7 +34,7 @@ public class World {
 		ufos = new ArrayList<UFO>();
 		fragments = new ArrayList<Fragment>();
 		sparks = new ArrayList<Spark>();
-		rocketRespawnTimer = 2;
+		rocketSpawnTimer = 2;
 		countdownRocketRespawn = false;
 		ufoSpawnTimer = 20;
 		score = level = 0;
@@ -43,24 +43,22 @@ public class World {
 	}
 	
 	private void checkTimers(float delta) {
-		if(rocketRespawnTimer > 0 && countdownRocketRespawn == true) {
-			rocketRespawnTimer -= delta;
+		if(rocketSpawnTimer > 0 && countdownRocketRespawn == true) {
+			rocketSpawnTimer -= delta;
 			
-		} else if(rocketRespawnTimer <= 0) {
+		} else if(rocketSpawnTimer <= 0) {
 			spawnRocket();
-			rocketRespawnTimer = 2;
-			countdownRocketRespawn = false;
 		}
 		
 		ufoSpawnTimer -= delta;
 		if(ufoSpawnTimer <= 0) {
 			spawnUFO();
-			ufoSpawnTimer = 20;
+			ufoSpawnTimer = 10;
 		}
 	}
 	
 	public void startRocketRespawnTimer() {
-		countdownRocketRespawn = true;	
+		countdownRocketRespawn = true;
 	}
 
 	public void update(float delta) {
@@ -159,8 +157,43 @@ public class World {
 	}
 	
 	private void spawnRocket() {
-		Rocket rocket = new Rocket(this);
-		rockets.add(rocket);
+		// Check if centre is clear
+		boolean clear = true;
+		
+		int w = Main.getWidth(); // replace with global
+		int h = Main.getHeight();
+		
+		float fw = w / 3;
+		float fh = h / 3;
+		
+		for(int i = 0; i < asteroids.size(); i++) {
+			float x = asteroids.get(i).getX();
+			float y = asteroids.get(i).getY();
+					
+			if(x > fw && x < w - fw) {
+				if(y > fh && y < h - fh) {
+					clear = false;
+				}
+			}
+		}
+		
+		for(int u = 0; u < ufos.size(); u++) {
+			float x = ufos.get(u).getX();
+			float y = ufos.get(u).getY();
+					
+			if(x > fw && x < w - fw) {
+				if(y > fh && y < h - fh) {
+					clear = false;
+				}
+			}
+		}
+		
+		if(clear == true) {
+			Rocket rocket = new Rocket(this);
+			rockets.add(rocket);
+			rocketSpawnTimer = 2; // need a reset function
+			countdownRocketRespawn = false;
+		}
 	}
 	
 	public void spawnSparks(float x, float y) {

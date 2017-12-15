@@ -26,7 +26,7 @@ public class Rocket extends SpaceObject {
 		velocity = new Vector2(0, 0);
 		vertices = new float[4][2];
 		flame = new float[3][2];
-		height = 90; 
+		height = 80; 
 		heading = 90;
 		r = height / 2;
 		edges = vertices.length;

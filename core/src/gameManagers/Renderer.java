@@ -41,6 +41,13 @@ public class Renderer {
 
 	public void render() {
 		drawBackground();
+		
+		float fw = w / 3;
+		float fh = h / 3;
+		sr.begin(ShapeType.Line);
+		sr.rect(fw, fh, w - 2*fw, h - 2*fh);
+		sr.end();
+		
 		drawSparks();
 		drawFragments();
 		drawAsteroids();
