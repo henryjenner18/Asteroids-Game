@@ -77,6 +77,10 @@ public class SpaceObject {
 	public float getY() {
 		return position.y;
 	}
+	
+	public int getR() {
+		return r;
+	}
 		
 	public Vector2 getVelocity() {
 		return velocity;

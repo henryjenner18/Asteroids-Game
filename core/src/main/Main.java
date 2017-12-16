@@ -16,12 +16,12 @@ public class Main extends Game { // Main game class
 
 	@Override
 	public void create() {
-		//AssetLoader.load();
+		AssetLoader.load();
 		setScreen(new GameScreen()); // Set the current screen to the game screen	
 	}
 	
 	public void dispose() {
-		//AssetLoader.dispose();
+		AssetLoader.dispose();
 	}
 	
 	public static int getWidth() {

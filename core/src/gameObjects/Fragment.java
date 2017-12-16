@@ -14,10 +14,9 @@ public class Fragment extends SpaceObject {
 	private float timeLeft, rotation;
 	private float[] angles;
 	private float[] radii;
-	private double avgRadius;
 	Random rand;
 	
-	public Fragment(World world, float x, float y, int[] fillColour, int[] lineColour) {
+	public Fragment(World world, float x, float y, int r, int[] fillColour, int[] lineColour) {
 		super(world);
 		rand = new Random();
 		position = new Vector2(x, y);
@@ -28,7 +27,7 @@ public class Fragment extends SpaceObject {
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];
-		avgRadius = 18;
+		this.r = r;
 		rotation = 0;
 		dr = rand.nextInt(31) - 10;
 		setTimeLeft(randFloatInRange(1.5, 2));
@@ -81,13 +80,13 @@ public class Fragment extends SpaceObject {
 
 	private void generateRadii() {
 		int diff = edges;
-		double maxRadius = avgRadius + diff;
-		double minRadius = avgRadius - diff;
+		double maxRadius = r + diff;
+		double minRadius = r - diff;
 
 		for(int i = 0; i < edges; i++) {
-			double r = (rand.nextInt((int) ((maxRadius - minRadius) + 1)) + minRadius);
+			double rd = (rand.nextInt((int) ((maxRadius - minRadius) + 1)) + minRadius);
 			
-			radii[i] = (float) r;
+			radii[i] = (float) rd;
 		}
 	}
 	

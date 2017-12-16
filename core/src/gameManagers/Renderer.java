@@ -6,12 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
+import gameHelpers.AssetLoader;
 import main.Main;
 
 public class Renderer {
@@ -19,9 +21,7 @@ public class Renderer {
 	private World world;
 	private OrthographicCamera cam;
 	private ShapeRenderer sr;
-	private BitmapFont font;
 	private SpriteBatch batch;
-	
 	private int[][] stars;
 	private int w = Main.getWidth();
 	private int h = Main.getHeight();
@@ -33,10 +33,9 @@ public class Renderer {
 		cam.update();
 		sr = new ShapeRenderer();
 		sr.setProjectionMatrix(cam.combined);
-		generateStars(500);
-		font = new BitmapFont(Gdx.files.internal("text.fnt"));
 		batch = new SpriteBatch();
 		batch.setProjectionMatrix(cam.combined);
+		generateStars(500);
 	}
 
 	public void render() {
@@ -48,60 +47,112 @@ public class Renderer {
 		drawUFOs();
 		drawRockets();
 		drawGameStats();
+		drawGameStateInfo();
+	}
+	
+	private void drawGameStateInfo() {
+		batch.begin();
+		GlyphLayout layout = new GlyphLayout();
+		
+		if(world.isReady()) {
+			String str = "Press any key to play";
+			
+			layout.setText(AssetLoader.font, str);
+			float width = layout.width;
+			float height = layout.height;
+			
+			float x = (w / 2) - (width / 2);
+			float y = (h / 2) + (height / 2);
+			
+			AssetLoader.font.draw(batch, str, x, y);			
+		}
+		
+		if(world.isGameOver()) {
+			String str = "Game Over!";
+			
+			layout.setText(AssetLoader.font, str);
+			float width = layout.width;
+			float height = layout.height;
+			
+			float x = (w / 2) - (width / 2);
+			float y = (h / 2) + (height / 2);
+			
+			AssetLoader.font.draw(batch, str, x, y);			
+		}
+		
+		batch.end();
+	}
+
+	private void drawLives(float scoreWidth) {
+		int lives = world.getLives();
+		int height = 80;
+		int r = height / 2;
+		Vector2 position = new Vector2(scoreWidth + r, h - height / 2 - 10);
+		
+		for(int i = 0; i < lives; i++) {
+			float vertices[][] = new float[4][2];
+			
+			vertices[0][0] = position.x;
+			vertices[0][1] = position.y + (height / 2);
+			
+			vertices[1][0] = position.x + MathUtils.cos(5 * MathUtils.PI / 4) * height / 3;
+			vertices[1][1] = position.y + MathUtils.sin(5 * MathUtils.PI / 4) * height / 3;
+			
+			vertices[2][0] = position.x;
+			vertices[2][1] = position.y - (height / 6);
+					
+			vertices[3][0] = position.x + MathUtils.cos(- MathUtils.PI / 4) * height / 3;
+			vertices[3][1] = position.y + MathUtils.sin(- MathUtils.PI / 4) * height / 3;
+			
+			sr.begin(ShapeType.Filled);
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			sr.setColor(255/255f, 255/255f, 255/255f, 0.5f);
+			sr.triangle(vertices[0][0], vertices[0][1],
+					vertices[1][0], vertices[1][1],
+					vertices[2][0], vertices[2][1]);
+			sr.triangle(vertices[0][0], vertices[0][1],
+					vertices[3][0], vertices[3][1],
+					vertices[2][0], vertices[2][1]);
+			sr.end();
+			
+			float polygon[] = polygonArray(vertices, 4);
+			Gdx.gl.glLineWidth(3);
+			sr.begin(ShapeType.Line);
+			sr.setColor(1, 1, 1, 1);
+			sr.polygon(polygon);
+			sr.end();
+			
+			position.x += r + 10;
+		}
 	}
 	
 	private void drawGameStats() {
-		batch.begin();
-		
-		// Score
-		int sc = world.getScore();
-		String score = sc + "";
-		font.draw(batch, score, 10, h - 10);
-		
-		// Level
-		int lvl = world.getLevel();
-		String level = "Lvl " + lvl;
-		
-		GlyphLayout layout = new GlyphLayout();
-		layout.setText(font, level);
-		float width = layout.width;
-
-		font.draw(batch, level, w - width - 10, h - 10);
-		
-		/*// Lives
-		int lvs = world.getLives();
-		String lives = "Lives: " + lvs;
-		
-		layout.setText(font, lives);
-		float height = layout.height;
-		font.draw(batch, lives, 10, height + 10);*/
-		batch.end();
-		
-		
-		// Health bar
-		int rectW = 250;
-		int rectH = 40;
-		
-		float health = world.getHealth();
-		float healthW = (health / 100) * rectW;
-		
-		int G = (int) ((255 * health) / 100);
-		int R = (int) ((255 * (100 - health)) / 100);
-		sr.begin(ShapeType.Filled);
-		sr.setColor(R/255f, G/255f, 0/255f, 1);
-		sr.rect(10, 10, healthW, rectH);
-		sr.end();
-		
-		sr.begin(ShapeType.Line);
-		sr.setColor(80/255f, 220/255f, 240/255f, 1);
-		sr.rect(10, 10, rectW, rectH);
-		sr.end();
-
-		/*Gdx.gl.glEnable(GL20.GL_BLEND);
-		sr.begin(ShapeType.Filled);
-		sr.setColor(1, 1, 1, 0.5f);
-		sr.triangle(200, 500, 215, 540, 230, 500);
-		sr.end();*/
+		if(world.isRunning() || world.isGameOver()) {
+			batch.begin();
+			GlyphLayout layout = new GlyphLayout();
+			
+			// Score
+			int sc = world.getScore();
+			String score = sc + "";
+			
+			layout.setText(AssetLoader.font, score);
+			float scoreWidth = layout.width;
+			
+			AssetLoader.font.draw(batch, score, 10, h - 10);
+			
+			// Level
+			int lvl = world.getLevel();
+			String level = "Lvl " + lvl;
+			
+			layout.setText(AssetLoader.font, level);
+			float levelWidth = layout.width;
+	
+			AssetLoader.font.draw(batch, level, w - levelWidth - 10, h - 10);
+	
+			batch.end();
+			
+			drawLives(scoreWidth);
+		}
 	}
 	
 	private void drawSparks() {
@@ -155,7 +206,6 @@ public class Renderer {
 			lineColour = world.getRocket(i).getLineColour();
 			
 			// Filled polygon
-			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Filled);
 			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
 			sr.triangle(vertices[0][0], vertices[0][1],
@@ -167,6 +217,7 @@ public class Renderer {
 			sr.end();
 						
 			// Polygon outline
+			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 			sr.polygon(polygon);

@@ -24,10 +24,17 @@ public class World {
 	private float rocketSpawnTimer, ufoSpawnTimer;
 	private boolean countdownRocketRespawn;
 	
-	private int score, level, health, lives;
+	private int score, level, lives;
 	Random rand = new Random();
 	
+	private GameState currentState;
+	
 	public World() {
+		init();
+	}
+	
+	private void init() {
+		currentState = GameState.READY;
 		rockets = new ArrayList<Rocket>();
 		asteroids = new ArrayList<Asteroid>();
 		missiles = new ArrayList<Missile>();
@@ -37,32 +44,34 @@ public class World {
 		rocketSpawnTimer = 2;
 		countdownRocketRespawn = false;
 		ufoSpawnTimer = 20;
-		health = 100;
 		score = level = 0;
 		lives = 3;
 		spawnRocket();
 	}
 	
-	private void checkTimers(float delta) {
-		if(rocketSpawnTimer > 0 && countdownRocketRespawn == true) {
-			rocketSpawnTimer -= delta;
-			
-		} else if(rocketSpawnTimer <= 0) {
-			spawnRocket();
-		}
+	public enum GameState {
+		READY, RUNNING, GAMEOVER
+	}
+	
+	public void update(float delta) {
 		
-		ufoSpawnTimer -= delta;
-		if(ufoSpawnTimer <= 0) {
-			spawnUFO();
-			ufoSpawnTimer = 20;
+		switch (currentState) {
+		case READY:
+			updateReady(delta);
+			break;
+			
+		case RUNNING:
+			default:
+				updateRunning(delta);
+				break;
 		}
 	}
 	
-	public void startRocketRespawnTimer() {
-		countdownRocketRespawn = true;
-	}
+	private void updateReady(float delta) {
+        // Do nothing for now
+    }
 
-	public void update(float delta) {
+	public void updateRunning(float delta) {
 		checkTimers(delta);
 		
 		if(asteroids.size() == 0 && ufos.size() == 0) {
@@ -95,11 +104,35 @@ public class World {
 		for(int i = 0; i < sparks.size(); i++) {
 			sparks.get(i).update(delta);
 		}
+		
+		if(lives == 0) {
+			currentState = GameState.GAMEOVER;
+			countdownRocketRespawn = false;
+		}
 	}
 	
-	public void spawnFragments(float x, float y, int[] fillColour, int[] lineColour) {
+	private void checkTimers(float delta) {
+		if(rocketSpawnTimer > 0 && countdownRocketRespawn == true) {
+			rocketSpawnTimer -= delta;
+			
+		} else if(rocketSpawnTimer <= 0) {
+			spawnRocket();
+		}
+		
+		ufoSpawnTimer -= delta;
+		if(ufoSpawnTimer <= 0) {
+			spawnUFO();
+			ufoSpawnTimer = 20;
+		}
+	}
+	
+	public void startRocketRespawnTimer() {
+		countdownRocketRespawn = true;
+	}
+	
+	public void spawnFragments(float x, float y, int r, int[] fillColour, int[] lineColour) {
 		for(int i = 0; i < 3; i++) {
-			Fragment fragment = new Fragment(this, x, y, fillColour, lineColour);
+			Fragment fragment = new Fragment(this, x, y, r, fillColour, lineColour);
 			fragments.add(fragment);
 		}
 	}
@@ -213,18 +246,6 @@ public class World {
 		}
 	}
 	
-	public void setHealth(int h) {
-		health = h;
-	}
-	
-	/*public void addHealth(int h) {
-		health += h;
-		if(health <= 0) {
-			health = 0;
-			countdownRocketRespawn = false;
-		}
-	}*/
-	
 	public void removeRocket(int i) {
 		rockets.remove(i);
 	}
@@ -332,8 +353,24 @@ public class World {
 	public int getLives() {
 		return lives;
 	}
-
-	public int getHealth() {
-		return health;
+	
+	public boolean isReady() {
+		return currentState == GameState.READY;
+	}
+	
+	public boolean isRunning() {
+		return currentState == GameState.RUNNING;
+	}
+	
+	public boolean isGameOver() {
+		return currentState == GameState.GAMEOVER;
+	}
+	
+	public void start() {
+		currentState = GameState.RUNNING;
+	}
+	
+	public void restart() {
+		init();
 	}
 }

@@ -41,9 +41,10 @@ public class SpaceManager {
 		for(int i = 0; i < objs.size(); i++) {
 			float x = world.getRocket(i).getX();
 			float y = world.getRocket(i).getY();
+			int r = (world.getRocket(i).getR() + world.getRocket(i).getHeight()) / 7;
 			int[] fillColour = world.getRocket(i).getFillColour();
 			int[] lineColour = world.getRocket(i).getLineColour();
-			world.spawnFragments(x, y, fillColour, lineColour);
+			world.spawnFragments(x, y, r, fillColour, lineColour);
 			world.removeRocket(i);
 			world.startRocketRespawnTimer();
 			world.loseLife();
@@ -88,9 +89,10 @@ public class SpaceManager {
 			
 			float x = world.getUFO(i).getX();
 			float y = world.getUFO(i).getY();
+			int r = (world.getUFO(i).getR() * 2) / 5;
 			int[] fillColour = world.getUFO(i).getFillColour();
 			int[] lineColour = world.getUFO(i).getLineColour();
-			world.spawnFragments(x, y, fillColour, lineColour);
+			world.spawnFragments(x, y, r, fillColour, lineColour);
 			world.removeUFO(objs.get(i));
 		}
 	}
