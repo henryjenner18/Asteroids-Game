@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import gameObjects.Rocket;
+
 public class SpaceManager {
 	
 	private World world;
@@ -39,15 +41,17 @@ public class SpaceManager {
 		ArrayList<Integer> objs = sortArrayList(colDet.getRocketsToRemove());
 		
 		for(int i = 0; i < objs.size(); i++) {
-			float x = world.getRocket(i).getX();
-			float y = world.getRocket(i).getY();
-			int r = (world.getRocket(i).getR() + world.getRocket(i).getHeight()) / 7;
-			int[] fillColour = world.getRocket(i).getFillColour();
-			int[] lineColour = world.getRocket(i).getLineColour();
+			Rocket rocket = world.getRocket(i);
+			float x = rocket.getX();
+			float y = rocket.getY();
+			int r = (rocket.getR() + rocket.getHeight()) / 7;
+			int[] fillColour = rocket.getFillColour();
+			int[] lineColour = rocket.getLineColour();
 			world.spawnFragments(x, y, r, fillColour, lineColour);
-			world.removeRocket(i);
-			world.startRocketRespawnTimer();
+			//world.removeRocket(i);
+			//world.startRocketRespawnTimer();
 			world.loseLife();
+			rocket.init();
 		}
 	}
 	

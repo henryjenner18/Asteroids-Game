@@ -1,5 +1,6 @@
 package screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import gameManagers.CollisionDetector;
@@ -15,6 +16,7 @@ public class GameScreen implements Screen {
 	private Renderer renderer;
 	
 	public GameScreen() {
+		Gdx.input.setCursorCatched(true);
 		world = new World();
 		collisionDetector = new CollisionDetector(world);
 		spaceManager = new SpaceManager(world, collisionDetector);
@@ -23,8 +25,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override

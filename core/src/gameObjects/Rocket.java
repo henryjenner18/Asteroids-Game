@@ -2,11 +2,9 @@ package gameObjects;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import gameHelpers.InputHandler;
 import gameManagers.World;
 import main.Main;
 
@@ -18,23 +16,26 @@ public class Rocket extends SpaceObject {
 	private boolean thrusting, left, right, flameOn;
 	
 	public Rocket(World world) {
-		super(world);
-		left = false;
-		right = false;
-		Gdx.input.setInputProcessor(new InputHandler(world, this));
-		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
-		velocity = new Vector2(0, 0);
+		super(world);		
 		vertices = new float[4][2];
 		flame = new float[3][2];
-		height = 80; 
-		heading = 90;
+		height = 80; 		
 		r = height / 2;
 		edges = vertices.length;
 		dh = 4;
 		terminalVel = 10;
-		maxMissiles = 8;
-		flameOn = false;
+		maxMissiles = 8;		
 		setColours();
+		init();
+	}
+	
+	public void init() {
+		left = false;
+		right = false;
+		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
+		velocity = new Vector2(0, 0);
+		heading = 90;
+		flameOn = false;
 	}
 	
 	public void update(float delta) {

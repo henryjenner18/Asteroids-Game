@@ -45,42 +45,57 @@ public class Renderer {
 		drawAsteroids();
 		drawMissiles();
 		drawUFOs();
-		drawRockets();
+		
+		if(world.isGameOver() == false) {
+			drawRockets();
+		}
+		
 		drawGameStats();
 		drawGameStateInfo();
 	}
 	
 	private void drawGameStateInfo() {
 		batch.begin();
-		GlyphLayout layout = new GlyphLayout();
 		
 		if(world.isReady()) {
-			String str = "Press any key to play";
-			
-			layout.setText(AssetLoader.font, str);
-			float width = layout.width;
-			float height = layout.height;
-			
-			float x = (w / 2) - (width / 2);
-			float y = (h / 2) + (height / 2);
-			
-			AssetLoader.font.draw(batch, str, x, y);			
+			drawString("Press enter to play", 0);	
 		}
 		
 		if(world.isGameOver()) {
-			String str = "Game Over!";
+			drawString("Game Over!", 0);
+			drawString("Press enter to continue", -h / 3);
 			
-			layout.setText(AssetLoader.font, str);
-			float width = layout.width;
-			float height = layout.height;
+			world.compareHighScore();
 			
-			float x = (w / 2) - (width / 2);
-			float y = (h / 2) + (height / 2);
+			String s;
+			if(world.getScore() == AssetLoader.getHighScore()) {
+				s = "New high score!";
 			
-			AssetLoader.font.draw(batch, str, x, y);			
+			} else {
+				s = "High score: " + AssetLoader.getHighScore();
+			}
+			
+			drawString(s, h / 5);
+		}
+		
+		if(world.isPause()) {
+			drawString("II", h / 2 - 39);
 		}
 		
 		batch.end();
+	}
+	
+	private void drawString(String str, int yDiff) {
+		GlyphLayout layout = new GlyphLayout();
+		
+		layout.setText(AssetLoader.font, str);
+		float width = layout.width;
+		float height = layout.height;
+		
+		float x = (w / 2) - (width / 2);
+		float y = (h / 2) + (height / 2);
+		
+		AssetLoader.font.draw(batch, str, x, y + yDiff);	
 	}
 
 	private void drawLives(float scoreWidth) {
@@ -106,7 +121,7 @@ public class Renderer {
 			
 			sr.begin(ShapeType.Filled);
 			Gdx.gl.glEnable(GL20.GL_BLEND);
-			sr.setColor(255/255f, 255/255f, 255/255f, 0.5f);
+			sr.setColor(51/255f, 153/255f, 255/255f, 0.5f);
 			sr.triangle(vertices[0][0], vertices[0][1],
 					vertices[1][0], vertices[1][1],
 					vertices[2][0], vertices[2][1]);
@@ -118,7 +133,7 @@ public class Renderer {
 			float polygon[] = polygonArray(vertices, 4);
 			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Line);
-			sr.setColor(1, 1, 1, 1);
+			sr.setColor(255/255f, 51/255f, 51/255f, 0.5f);
 			sr.polygon(polygon);
 			sr.end();
 			
@@ -127,7 +142,7 @@ public class Renderer {
 	}
 	
 	private void drawGameStats() {
-		if(world.isRunning() || world.isGameOver()) {
+		if(world.isReady() == false) {
 			batch.begin();
 			GlyphLayout layout = new GlyphLayout();
 			

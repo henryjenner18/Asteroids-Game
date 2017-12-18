@@ -3,8 +3,11 @@ package gameManagers;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
+import gameHelpers.AssetLoader;
+import gameHelpers.InputHandler;
 import gameObjects.Asteroid;
 import gameObjects.Fragment;
 import gameObjects.Missile;
@@ -50,7 +53,7 @@ public class World {
 	}
 	
 	public enum GameState {
-		READY, RUNNING, GAMEOVER
+		READY, RUNNING, GAMEOVER, PAUSE
 	}
 	
 	public void update(float delta) {
@@ -64,6 +67,9 @@ public class World {
 			default:
 				updateRunning(delta);
 				break;
+		
+		case PAUSE:
+			break;
 		}
 	}
 	
@@ -81,8 +87,10 @@ public class World {
 			}
 		}
 		
-		for(int i = 0; i < rockets.size(); i++) {
-			rockets.get(i).update(delta);
+		if(isRunning()) {
+			for(int i = 0; i < rockets.size(); i++) {
+				rockets.get(i).update(delta);
+			}
 		}
 		
 		for(int i = 0; i < asteroids.size(); i++) {
@@ -104,11 +112,6 @@ public class World {
 		for(int i = 0; i < sparks.size(); i++) {
 			sparks.get(i).update(delta);
 		}
-		
-		if(lives == 0) {
-			currentState = GameState.GAMEOVER;
-			countdownRocketRespawn = false;
-		}
 	}
 	
 	private void checkTimers(float delta) {
@@ -119,10 +122,13 @@ public class World {
 			spawnRocket();
 		}
 		
-		ufoSpawnTimer -= delta;
-		if(ufoSpawnTimer <= 0) {
-			spawnUFO();
-			ufoSpawnTimer = 20;
+		if(isRunning()) {
+			ufoSpawnTimer -= delta;
+			
+			if(ufoSpawnTimer <= 0) {
+				spawnUFO();
+				ufoSpawnTimer = 20;
+			}
 		}
 	}
 	
@@ -226,6 +232,7 @@ public class World {
 			rockets.add(rocket);
 			rocketSpawnTimer = 2; // need a reset function
 			countdownRocketRespawn = false;
+			Gdx.input.setInputProcessor(new InputHandler(this, rocket));
 		}
 	}
 	
@@ -236,13 +243,23 @@ public class World {
 		}
 	}
 	
+	public void compareHighScore() {
+		if(score > AssetLoader.getHighScore()) {
+			AssetLoader.setHighScore(score);
+		}
+	}
+	
 	public void addScore(int s) {
 		score += s;
 	}
 	
 	public void loseLife() {
-		if(lives > 0) {
-			lives--;
+		lives--;
+		
+		if(lives <= 0) {
+			currentState = GameState.GAMEOVER;
+			countdownRocketRespawn = false;
+			removeRocket(0);
 		}
 	}
 	
@@ -366,11 +383,19 @@ public class World {
 		return currentState == GameState.GAMEOVER;
 	}
 	
+	public boolean isPause() {
+		return currentState == GameState.PAUSE;
+	}
+	
 	public void start() {
 		currentState = GameState.RUNNING;
 	}
 	
 	public void restart() {
 		init();
+	}
+	
+	public void pause() {
+		currentState = GameState.PAUSE;
 	}
 }

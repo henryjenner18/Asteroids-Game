@@ -19,28 +19,35 @@ public class InputHandler implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		if(world.isReady()) {
-			world.start();
+			if(keycode == Keys.ENTER) {
+				world.start();
+			}
 			
 		} else if(world.isGameOver()) {
-			world.restart();
+			if(keycode == Keys.ENTER) {
+				world.restart();
+			}
 			
-		} else {	
-			if(world.getNumRockets() > 0) {
-				if(keycode == Keys.UP) {
-					rocket.setThrusting(true);
+		} else if(world.isRunning()) {
+			if(keycode == Keys.UP) {
+				rocket.setThrusting(true);
 					
-				} else if(keycode == Keys.LEFT) {
-					rocket.setLeft(true);
+			} else if(keycode == Keys.LEFT) {
+				rocket.setLeft(true);
 					
-				} else if(keycode == Keys.RIGHT) {
-					rocket.setRight(true);
+			} else if(keycode == Keys.RIGHT) {
+				rocket.setRight(true);
 					
-				} else if(keycode == Keys.SPACE) {
-					world.spawnMissile('r', rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getMissileV(), rocket.getMissileColour());	
+			} else if(keycode == Keys.SPACE) {
+				world.spawnMissile('r', rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getMissileV(), rocket.getMissileColour());	
 					
-				} else {
-					world.spawnUFO();
-				}
+			} else if(keycode == Keys.DOWN) {
+				world.pause();
+			}
+			
+		} else if(world.isPause()) {
+			if(keycode == Keys.DOWN) {
+				world.start();
 			}
 		}
 		
@@ -49,14 +56,16 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean keyUp(int keycode) {
-		if(keycode == Keys.UP) {
-			rocket.setThrusting(false);
-			
-		} else if(keycode == Keys.LEFT) {
-			rocket.setLeft(false);
-			
-		} else if(keycode == Keys.RIGHT) {
-			rocket.setRight(false);
+		if(world.isRunning()) {
+			if(keycode == Keys.UP) {
+				rocket.setThrusting(false);
+				
+			} else if(keycode == Keys.LEFT) {
+				rocket.setLeft(false);
+				
+			} else if(keycode == Keys.RIGHT) {
+				rocket.setRight(false);
+			}		
 		}
 		
 		return true;
