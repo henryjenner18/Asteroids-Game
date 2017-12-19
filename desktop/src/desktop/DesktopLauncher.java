@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.title = "Asteroids by Henry";
 		config.width = Main.getWidth();
 		config.height = Main.getHeight();
-		config.fullscreen = true;
+		config.fullscreen = false;
 		config.resizable = false;
 		new LwjglApplication(new Main(), config);
 	}

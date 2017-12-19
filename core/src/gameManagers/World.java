@@ -53,7 +53,7 @@ public class World {
 	}
 	
 	public enum GameState {
-		READY, RUNNING, GAMEOVER, PAUSE
+		READY, RUNNING, GAMEOVER, PAUSE, RESPAWN
 	}
 	
 	public void update(float delta) {
@@ -90,6 +90,12 @@ public class World {
 		if(isRunning()) {
 			for(int i = 0; i < rockets.size(); i++) {
 				rockets.get(i).update(delta);
+			}
+		}
+		
+		if(isRespawn()) {
+			for(int i = 0; i < rockets.size(); i++) {
+				rockets.get(i).init();
 			}
 		}
 		
@@ -197,43 +203,11 @@ public class World {
 	}
 	
 	private void spawnRocket() {
-		boolean clear = true;
-		
-		int w = Main.getWidth(); // replace with global variable
-		int h = Main.getHeight();
-		
-		float fw = w / 3;
-		float fh = h / 3;
-		
-		for(int i = 0; i < asteroids.size(); i++) {
-			float x = asteroids.get(i).getX();
-			float y = asteroids.get(i).getY();
-					
-			if(x > fw && x < w - fw) {
-				if(y > fh && y < h - fh) {
-					clear = false;
-				}
-			}
-		}
-		
-		for(int u = 0; u < ufos.size(); u++) {
-			float x = ufos.get(u).getX();
-			float y = ufos.get(u).getY();
-					
-			if(x > fw && x < w - fw) {
-				if(y > fh && y < h - fh) {
-					clear = false;
-				}
-			}
-		}
-		
-		if(clear == true) {
-			Rocket rocket = new Rocket(this);
-			rockets.add(rocket);
-			rocketSpawnTimer = 2; // need a reset function
-			countdownRocketRespawn = false;
-			Gdx.input.setInputProcessor(new InputHandler(this, rocket));
-		}
+		Rocket rocket = new Rocket(this);
+		rockets.add(rocket);
+		//rocketSpawnTimer = 2; // need a reset function
+		//countdownRocketRespawn = false;
+		Gdx.input.setInputProcessor(new InputHandler(this, rocket));
 	}
 	
 	public void spawnSparks(float x, float y) {
@@ -387,6 +361,10 @@ public class World {
 		return currentState == GameState.PAUSE;
 	}
 	
+	public boolean isRespawn() {
+		return currentState == GameState.RESPAWN;
+	}
+	
 	public void start() {
 		currentState = GameState.RUNNING;
 	}
@@ -397,5 +375,9 @@ public class World {
 	
 	public void pause() {
 		currentState = GameState.PAUSE;
+	}
+	
+	public void respawn() {
+		currentState = GameState.RESPAWN;
 	}
 }

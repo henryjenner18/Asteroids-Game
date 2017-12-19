@@ -30,12 +30,45 @@ public class Rocket extends SpaceObject {
 	}
 	
 	public void init() {
-		left = false;
-		right = false;
-		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
-		velocity = new Vector2(0, 0);
-		heading = 90;
-		flameOn = false;
+		int w = Main.getWidth(); // replace with global variable
+		int h = Main.getHeight();
+		
+		float fw = w / 3;
+		float fh = h / 3;
+		
+		boolean clear = true;
+		
+		for(int i = 0; i < world.getNumAsteroids(); i++) {
+			float x = world.getAsteroid(i).getX();
+			float y = world.getAsteroid(i).getY();
+					
+			if(x > fw && x < w - fw) {
+				if(y > fh && y < h - fh) {
+					clear = false;
+				}
+			}
+		}
+		
+		for(int u = 0; u < world.getNumUFOs(); u++) {
+			float x = world.getUFO(u).getX();
+			float y = world.getUFO(u).getY();
+					
+			if(x > fw && x < w - fw) {
+				if(y > fh && y < h - fh) {
+					clear = false;
+				}
+			}
+		}
+		
+		if(clear == true) {
+			left = false;
+			right = false;
+			position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
+			velocity = new Vector2(0, 0);
+			heading = 90;
+			flameOn = false;
+			world.start();
+		}		
 	}
 	
 	public void update(float delta) {

@@ -51,7 +51,7 @@ public class SpaceManager {
 			//world.removeRocket(i);
 			//world.startRocketRespawnTimer();
 			world.loseLife();
-			rocket.init();
+			world.respawn();
 		}
 	}
 	
