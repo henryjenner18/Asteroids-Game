@@ -24,6 +24,7 @@ public class SpaceManager {
 		resolveUFOs();
 		resolveFragments();
 		resolveSparks();
+		resolvePowerUps();
 	}
 	
 	private ArrayList<Integer> sortArrayList(ArrayList<Integer> objs) {
@@ -44,14 +45,12 @@ public class SpaceManager {
 			Rocket rocket = world.getRocket(i);
 			float x = rocket.getX();
 			float y = rocket.getY();
-			int r = (rocket.getR() + rocket.getHeight()) / 7;
+			float r = (float) (rocket.getR() / 2.2);
 			int[] fillColour = rocket.getFillColour();
 			int[] lineColour = rocket.getLineColour();
-			world.spawnFragments(x, y, r, fillColour, lineColour);
-			//world.removeRocket(i);
-			//world.startRocketRespawnTimer();
+			world.objSpawner.fragments(x, y, r, fillColour, lineColour);
+			world.removeRocket(i);
 			world.loseLife();
-			world.respawn();
 		}
 	}
 	
@@ -93,10 +92,12 @@ public class SpaceManager {
 			
 			float x = world.getUFO(i).getX();
 			float y = world.getUFO(i).getY();
-			int r = (world.getUFO(i).getR() * 2) / 5;
+			float r = (world.getUFO(i).getR() * 2) / 5;
 			int[] fillColour = world.getUFO(i).getFillColour();
 			int[] lineColour = world.getUFO(i).getLineColour();
-			world.spawnFragments(x, y, r, fillColour, lineColour);
+			
+			world.checkForPowerUp(x, y);
+			world.objSpawner.fragments(x, y, r, fillColour, lineColour);
 			world.removeUFO(objs.get(i));
 		}
 	}
@@ -134,6 +135,24 @@ public class SpaceManager {
 		
 		for(int i = 0; i < objs.size(); i++) {
 			world.removeSpark(objs.get(i));
+		}
+	}
+	
+	private void resolvePowerUps() {
+		ArrayList<Integer> objs = new ArrayList<Integer>();
+		
+		int numPowerUps = world.getNumPowerUps();
+		
+		for(int i = 0; i < numPowerUps; i++) {
+			if(world.getPowerUp(i).getTimeLeft() == 0) {
+				objs.add(i);
+			}
+		}
+		
+		objs = sortArrayList(objs);
+		
+		for(int i = 0; i < objs.size(); i++) {
+			world.removePowerUp(objs.get(i));
 		}
 	}
 }

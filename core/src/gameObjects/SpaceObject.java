@@ -15,7 +15,8 @@ public class SpaceObject {
 	protected float[] gradients, yIntercepts;
 	protected int[] fillColour, lineColour, missileColour;
 	protected double heading;
-	protected int edges, r, missileV, score;
+	protected int edges, missileV, score;
+	protected float r;
 	Random rand = new Random();
 	
 	public SpaceObject(World world) {
@@ -58,7 +59,7 @@ public class SpaceObject {
 		float w = Main.getWidth();
 		float h = Main.getHeight();
 		
-		if(position.x < -r) position.x = w + r;
+		if(position.x < -r)	position.x = w + r;
 		if(position.x > w + r) position.x = -r;
 		if(position.y < -r) position.y = h + r;
 		if(position.y > h + r) position.y = -r;	
@@ -78,7 +79,7 @@ public class SpaceObject {
 		return position.y;
 	}
 	
-	public int getR() {
+	public float getR() {
 		return r;
 	}
 		

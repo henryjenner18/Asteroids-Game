@@ -10,25 +10,29 @@ public class CollisionDetector {
 	private ArrayList<Integer> rocketsToRemove;
 	private ArrayList<Integer> asteroidsToRemove;
 	private ArrayList<Integer> missilesToRemove;
-	private ArrayList<Integer> UFOsToRemove;
+	private ArrayList<Integer> ufosToRemove;
+	int col;
 	
 	public CollisionDetector(World world) {
 		this.world = world;
 	}
 
 	public void manage() {
+		col = 0;
 		rocketsToRemove = new ArrayList<Integer>();
 		asteroidsToRemove = new ArrayList<Integer>();
 		missilesToRemove = new ArrayList<Integer>();
-		UFOsToRemove = new ArrayList<Integer>();
+		ufosToRemove = new ArrayList<Integer>();
 		
 		checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
-		checkForCollisions(world.getMissiles(), 'm', world.getAsteroids(), 'a');
 		checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
 		checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');
+		checkForCollisions(world.getRockets(), 'r', world.getPowerUps(), 'p');
+		checkForCollisions(world.getMissiles(), 'm', world.getAsteroids(), 'a');
 		checkForCollisions(world.getMissiles(), 'm', world.getUFOs(), 'u');
 		checkForCollisions(world.getMissiles(), 'm', world.getMissiles(), 'm');
 		//checkForCollisions(world.getUFOs(), 'u', world.getUFOs(), 'u');
+		//System.out.println(col);
 	}
 	
 	public void checkForCollisions(ArrayList<?> obj1, char obj1Type, ArrayList<?> obj2, char obj2Type) {
@@ -70,7 +74,7 @@ public class CollisionDetector {
 										
 										y = (obj1Gradients[e] * x) + obj1Yintercepts[e];
 										//System.out.println(f + ": collision occurred: no inf; " + obj1Type + "(" + i +"):[" + e +"] with "+ obj2Type + "(" + a +"):[" + q +"]");
-										collisionOccurred(x, y, obj1Type, i, obj2Type, a);	
+										collisionOccurred(x, y, obj1Type, i, obj2Type, a);
 									}
 
 								} else { // Infinity gradient
@@ -93,6 +97,7 @@ public class CollisionDetector {
 										collisionOccurred(x, y, obj1Type, i, obj2Type, a);
 									}
 								}
+							col++;
 							}
 						}
 					}
@@ -102,11 +107,10 @@ public class CollisionDetector {
 	}
 	
 	private void collisionOccurred(float x, float y, char obj1Type, int obj1Index, char obj2Type, int obj2Index) {
-		
 		if(checkValidCollision(obj1Type, obj1Index, obj2Type, obj2Index) == true) {
 			addObjectToList(obj1Type, obj1Index);
 			addObjectToList(obj2Type, obj2Index);
-			world.spawnSparks(x, y);
+			world.objSpawner.sparks(x, y);
 		}
 	}
 	
@@ -119,21 +123,6 @@ public class CollisionDetector {
 			} else {
 				return true;
 			}
-			
-		} else if(obj1Type == 'u' && obj2Type == 'm') {
-			if(world.getMissile(obj2Index).getCreator() == 'u') {
-				return false;
-			} else {
-				return true;
-			}
-		
-		} else if(obj1Type == 'm' && obj2Type == 'r') {
-			
-			if(world.getMissile(obj1Index).getCreator() == 'r') {
-				return false;
-			} else {
-				return true;
-			}
 				
 		} else if(obj1Type == 'r' && obj2Type == 'm') {
 			if(world.getMissile(obj2Index).getCreator() == 'r') {
@@ -141,6 +130,11 @@ public class CollisionDetector {
 			} else {
 				return true;
 			}
+			
+		} else if(obj1Type == 'r' && obj2Type == 'p') {
+			world.getPowerUp(obj2Index).setTimeLeft(0);
+			world.getRocket(obj1Index).setTripleMissile(true);
+			return false;
 			
 		} else {
 			return true;
@@ -158,7 +152,10 @@ public class CollisionDetector {
 		case 'm': world.getMissile(i).setTimeLeft(0);
 			break;
 				
-		case 'u': UFOsToRemove.add(i);
+		case 'u': ufosToRemove.add(i);
+			break;
+			
+		case 'p': world.getPowerUp(i).setTimeLeft(0);
 			break;
 		}
 	}
@@ -255,6 +252,6 @@ public class CollisionDetector {
 	}
 	
 	public ArrayList<Integer> getUFOsToRemove() {
-		return UFOsToRemove;
+		return ufosToRemove;
 	}
 }

@@ -19,7 +19,7 @@ public class Spark extends SpaceObject {
 		velocity = new Vector2();
 		setTimeLeft(rand.nextFloat() * rand.nextFloat());
 		heading = rand.nextInt(361);
-		v = rand.nextInt(50) + 100;
+		v = rand.nextInt(80) + 80;
 		colour = rand.nextInt(3);
 		setColour();
 	}

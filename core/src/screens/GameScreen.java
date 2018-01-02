@@ -3,6 +3,7 @@ package screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
+import gameHelpers.InputHandler;
 import gameManagers.CollisionDetector;
 import gameManagers.Renderer;
 import gameManagers.SpaceManager;
@@ -14,13 +15,19 @@ public class GameScreen implements Screen {
 	private CollisionDetector collisionDetector;
 	private SpaceManager spaceManager;
 	private Renderer renderer;
+	//private TextInputHandler textInputHandler;
 	
 	public GameScreen() {
-		Gdx.input.setCursorCatched(true);
 		world = new World();
 		collisionDetector = new CollisionDetector(world);
 		spaceManager = new SpaceManager(world, collisionDetector);
 		renderer = new Renderer(world);
+		
+		Gdx.input.setInputProcessor(new InputHandler(world));
+		
+		Gdx.input.setCursorCatched(true);
+		//TextInputHandler textInputHandler = new TextInputHandler();
+		//Gdx.input.getTextInput(textInputHandler, "Enter your name", null, null);
 	}
 
 	@Override

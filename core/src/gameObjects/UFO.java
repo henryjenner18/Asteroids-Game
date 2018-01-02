@@ -19,14 +19,15 @@ public class UFO extends SpaceObject {
 		velocity = new Vector2();
 		edges = 8;
 		vertices = new float[edges][2];
-		r = 50;
+		float ran = randFloatInRange(0.6, 1);
+		r = 50 * ran;
 		height = r;
 		dv = 0;
 		while(dv == 0) {
 			dv = rand.nextInt(5) - 2;
 		}
 		terminalVel = 6;
-		score = 500;
+		score = (int) (500 / ran);
 		resetCountdown();
 		setColours();
 	}
@@ -105,6 +106,8 @@ public class UFO extends SpaceObject {
 				if(origPos.x > targetPos.x) {
 					alpha += 180;
 				}
+				
+				alpha += rand.nextInt(2 * world.getUFOAccuracy() + 2) - world.getUFOAccuracy();
 	
 				shootMissile(alpha);
 			}
@@ -119,7 +122,7 @@ public class UFO extends SpaceObject {
 	
 	
 	private void shootMissile(double heading) {
-		world.spawnMissile('u', position.x, position.y, heading, 0, velocity, missileV, missileColour);
+		world.objSpawner.missile('u', 1, position.x, position.y, heading, 0, velocity, missileV, missileColour);
 	}
 	
 	private void checkCountdown(float delta) {

@@ -4,98 +4,90 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 
 import gameHelpers.AssetLoader;
-import gameHelpers.InputHandler;
 import gameObjects.Asteroid;
 import gameObjects.Fragment;
 import gameObjects.Missile;
+import gameObjects.PowerUp;
 import gameObjects.Rocket;
 import gameObjects.Spark;
 import gameObjects.UFO;
-import main.Main;
 
 public class World {
 	
-	private ArrayList<Rocket> rockets;
-	private ArrayList<Asteroid> asteroids;
-	private ArrayList<Missile> missiles;
-	private ArrayList<UFO> ufos;
-	private ArrayList<Fragment> fragments;
-	private ArrayList<Spark> sparks;
-	private float rocketSpawnTimer, ufoSpawnTimer;
-	private boolean countdownRocketRespawn;
+	ArrayList<Rocket> rockets;
+	ArrayList<Asteroid> asteroids;
+	ArrayList<Missile> missiles;
+	ArrayList<UFO> ufos;
+	ArrayList<Fragment> fragments;
+	ArrayList<Spark> sparks;
+	ArrayList<PowerUp> powerUps;
 	
-	private int score, level, lives;
-	Random rand = new Random();
-	
+	float rocketSpawnTimer;
+	private float ufoSpawnTimer;
+	private float asteroidSpawnTimer;
+	boolean respawn;
+	private boolean nextLevel;
+	private int score, level, lives, UFOAccuracy, extraLifeCount;
+
 	private GameState currentState;
 	
+	public ObjectSpawner objSpawner;
+	
 	public World() {
+		objSpawner = new ObjectSpawner(this);
 		init();
 	}
 	
 	private void init() {
-		currentState = GameState.READY;
 		rockets = new ArrayList<Rocket>();
 		asteroids = new ArrayList<Asteroid>();
 		missiles = new ArrayList<Missile>();
 		ufos = new ArrayList<UFO>();
 		fragments = new ArrayList<Fragment>();
 		sparks = new ArrayList<Spark>();
-		rocketSpawnTimer = 2;
-		countdownRocketRespawn = false;
-		ufoSpawnTimer = 20;
-		score = level = 0;
+		powerUps = new ArrayList<PowerUp>();
+		
+		resetUFOSpawnTimer();
+		score = level = extraLifeCount = (int) (rocketSpawnTimer = 0);
 		lives = 3;
-		spawnRocket();
+		UFOAccuracy = 10;
+		objSpawner.rocket(0);
+		currentState = GameState.RUNNING;
 	}
 	
 	public enum GameState {
-		READY, RUNNING, GAMEOVER, PAUSE, RESPAWN
+		RUNNING, GAMEOVER, PAUSE
 	}
 	
 	public void update(float delta) {
-		
 		switch (currentState) {
-		case READY:
-			updateReady(delta);
+		case PAUSE:
 			break;
 			
-		case RUNNING:
-			default:
-				updateRunning(delta);
-				break;
-		
-		case PAUSE:
+		default:
+			updatePlay(delta);
 			break;
 		}
 	}
-	
-	private void updateReady(float delta) {
-        // Do nothing for now
-    }
 
-	public void updateRunning(float delta) {
-		checkTimers(delta);
-		
-		if(asteroids.size() == 0 && ufos.size() == 0) {
-			level++;
-			for(int i = 0; i < level + 1; i++) {
-				newAsteroid();
-			}
+	public void updatePlay(float delta) {
+		if(extraLifeCount >= 25000) {
+			extraLifeCount -= 25000;
+			lives += 1;
 		}
 		
-		if(isRunning()) {
+		if(isRunning() && !isRespawn()) {
 			for(int i = 0; i < rockets.size(); i++) {
 				rockets.get(i).update(delta);
 			}
-		}
-		
-		if(isRespawn()) {
-			for(int i = 0; i < rockets.size(); i++) {
-				rockets.get(i).init();
+			
+			ufoSpawnTimer -= delta;
+			
+			if(ufoSpawnTimer <= 0) {
+				objSpawner.ufo();
+				resetUFOSpawnTimer();
 			}
 		}
 		
@@ -118,102 +110,41 @@ public class World {
 		for(int i = 0; i < sparks.size(); i++) {
 			sparks.get(i).update(delta);
 		}
-	}
-	
-	private void checkTimers(float delta) {
-		if(rocketSpawnTimer > 0 && countdownRocketRespawn == true) {
-			rocketSpawnTimer -= delta;
-			
-		} else if(rocketSpawnTimer <= 0) {
-			spawnRocket();
+		
+		for(int i = 0; i < powerUps.size(); i++) {
+			powerUps.get(i).update(delta);
 		}
 		
-		if(isRunning()) {
-			ufoSpawnTimer -= delta;
-			
-			if(ufoSpawnTimer <= 0) {
-				spawnUFO();
-				ufoSpawnTimer = 20;
+		if(isRespawn()) {
+			objSpawner.rocket(delta);
+		}
+		
+		if(asteroids.size() == 0 && ufos.size() == 0) {
+			nextLevel = true;
+		}
+		
+		if(isNextLevel()) {
+			if(asteroidSpawnTimer > 0) {
+				asteroidSpawnTimer -= delta;
+				
+			} else {
+				levelUp();
+				
+				for(int a = 0; a < level; a ++) {
+					objSpawner.newAsteroid();
+				}
+				
+				resetAsteroidSpawnTimer();
+				nextLevel = false;
 			}
 		}
 	}
 	
-	public void startRocketRespawnTimer() {
-		countdownRocketRespawn = true;
-	}
-	
-	public void spawnFragments(float x, float y, int r, int[] fillColour, int[] lineColour) {
-		for(int i = 0; i < 3; i++) {
-			Fragment fragment = new Fragment(this, x, y, r, fillColour, lineColour);
-			fragments.add(fragment);
-		}
-	}
-	
-	private void newAsteroid() {
-		float r = rand.nextInt(21) + 90;
-		int hg = rand.nextInt(361);
-		int v = rand.nextInt(101) + 150;		
-		float w = Main.getWidth(), h = Main.getHeight();
-		float x = 0, y = 0;
-		
-		switch(rand.nextInt(4)) {
-		case 0: // Left
-			x = -r;
-			y = h * rand.nextFloat();
-			break;
-		case 1: // Right
-			x = w + r;
-			y = h * rand.nextFloat();
-			break;
-		case 2: // Top
-			x = w * rand.nextFloat();
-			y = h + r;
-			break;
-		case 3: // Bottom
-			x = w * rand.nextFloat();
-			y = -r;	
-		}
-		
-		spawnAsteroid(this, x, y, r, v, hg);
-	}
-	
-	public void spawnAsteroid(World world, float x, float y, float r, int v, int hg) {
-		if(r >= 20) {
-			Asteroid asteroid = new Asteroid(world , x, y, r, v, hg);
-			asteroids.add(asteroid);
-		}	
-	}
-	
-	public void spawnMissile(char creator, float x, float y, double heading, int height, Vector2 velocity, int vMult, int[] colour) {
-		Missile missile = new Missile(this, creator, x, y, heading, height, velocity, vMult, colour);
-		missiles.add(missile);
-	}
-	
-	public void spawnUFO() {
-		int num = rand.nextInt(2);
-		float x, y;
-		if(num == 0) {
-			x = 0;
-		} else {
-			x = Main.getWidth();
-		}
-		y = rand.nextInt(1251);
-		UFO ufo = new UFO(this, x, y);
-		ufos.add(ufo);
-	}
-	
-	private void spawnRocket() {
-		Rocket rocket = new Rocket(this);
-		rockets.add(rocket);
-		//rocketSpawnTimer = 2; // need a reset function
-		//countdownRocketRespawn = false;
-		Gdx.input.setInputProcessor(new InputHandler(this, rocket));
-	}
-	
-	public void spawnSparks(float x, float y) {
-		for(int i = 0; i < rand.nextInt(11) + 25; i++) {
-			Spark spark = new Spark(this, x, y);
-			sparks.add(spark);
+	// Gameplay
+	private void levelUp() {
+		level++;
+		if(UFOAccuracy > 0) {
+			UFOAccuracy--;
 		}
 	}
 	
@@ -225,6 +156,7 @@ public class World {
 	
 	public void addScore(int s) {
 		score += s;
+		extraLifeCount += s;
 	}
 	
 	public void loseLife() {
@@ -232,11 +164,49 @@ public class World {
 		
 		if(lives <= 0) {
 			currentState = GameState.GAMEOVER;
-			countdownRocketRespawn = false;
-			removeRocket(0);
+		} else {
+			respawn = true;
 		}
 	}
 	
+	public void checkForPowerUp(float x, float y) {
+		Random rand = new Random();
+		
+		int n = rand.nextInt(10) + 1;
+		
+		if(n == 1) {
+			objSpawner.powerUp(x, y);
+		}
+	}
+	
+	// Game states
+	public void start() {
+		currentState = GameState.RUNNING;
+	}
+	
+	public void restart() {
+		init();
+		Gdx.input.setCursorCatched(true);
+	}
+	
+	public void pause() {
+		currentState = GameState.PAUSE;
+	}
+	
+	// Timers
+	public void resetRocketSpawnTimer() {
+		rocketSpawnTimer = 2;
+	}
+	
+	public void resetAsteroidSpawnTimer() {
+		asteroidSpawnTimer = 2;
+	}
+	
+	private void resetUFOSpawnTimer() {
+		ufoSpawnTimer = 20;
+	}
+	
+	// Remove objects
 	public void removeRocket(int i) {
 		rockets.remove(i);
 	}
@@ -261,6 +231,11 @@ public class World {
 		sparks.remove(i);
 	}
 	
+	public void removePowerUp(int i) {
+		powerUps.remove(i);
+	}
+	
+	// Getters	
 	public ArrayList<Rocket> getRockets() {
 		return rockets;
 	}
@@ -333,6 +308,18 @@ public class World {
 		return sparks.size();
 	}
 	
+	public ArrayList<PowerUp> getPowerUps() {
+		return powerUps;
+	}
+	
+	public PowerUp getPowerUp(int i) {
+		return powerUps.get(i);
+	}
+	
+	public int getNumPowerUps() {
+		return powerUps.size();
+	}
+	
 	public int getScore() {
 		return score;
 	}
@@ -345,8 +332,8 @@ public class World {
 		return lives;
 	}
 	
-	public boolean isReady() {
-		return currentState == GameState.READY;
+	public int getUFOAccuracy() {
+		return UFOAccuracy;
 	}
 	
 	public boolean isRunning() {
@@ -362,22 +349,10 @@ public class World {
 	}
 	
 	public boolean isRespawn() {
-		return currentState == GameState.RESPAWN;
+		return respawn;
 	}
 	
-	public void start() {
-		currentState = GameState.RUNNING;
-	}
-	
-	public void restart() {
-		init();
-	}
-	
-	public void pause() {
-		currentState = GameState.PAUSE;
-	}
-	
-	public void respawn() {
-		currentState = GameState.RESPAWN;
+	public boolean isNextLevel() {
+		return nextLevel;
 	}
 }

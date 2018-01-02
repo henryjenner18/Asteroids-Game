@@ -12,7 +12,6 @@ public class Asteroid extends SpaceObject {
 	
 	private float[] angles;
 	private float[] radii;
-	private float r;
 	private double area;
 	private float rotation;
 	private int v, dr;
@@ -31,7 +30,7 @@ public class Asteroid extends SpaceObject {
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];	
-		score = (int) (120 - r);
+		score = (int) (120 - r) * 2;
 		generateAngles();
 		generateRadii();
 		setColours();
@@ -69,11 +68,13 @@ public class Asteroid extends SpaceObject {
 			float radians = (float) Math.toRadians(newHg);
 			float x = (float) (MathUtils.cos(radians) * dx);
 			float y = (float) (MathUtils.cos(radians) * dy);
-
-			world.spawnAsteroid(world, position.x + x, position.y + y, newR, v, newHg);
+			
+			world.objSpawner.asteroid(world, position.x + x, position.y + y, newR, v, newHg);
 			
 			newHg += randFloatInRange(160, 200);
 		}
+		
+		world.checkForPowerUp(position.x, position.y);
 	}
 	
 	private void rotate(float delta) {

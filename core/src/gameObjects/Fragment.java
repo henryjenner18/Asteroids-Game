@@ -16,7 +16,7 @@ public class Fragment extends SpaceObject {
 	private float[] radii;
 	Random rand;
 	
-	public Fragment(World world, float x, float y, int r, int[] fillColour, int[] lineColour) {
+	public Fragment(World world, float x, float y, float r, int[] fillColour, int[] lineColour) {
 		super(world);
 		rand = new Random();
 		position = new Vector2(x, y);
@@ -101,8 +101,8 @@ public class Fragment extends SpaceObject {
 		Arrays.sort(angles); // Order the angles ascending
 	}
 	
-	public void setTimeLeft(float f) {
-		timeLeft = f;
+	public void setTimeLeft(float t) {
+		timeLeft = t;
 	}
 	
 	public float getTimeLeft() {
