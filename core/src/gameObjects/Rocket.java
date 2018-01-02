@@ -186,7 +186,7 @@ public class Rocket extends SpaceObject {
 		tripleMissile = b;
 	}
 	
-	private void resetTripleMissileTimer() {
+	public void resetTripleMissileTimer() {
 		tripleMissileTimer = 5;
 	}
 	

@@ -134,6 +134,7 @@ public class CollisionDetector {
 		} else if(obj1Type == 'r' && obj2Type == 'p') {
 			world.getPowerUp(obj2Index).setTimeLeft(0);
 			world.getRocket(obj1Index).setTripleMissile(true);
+			world.getRocket(obj1Index).resetTripleMissileTimer();
 			return false;
 			
 		} else {
