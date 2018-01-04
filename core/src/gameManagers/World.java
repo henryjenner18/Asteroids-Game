@@ -172,7 +172,7 @@ public class World {
 	public void checkForPowerUp(float x, float y) {
 		Random rand = new Random();
 		
-		int n = rand.nextInt(10) + 1;
+		int n = rand.nextInt(15) + 1;
 		
 		if(n == 1) {
 			objSpawner.powerUp(x, y);

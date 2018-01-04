@@ -17,10 +17,11 @@ public class Spark extends SpaceObject {
 		super(world);
 		position = new Vector2(x, y);
 		velocity = new Vector2();
+		r = 1;
 		setTimeLeft(rand.nextFloat() * rand.nextFloat());
 		heading = rand.nextInt(361);
 		v = rand.nextInt(80) + 80;
-		colour = rand.nextInt(3);
+		colour = rand.nextInt(4);
 		setColour();
 	}
 	
@@ -43,6 +44,13 @@ public class Spark extends SpaceObject {
 			fillColour[0] = 255;
 			fillColour[1] = 102;
 			fillColour[2] = 102;
+			break;
+			
+		case 3:
+			fillColour[0] = 150;
+			fillColour[1] = 150;
+			fillColour[2] = 150;
+			r = 3;
 			break;
 		}
 	}

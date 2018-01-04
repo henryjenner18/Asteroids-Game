@@ -39,23 +39,27 @@ public class CollisionDetector {
 		
 		for(int i = 0; i < obj1.size(); i++) {
 			if(obj1.get(i) instanceof SpaceObject) {
+				
+				SpaceObject space1 = (SpaceObject) obj1.get(i);
 
-				((SpaceObject) obj1.get(i)).linearEquation();
-				float[][] obj1Vertices = ((SpaceObject) obj1.get(i)).getVertices();
-				float[] obj1Gradients = ((SpaceObject) obj1.get(i)).getGradients();
-				float[] obj1Yintercepts = ((SpaceObject) obj1.get(i)).getYintercepts();
-				int obj1Edges = ((SpaceObject) obj1.get(i)).getEdges();
+				space1.linearEquation();
+				float[][] obj1Vertices = space1.getVertices();
+				float[] obj1Gradients = space1.getGradients();
+				float[] obj1Yintercepts = space1.getYintercepts();
+				int obj1Edges = space1.getEdges();
 				
 				for(int e = 0; e < obj1Edges; e++) {
 					
 					for(int a = 0; a < obj2.size(); a++) {
 						if(obj2.get(a) instanceof SpaceObject) {
 							
+							SpaceObject space2 = (SpaceObject) obj2.get(a);
+							
 							((SpaceObject) obj2.get(a)).linearEquation();
-							float[][] obj2Vertices = ((SpaceObject) obj2.get(a)).getVertices();
-							float[] obj2Gradients = ((SpaceObject) obj2.get(a)).getGradients();
-							float[] obj2Yintercepts = ((SpaceObject) obj2.get(a)).getYintercepts();
-							int obj2Edges = ((SpaceObject) obj2.get(a)).getEdges();
+							float[][] obj2Vertices = space2.getVertices();
+							float[] obj2Gradients = space2.getGradients();
+							float[] obj2Yintercepts = space2.getYintercepts();
+							int obj2Edges = space2.getEdges();
 							
 							for(int q = 0; q < obj2Edges; q++) {
 								

@@ -3,6 +3,7 @@ package gameManagers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -243,6 +244,20 @@ public class Renderer {
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 			sr.polygon(polygon);
 			sr.end();
+			
+			SpriteBatch batch = new SpriteBatch();
+			batch.begin();
+			
+			BitmapFont f = new BitmapFont();
+			String str = "3";
+			GlyphLayout layout = new GlyphLayout();
+			
+			layout.setText(f, str);
+			float strWidth = layout.width;
+			float strHeight = layout.height;
+			f.draw(batch, str, x - strWidth/2, y + strHeight/2);
+			
+			batch.end();
 		}
 	}
 	
@@ -252,12 +267,13 @@ public class Renderer {
 		for(int i = 0; i < numSparks; i++) {
 			float x = world.getSpark(i).getX();
 			float y = world.getSpark(i).getY();
+			float r = world.getSpark(i).getR();
 			
 			int[] fillColour = world.getSpark(i).getFillColour();
 			
 			sr.begin(ShapeType.Filled);
 			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-			sr.circle(x, y, 1);
+			sr.circle(x, y, r);
 			sr.end();
 		}
 	}

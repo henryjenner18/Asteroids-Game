@@ -11,18 +11,20 @@ import gameManagers.World;
 public class Fragment extends SpaceObject {
 	
 	private int v, dr;
+	final Vector2 objVelocity;
 	private float timeLeft, rotation;
 	private float[] angles;
 	private float[] radii;
 	Random rand;
 	
-	public Fragment(World world, float x, float y, float r, int[] fillColour, int[] lineColour) {
+	public Fragment(World world, float x, float y, float r, Vector2 objVelocity, int[] fillColour, int[] lineColour) {
 		super(world);
 		rand = new Random();
 		position = new Vector2(x, y);
-		velocity = new Vector2();	
+		velocity = new Vector2();
+		this.objVelocity = new Vector2(objVelocity.x, objVelocity.y).scl((float) 0.3);
 		heading = rand.nextInt(361);
-		v = rand.nextInt(50) + 100;	
+		v = rand.nextInt(50) + 50;	
 		edges = rand.nextInt(3)+3;
 		angles = new float[edges];
 		radii = new float[edges];
@@ -50,9 +52,10 @@ public class Fragment extends SpaceObject {
 	
 	private void move(float delta) {
 		velocity.setZero(); // Wipes the current velocity vector
-		float radians = (float) Math.toRadians(heading);		
+		float radians = (float) Math.toRadians(heading);	
 		velocity.x = MathUtils.cos(radians) * delta * v;
-		velocity.y = MathUtils.sin(radians) * delta * v;
+		velocity.y = MathUtils.sin(radians) * delta * v;		
+		velocity.add(objVelocity);
 	}
 	
 	private void rotate(float delta) {

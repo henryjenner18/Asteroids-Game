@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badlogic.gdx.math.Vector2;
+
 import gameObjects.Rocket;
 
 public class SpaceManager {
@@ -46,9 +48,10 @@ public class SpaceManager {
 			float x = rocket.getX();
 			float y = rocket.getY();
 			float r = (float) (rocket.getR() / 2.2);
+			Vector2 objVelocity = rocket.getVelocity();
 			int[] fillColour = rocket.getFillColour();
 			int[] lineColour = rocket.getLineColour();
-			world.objSpawner.fragments(x, y, r, fillColour, lineColour);
+			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
 			world.removeRocket(i);
 			world.loseLife();
 		}
@@ -93,11 +96,12 @@ public class SpaceManager {
 			float x = world.getUFO(i).getX();
 			float y = world.getUFO(i).getY();
 			float r = (world.getUFO(i).getR() * 2) / 5;
+			Vector2 objVelocity = world.getUFO(i).getVelocity();
 			int[] fillColour = world.getUFO(i).getFillColour();
 			int[] lineColour = world.getUFO(i).getLineColour();
 			
 			world.checkForPowerUp(x, y);
-			world.objSpawner.fragments(x, y, r, fillColour, lineColour);
+			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
 			world.removeUFO(objs.get(i));
 		}
 	}

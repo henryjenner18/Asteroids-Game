@@ -135,9 +135,9 @@ public class ObjectSpawner {
 		}	
 	}
 	
-	public void fragments(float x, float y, float r, int[] fillColour, int[] lineColour) {
+	public void fragments(float x, float y, float r, Vector2 objVelocity, int[] fillColour, int[] lineColour) {
 		for(int i = 0; i < 4; i++) {
-			Fragment fragment = new Fragment(world, x, y, r, fillColour, lineColour);
+			Fragment fragment = new Fragment(world, x, y, r, objVelocity, fillColour, lineColour);
 			world.fragments.add(fragment);
 		}
 	}
