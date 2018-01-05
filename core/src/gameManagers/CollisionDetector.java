@@ -24,15 +24,21 @@ public class CollisionDetector {
 		missilesToRemove = new ArrayList<Integer>();
 		ufosToRemove = new ArrayList<Integer>();
 		
-		checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
-		checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
-		checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');
-		checkForCollisions(world.getRockets(), 'r', world.getPowerUps(), 'p');
+		if(world.getNumRockets() > 0) {
+			boolean invincible = world.getRocket(0).getInvincible();
+			
+			if(invincible == false) {
+				checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
+				checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
+				checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');
+			}
+			
+			checkForCollisions(world.getRockets(), 'r', world.getPowerUps(), 'p');
+		}
+		
 		checkForCollisions(world.getMissiles(), 'm', world.getAsteroids(), 'a');
 		checkForCollisions(world.getMissiles(), 'm', world.getUFOs(), 'u');
 		checkForCollisions(world.getMissiles(), 'm', world.getMissiles(), 'm');
-		//checkForCollisions(world.getUFOs(), 'u', world.getUFOs(), 'u');
-		//System.out.println(col);
 	}
 	
 	public void checkForCollisions(ArrayList<?> obj1, char obj1Type, ArrayList<?> obj2, char obj2Type) {
@@ -114,7 +120,12 @@ public class CollisionDetector {
 		if(checkValidCollision(obj1Type, obj1Index, obj2Type, obj2Index) == true) {
 			addObjectToList(obj1Type, obj1Index);
 			addObjectToList(obj2Type, obj2Index);
-			world.objSpawner.sparks(x, y);
+			
+			if(obj1Type == 'm' && obj2Type == 'm') { // Missile-missile collision, therefore grey boulders not allowed in sparks
+				world.objSpawner.sparks(x, y, true);
+			} else {
+				world.objSpawner.sparks(x, y, false);
+			}
 		}
 	}
 	

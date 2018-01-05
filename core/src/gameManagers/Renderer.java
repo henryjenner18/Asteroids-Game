@@ -279,6 +279,8 @@ public class Renderer {
 	}
 
 	private void drawRockets() {
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		
 		int numRockets = world.getNumRockets();
 		
 		for(int i = 0; i < numRockets; i++) {		
@@ -289,10 +291,17 @@ public class Renderer {
 			int[] fillColour = world.getRocket(i).getFlameFillColour();
 			int[] lineColour = world.getRocket(i).getFlameLineColour();
 			
-			if(world.getRocket(i).getFlameOn() == true) {
+			boolean invincible;		
+			if(world.getRocket(i).getInvincible() == true) {
+				invincible = true;
+			} else {
+				invincible = false;
+			}
+			
+			if(world.getRocket(i).getFlameOn() == true && invincible == false) {
 				// Filled flame
 				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);			
 				sr.triangle(vertices[0][0], vertices[0][1],
 						vertices[1][0], vertices[1][1],
 						vertices[2][0], vertices[2][1]);
@@ -314,7 +323,14 @@ public class Renderer {
 			
 			// Filled polygon
 			sr.begin(ShapeType.Filled);
-			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+			
+			if(invincible == true) {
+				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.5f);
+
+			} else {
+				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+			}
+			
 			sr.triangle(vertices[0][0], vertices[0][1],
 					vertices[1][0], vertices[1][1],
 					vertices[2][0], vertices[2][1]);
@@ -326,7 +342,14 @@ public class Renderer {
 			// Polygon outline
 			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Line);
-			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
+			
+			if(invincible == true) {
+				sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.5f);
+
+			} else {
+				sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
+			}
+			
 			sr.polygon(polygon);
 			sr.end();
 		}
@@ -485,7 +508,7 @@ public class Renderer {
 	}
 
 	private void drawBackground() {
-		Gdx.gl.glClearColor(0/255f, 0/255f, 0/255f, 1);
+		Gdx.gl.glClearColor(10/255f, 5/255f, 10/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		sr.begin(ShapeType.Point);

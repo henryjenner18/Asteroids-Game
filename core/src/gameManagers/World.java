@@ -25,8 +25,7 @@ public class World {
 	ArrayList<PowerUp> powerUps;
 	
 	float rocketSpawnTimer;
-	private float ufoSpawnTimer;
-	private float asteroidSpawnTimer;
+	private float ufoSpawnTimer, asteroidSpawnTimer;
 	boolean respawn;
 	private boolean nextLevel;
 	private int score, level, lives, UFOAccuracy, extraLifeCount;

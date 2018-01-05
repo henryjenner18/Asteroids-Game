@@ -43,7 +43,7 @@ public class InputHandler implements InputProcessor {
 			}
 		}
 		
-		if(keycode == Keys.DOWN  || keycode == Keys.S && !world.isGameOver()) {
+		if(keycode == Keys.P && !world.isGameOver()) {
 			if(world.isPause()) {
 				world.start();
 			
@@ -57,7 +57,7 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean keyUp(int keycode) {
-		if(world.isRunning() || world.isNextLevel()) {
+		if(world.isRunning() || world.isNextLevel() || world.isPause()) {
 			if(world.getNumRockets() > 0) {
 				Rocket rocket = world.getRocket(0);
 				

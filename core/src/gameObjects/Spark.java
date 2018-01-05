@@ -11,9 +11,10 @@ public class Spark extends SpaceObject {
 	
 	private int v, colour;
 	private float timeLeft;
+	private boolean missilesOnly;
 	Random rand = new Random();
 	
-	public Spark(World world, float x, float y) {
+	public Spark(World world, float x, float y, boolean missilesOnly) {
 		super(world);
 		position = new Vector2(x, y);
 		velocity = new Vector2();
@@ -21,11 +22,19 @@ public class Spark extends SpaceObject {
 		setTimeLeft(rand.nextFloat() * rand.nextFloat());
 		heading = rand.nextInt(361);
 		v = rand.nextInt(80) + 80;
-		colour = rand.nextInt(4);
+		this.missilesOnly = missilesOnly;
 		setColour();
 	}
 	
 	private void setColour() {
+		int n;
+		if(missilesOnly == true) {
+			n = 3;
+		} else {
+			n = 4;
+		}
+		colour = rand.nextInt(n);
+		
 		fillColour = new int[3];
 		switch(colour) {
 		case 0:

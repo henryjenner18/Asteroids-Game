@@ -13,9 +13,9 @@ public class Main extends Game { // Main game class
 	private static int height;
 	private static int[][] stars;
 	
-	public Main() {
-		width = 1920;
-		height = 1080;
+	public Main(int width, int height) {
+		Main.width = width;
+		Main.height = height;
 		generateStars(500);
 	}
 	

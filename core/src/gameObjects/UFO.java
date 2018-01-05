@@ -34,9 +34,9 @@ public class UFO extends SpaceObject {
 	
 	private void setColours() {
 		fillColour = new int[3];
-		fillColour[0] = 14;
-		fillColour[1] = 33;
-		fillColour[2] = 84;
+		fillColour[0] = 0;
+		fillColour[1] = 51;
+		fillColour[2] = 153;
 		
 		lineColour = new int[3];
 		lineColour[0] = 102;

@@ -1,6 +1,7 @@
 package screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -45,10 +46,7 @@ public class MainMenuScreen implements Screen {
 	public void render(float delta) {
 		world.update(delta);
 		
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		drawStars();
+		drawBackground();
 		drawAsteroids();
 		drawText();	
 	}
@@ -79,6 +77,10 @@ public class MainMenuScreen implements Screen {
 			if(Gdx.input.isTouched()) {
 				main.setGameScreen();
 			}
+		}
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.Q)) { //REMOVE
+			main.setGameScreen();
 		}
 		
 		str = "Exit";
@@ -169,7 +171,10 @@ public class MainMenuScreen implements Screen {
 		return polygon;	
 	}
 	
-	private void drawStars() {
+	private void drawBackground() {
+		Gdx.gl.glClearColor(10/255f, 5/255f, 10/255f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
 		sr.begin(ShapeType.Point);
 		sr.setColor(Color.WHITE);
 	

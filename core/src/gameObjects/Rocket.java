@@ -13,8 +13,8 @@ public class Rocket extends SpaceObject {
 	private float[][] flame;
 	private int[] flameFillColour, flameLineColour;
 	private int height, dh, terminalVel, maxMissiles;
-	private boolean thrusting, left, right, flameOn, tripleMissile;
-	private float tripleMissileTimer;
+	private boolean thrusting, left, right, flameOn, tripleMissile, invincible;
+	private float tripleMissileTimer, invincibleTimer;
 	
 	public Rocket(World world) {
 		super(world);
@@ -27,11 +27,12 @@ public class Rocket extends SpaceObject {
 		terminalVel = 10;
 		maxMissiles = 8;		
 		setColours();
-		left = right = flameOn = tripleMissile = false;
+		left = right = flameOn = tripleMissile = invincible = false;
 		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
 		velocity = new Vector2(0, 0);
 		heading = 90;
 		resetTripleMissileTimer();
+		resetInvincibleTimer();
 	}
 	
 	public void update(float delta) {
@@ -52,6 +53,15 @@ public class Rocket extends SpaceObject {
 			if(tripleMissileTimer <= 0) {
 				tripleMissile = false;
 				resetTripleMissileTimer();
+			}
+		}
+		
+		if(invincible == true) {
+			invincibleTimer -= delta;
+			
+			if(invincibleTimer <= 0) {
+				invincible = false;
+				resetInvincibleTimer();
 			}
 		}
 	}
@@ -186,8 +196,16 @@ public class Rocket extends SpaceObject {
 		tripleMissile = b;
 	}
 	
+	public void setInvincible(boolean b) {
+		invincible = b;
+	}
+	
 	public void resetTripleMissileTimer() {
 		tripleMissileTimer = 5;
+	}
+	
+	private void resetInvincibleTimer() {
+		invincibleTimer = 3;
 	}
 	
 	public int[] getFlameFillColour() {
@@ -216,5 +234,9 @@ public class Rocket extends SpaceObject {
 	
 	public boolean getTripleMissile() {
 		return tripleMissile;
+	}
+	
+	public boolean getInvincible() {
+		return invincible;
 	}
 }

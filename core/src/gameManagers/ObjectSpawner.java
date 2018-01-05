@@ -28,41 +28,13 @@ public class ObjectSpawner {
 			world.rocketSpawnTimer -= delta;
 			
 		} else {
-			boolean clear = true;
-			
-			int w = Main.getWidth(); // replace with global variable
-			int h = Main.getHeight();
-			
-			float fw = w / 3;
-			float fh = h / 3;
-			
-			for(int i = 0; i < world.asteroids.size(); i++) {
-				float x = world.asteroids.get(i).getX();
-				float y = world.asteroids.get(i).getY();
-						
-				if(x > fw && x < w - fw) {
-					if(y > fh && y < h - fh) {
-						clear = false;
-					}
-				}
-			}
-			
-			for(int u = 0; u < world.ufos.size(); u++) {
-				float x = world.ufos.get(u).getX();
-				float y = world.ufos.get(u).getY();
-						
-				if(x > fw && x < w - fw) {
-					if(y > fh && y < h - fh) {
-						clear = false;
-					}
-				}
-			}
-			
-			if(clear == true) {
-				Rocket rocket = new Rocket(world);
-				world.rockets.add(rocket);
-				world.resetRocketSpawnTimer();
-				world.respawn = false;
+			Rocket rocket = new Rocket(world);
+			world.rockets.add(rocket);
+			world.resetRocketSpawnTimer();
+			world.respawn = false;
+				
+			if(world.getLevel() != 0) {
+				world.rockets.get(0).setInvincible(true);
 			}
 		}
 	}
@@ -70,7 +42,7 @@ public class ObjectSpawner {
 	public void newAsteroid() {
 		float r = rand.nextInt(21) + 90;
 		int hg = rand.nextInt(361);
-		int v = rand.nextInt(81) + 130;		
+		int v = rand.nextInt(81) + 130;
 		float w = Main.getWidth(), h = Main.getHeight();
 		float x = 0, y = 0;
 
@@ -142,9 +114,9 @@ public class ObjectSpawner {
 		}
 	}
 	
-	public void sparks(float x, float y) {
+	public void sparks(float x, float y, boolean missilesOnly) {
 		for(int i = 0; i < rand.nextInt(11) + 25; i++) {
-			Spark spark = new Spark(world, x, y);
+			Spark spark = new Spark(world, x, y, missilesOnly);
 			world.sparks.add(spark);
 		}
 	}

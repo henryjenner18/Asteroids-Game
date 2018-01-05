@@ -14,7 +14,7 @@ public class PowerUp extends SpaceObject {
 	public PowerUp(World world, float x, float y) {
 		super(world);
 		position = new Vector2(x, y);
-		r = 17;
+		r = 19;
 		edges = 6;
 		vertices = new float[edges][2];
 		lifespan = 7;
@@ -59,8 +59,8 @@ public class PowerUp extends SpaceObject {
 		
 		lineColour = new int[3];
 		if(flash == true) {
-			lineColour[0] = 0;
-			lineColour[1] = 153;
+			lineColour[0] = 204;
+			lineColour[1] = 255;
 			lineColour[2] = 51;
 		} else {
 			lineColour = fillColour;
