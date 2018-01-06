@@ -43,29 +43,92 @@ public class Renderer {
 		}
 		
 		drawGameStats();
-		drawGameStateInfo();
+		drawText();
 	}
 	
-	private void drawGameStateInfo() {
+	private void drawText() {
 		batch.begin();
 		
 		if(world.isGameOver()) {
 			Gdx.input.setCursorCatched(false);
 			
-			drawString("Game Over!", 0);
+			int x = Gdx.input.getX();
+			int y = h - Gdx.input.getY();
 			
+			GlyphLayout layout = new GlyphLayout();
+			
+			// Play again
+			String str = "Play again";	
+			layout.setText(AssetLoader.font, str);
+			float strWidth = layout.width;
+			float strHeight = layout.height;
+					
+			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
+				y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
+						
+				str = "[Play again]";
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+						
+				if(Gdx.input.isTouched()) {
+					world.restart();
+				}
+			}
+					
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
+			
+			// Exit
+			str = "Exit";
+			layout.setText(AssetLoader.font, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+					
+			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
+				y >= h/2 - 5*strHeight && y <= h/2 - 4*strHeight) {
+
+				str = "[Exit]";
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+						
+				if(Gdx.input.isTouched()) {
+					Gdx.app.exit();
+				}
+			}
+					
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
+			
+			// Game over
+			str = "---- GAME OVER ----";	
+			layout.setText(AssetLoader.font, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 2*strHeight);
+			
+			// High score
 			world.compareHighScore();
 			
-			String s;
 			if(world.getScore() == AssetLoader.getHighScore()) {
-				s = "New high score!";
+				str = "New high score!";
 			
 			} else {
-				s = "High score: " + AssetLoader.getHighScore();
+				str = "High score: " + AssetLoader.getHighScore();
 			}
 			
-			drawString(s, h / 5);
-			drawGameOverOptions();
+			layout.setText(AssetLoader.font, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 5*strHeight);
+			
+			// Shot accuracy
+			float[] hits = world.getHits();
+			int acc = (int) ((hits[0] / hits[1]) * 100);
+			str = "Accuracy: " + acc + "%";
+			layout.setText(AssetLoader.font, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h-10);			
 		}
 		
 		if(world.isPause()) {
@@ -73,55 +136,6 @@ public class Renderer {
 		}
 		
 		batch.end();
-	}
-	
-	private void drawGameOverOptions() {
-		int x = Gdx.input.getX();
-		int y = h - Gdx.input.getY();
-		
-		GlyphLayout layout = new GlyphLayout();
-		
-		String str = "Replay";	
-		layout.setText(AssetLoader.font, str);
-		float strWidth = layout.width;
-		float strHeight = layout.height;
-		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/3);	
-		
-		if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
-				y >= h/3 - strHeight && y <= h/3) {
-			
-			str = "[        ]";
-			layout.setText(AssetLoader.font, str);
-			strWidth = layout.width;
-			strHeight = layout.height;
-			
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/3);
-			
-			if(Gdx.input.isTouched()) {
-				world.restart();
-			}
-		}
-		
-		str = "Exit";
-		layout.setText(AssetLoader.font, str);
-		strWidth = layout.width;
-		strHeight = layout.height;
-		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/3 - 3*strHeight);
-		
-		if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
-				y >= h/3 - 4*strHeight && y <= h/3 - 3*strHeight) {
-
-			str = "[     ]";
-			layout.setText(AssetLoader.font, str);
-			strWidth = layout.width;
-			strHeight = layout.height;
-			
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/3 - 3*strHeight);
-			
-			if(Gdx.input.isTouched()) {
-				Gdx.app.exit();
-			}
-		}
 	}
 	
 	private void drawString(String str, int yDiff) {
@@ -508,7 +522,7 @@ public class Renderer {
 	}
 
 	private void drawBackground() {
-		Gdx.gl.glClearColor(10/255f, 5/255f, 10/255f, 1);
+		Gdx.gl.glClearColor(5/255f, 5/255f, 5/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		sr.begin(ShapeType.Point);

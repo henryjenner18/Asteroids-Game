@@ -76,12 +76,17 @@ public class SpaceManager {
 		for(int i = 0; i < numMissiles; i++) {
 			if(world.getMissile(i).getTimeLeft() == 0) {
 				objs.add(i);
+				
+				if(world.getMissile(i).getCreator() == 'r') {
+					world.setHits(1, 1);
+				}
 			}
 		}
 		
 		objs = sortArrayList(objs);
 		
 		for(int i = 0; i < objs.size(); i++) {
+			
 			world.removeMissile(objs.get(i));
 		}
 	}

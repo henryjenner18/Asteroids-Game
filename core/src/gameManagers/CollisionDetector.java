@@ -136,8 +136,16 @@ public class CollisionDetector {
 			if(world.getMissile(obj1Index).getCreator() == 'u') {
 				return false;
 			} else {
+				world.setHits(0, 0.5);
 				return true;
 			}
+			
+		} else if((obj1Type == 'm' && obj2Type == 'a') || (obj1Type == 'm' && obj2Type == 'a')) {
+
+			if(world.getMissile(obj1Index).getCreator() == 'r') {
+				world.setHits(0, 0.5);
+			}
+			return true;
 				
 		} else if(obj1Type == 'r' && obj2Type == 'm') {
 			if(world.getMissile(obj2Index).getCreator() == 'r') {

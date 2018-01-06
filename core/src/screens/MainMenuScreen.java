@@ -1,7 +1,6 @@
 package screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -52,64 +51,62 @@ public class MainMenuScreen implements Screen {
 	}
 	
 	private void drawText() {
+		int x = Gdx.input.getX();
+		int y = h - Gdx.input.getY();
+		
 		batch.begin();
 		GlyphLayout layout = new GlyphLayout();
 		
+		// Play
 		String str = "Play";	
 		layout.setText(AssetLoader.font, str);
 		float strWidth = layout.width;
 		float strHeight = layout.height;
-		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
-		
-		int x = Gdx.input.getX();
-		int y = h - Gdx.input.getY();
 		
 		if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 				y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
 			
-			str = "[     ]";
+			str = "[Play]";
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
-			
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
 			
 			if(Gdx.input.isTouched()) {
 				main.setGameScreen();
 			}
 		}
 		
-		if(Gdx.input.isKeyPressed(Input.Keys.Q)) { //REMOVE
-			main.setGameScreen();
-		}
+		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
 		
+		// Exit
 		str = "Exit";
 		layout.setText(AssetLoader.font, str);
 		strWidth = layout.width;
 		strHeight = layout.height;
-		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
 		
 		if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 				y >= h/2 - 5*strHeight && y <= h/2 - 4*strHeight) {
 
-			str = "[     ]";
+			str = "[Exit]";
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
-			
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
 			
 			if(Gdx.input.isTouched()) {
 				Gdx.app.exit();
 			}
 		}
 		
-
+		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
+		
+		// Title - Asteroids
 		str = "ASTEROIDS";	
 		layout.setText(AssetLoader.font, str);
-		strWidth = layout.width;		
+		strWidth = layout.width;
+		strHeight = layout.height;
 		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 2*strHeight);
 		
+		// Copyright
 		BitmapFont f = new BitmapFont();
 		str = "C 2017-18 Henry Jenner";
 		layout.setText(f, str);
@@ -172,7 +169,7 @@ public class MainMenuScreen implements Screen {
 	}
 	
 	private void drawBackground() {
-		Gdx.gl.glClearColor(10/255f, 5/255f, 10/255f, 1);
+		Gdx.gl.glClearColor(5/255f, 5/255f, 5/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		sr.begin(ShapeType.Point);

@@ -29,9 +29,8 @@ public class World {
 	boolean respawn;
 	private boolean nextLevel;
 	private int score, level, lives, UFOAccuracy, extraLifeCount;
-
-	private GameState currentState;
-	
+	private float[] hits; // [0] for missile hits, [1] for sent missiles
+	private GameState currentState;	
 	public ObjectSpawner objSpawner;
 	
 	public World() {
@@ -51,6 +50,7 @@ public class World {
 		resetUFOSpawnTimer();
 		score = level = extraLifeCount = (int) (rocketSpawnTimer = 0);
 		lives = 3;
+		hits = new float[2];
 		UFOAccuracy = 10;
 		objSpawner.rocket(0);
 		currentState = GameState.RUNNING;
@@ -171,7 +171,7 @@ public class World {
 	public void checkForPowerUp(float x, float y) {
 		Random rand = new Random();
 		
-		int n = rand.nextInt(15) + 1;
+		int n = rand.nextInt(20) + 1;
 		
 		if(n == 1) {
 			objSpawner.powerUp(x, y);
@@ -192,7 +192,7 @@ public class World {
 		currentState = GameState.PAUSE;
 	}
 	
-	// Timers
+	// Setters
 	public void resetRocketSpawnTimer() {
 		rocketSpawnTimer = 2;
 	}
@@ -203,6 +203,10 @@ public class World {
 	
 	private void resetUFOSpawnTimer() {
 		ufoSpawnTimer = 20;
+	}
+	
+	public void setHits(int i, double d) {
+		hits[i] += d;;
 	}
 	
 	// Remove objects
@@ -329,6 +333,10 @@ public class World {
 	
 	public int getLives() {
 		return lives;
+	}
+	
+	public float[] getHits() {
+		return hits;
 	}
 	
 	public int getUFOAccuracy() {
