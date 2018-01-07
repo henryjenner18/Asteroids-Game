@@ -26,6 +26,7 @@ public class World {
 	
 	float rocketSpawnTimer;
 	private float ufoSpawnTimer, asteroidSpawnTimer;
+	float gameOverTimer;
 	boolean respawn;
 	private boolean nextLevel;
 	private int score, level, lives, UFOAccuracy, extraLifeCount;
@@ -48,6 +49,8 @@ public class World {
 		powerUps = new ArrayList<PowerUp>();
 		
 		resetUFOSpawnTimer();
+		resetAsteroidSpawnTimer();
+		resetGameOverTimer();
 		score = level = extraLifeCount = (int) (rocketSpawnTimer = 0);
 		lives = 3;
 		hits = new float[2];
@@ -71,7 +74,9 @@ public class World {
 		}
 	}
 
-	public void updatePlay(float delta) {
+	private void updatePlay(float delta) {
+		updateObjects(delta);
+		
 		if(extraLifeCount >= 25000) {
 			extraLifeCount -= 25000;
 			lives += 1;
@@ -88,30 +93,6 @@ public class World {
 				objSpawner.ufo();
 				resetUFOSpawnTimer();
 			}
-		}
-		
-		for(int i = 0; i < asteroids.size(); i++) {
-			asteroids.get(i).update(delta);
-		}
-		
-		for(int i = 0; i < missiles.size(); i++) {
-			missiles.get(i).update(delta);
-		}
-		
-		for(int i = 0; i < ufos.size(); i++) {
-			ufos.get(i).update(delta);
-		}
-		
-		for(int i = 0; i < fragments.size(); i++) {
-			fragments.get(i).update(delta);
-		}
-		
-		for(int i = 0; i < sparks.size(); i++) {
-			sparks.get(i).update(delta);
-		}
-		
-		for(int i = 0; i < powerUps.size(); i++) {
-			powerUps.get(i).update(delta);
 		}
 		
 		if(isRespawn()) {
@@ -136,6 +117,32 @@ public class World {
 				resetAsteroidSpawnTimer();
 				nextLevel = false;
 			}
+		}
+	}
+	
+	private void updateObjects(float delta) {
+		for(int i = 0; i < asteroids.size(); i++) {
+			asteroids.get(i).update(delta);
+		}
+		
+		for(int i = 0; i < missiles.size(); i++) {
+			missiles.get(i).update(delta);
+		}
+		
+		for(int i = 0; i < ufos.size(); i++) {
+			ufos.get(i).update(delta);
+		}
+		
+		for(int i = 0; i < fragments.size(); i++) {
+			fragments.get(i).update(delta);
+		}
+		
+		for(int i = 0; i < sparks.size(); i++) {
+			sparks.get(i).update(delta);
+		}
+		
+		for(int i = 0; i < powerUps.size(); i++) {
+			powerUps.get(i).update(delta);
 		}
 	}
 	
@@ -203,6 +210,10 @@ public class World {
 	
 	private void resetUFOSpawnTimer() {
 		ufoSpawnTimer = 20;
+	}
+	
+	private void resetGameOverTimer() {
+		gameOverTimer = 2;
 	}
 	
 	public void setHits(int i, double d) {

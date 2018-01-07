@@ -1,6 +1,7 @@
 package gameManagers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -29,7 +30,7 @@ public class Renderer {
 		sr = AssetLoader.sr;
 	}
 
-	public void render() {
+	public void render(float delta) {
 		drawBackground();
 		drawPowerUps();
 		drawSparks();
@@ -43,11 +44,14 @@ public class Renderer {
 		}
 		
 		drawGameStats();
-		drawText();
+		drawText(delta);
 	}
 	
-	private void drawText() {
+	private void drawText(float delta) {
 		batch.begin();
+		GlyphLayout layout = new GlyphLayout();
+		String str;
+		float strWidth, strHeight;
 		
 		if(world.isGameOver()) {
 			Gdx.input.setCursorCatched(false);
@@ -55,102 +59,112 @@ public class Renderer {
 			int x = Gdx.input.getX();
 			int y = h - Gdx.input.getY();
 			
-			GlyphLayout layout = new GlyphLayout();
-			
-			// Play again
-			String str = "Play again";	
-			layout.setText(AssetLoader.font, str);
-			float strWidth = layout.width;
-			float strHeight = layout.height;
-					
-			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
-				y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
-						
-				str = "[Play again]";
-				layout.setText(AssetLoader.font, str);
-				strWidth = layout.width;
-				strHeight = layout.height;
-						
-				if(Gdx.input.isTouched()) {
-					world.restart();
-				}
-			}
-					
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
-			
-			// Exit
-			str = "Exit";
-			layout.setText(AssetLoader.font, str);
-			strWidth = layout.width;
-			strHeight = layout.height;
-					
-			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
-				y >= h/2 - 5*strHeight && y <= h/2 - 4*strHeight) {
-
-				str = "[Exit]";
-				layout.setText(AssetLoader.font, str);
-				strWidth = layout.width;
-				strHeight = layout.height;
-						
-				if(Gdx.input.isTouched()) {
-					Gdx.app.exit();
-				}
-			}
-					
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
-			
 			// Game over
-			str = "---- GAME OVER ----";	
+			str = "GAME OVER";	
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
 			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 2*strHeight);
 			
-			// High score
-			world.compareHighScore();
-			
-			if(world.getScore() == AssetLoader.getHighScore()) {
-				str = "New high score!";
-			
-			} else {
-				str = "High score: " + AssetLoader.getHighScore();
+			if(world.gameOverTimer > 0) {
+				world.gameOverTimer -= delta;
+				
+			} else {			
+				// Play again
+				str = "Play again";	
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+						
+				if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
+					y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
+							
+					str = "[Play again]";
+					layout.setText(AssetLoader.font, str);
+					strWidth = layout.width;
+					strHeight = layout.height;
+							
+					if(Gdx.input.isTouched()) {
+						world.restart();
+					}
+				}
+						
+				AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
+				
+				// Exit
+				str = "Exit";
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+						
+				if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
+					y >= h/2 - 5*strHeight && y <= h/2 - 4*strHeight) {
+	
+					str = "[Exit]";
+					layout.setText(AssetLoader.font, str);
+					strWidth = layout.width;
+					strHeight = layout.height;
+							
+					if(Gdx.input.isTouched()) {
+						Gdx.app.exit();
+					}
+				}
+						
+				AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
+				
+				// Shot accuracy
+				float[] hits = world.getHits();
+				int acc = (int) ((hits[0] / hits[1]) * 100);
+				String strAcc = acc + "% accuracy";
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+				//AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h-10);
+				
+				// High score
+				world.compareHighScore();
+				
+				if(world.getScore() == AssetLoader.getHighScore()) {
+					str = strAcc + "   " + "New high score!";
+				
+				} else {
+					str = strAcc + " / " + "High score: " + AssetLoader.getHighScore();
+				}
+				
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+				AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 5*strHeight);
 			}
-			
-			layout.setText(AssetLoader.font, str);
-			strWidth = layout.width;
-			strHeight = layout.height;
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 5*strHeight);
-			
-			// Shot accuracy
-			float[] hits = world.getHits();
-			int acc = (int) ((hits[0] / hits[1]) * 100);
-			str = "Accuracy: " + acc + "%";
-			layout.setText(AssetLoader.font, str);
-			strWidth = layout.width;
-			strHeight = layout.height;
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h-10);			
 		}
 		
 		if(world.isPause()) {
-			drawString("II", -h / 2 + 39);
+			// Pause
+			str = "II";	
+			layout.setText(AssetLoader.font, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, strHeight + 10);
+			
+			// Exit and restart
+			BitmapFont f = new BitmapFont();
+			str = "Press E to exit, R to restart";
+			layout.setText(f, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+			f.draw(batch, str, w - strWidth - 10, strHeight + 10);
+			
+			if(Gdx.input.isKeyPressed(Input.Keys.E)) {
+				Gdx.app.exit();
+				
+			} else if(Gdx.input.isKeyPressed(Input.Keys.R)) {
+				world.restart();
+			}
 		}
 		
 		batch.end();
 	}
 	
-	private void drawString(String str, int yDiff) {
-		GlyphLayout layout = new GlyphLayout();
-		
-		layout.setText(AssetLoader.font, str);
-		float width = layout.width;
-		float height = layout.height;
-		
-		float x = (w / 2) - (width / 2);
-		float y = (h / 2) + (height / 2);
-		
-		AssetLoader.font.draw(batch, str, x, y + yDiff);	
-	}
-
 	private void drawLives() {
 		int lives = world.getLives();
 		int height = 80;
@@ -206,14 +220,16 @@ public class Renderer {
 			
 		// Level
 		int lvl = world.getLevel();
-		String level = "Lvl " + lvl;
-			
-		GlyphLayout layout = new GlyphLayout();
-		layout.setText(AssetLoader.font, level);
-		float levelWidth = layout.width;
-	
-		AssetLoader.font.draw(batch, level, w - levelWidth - 10, h - 10);
-	
+		
+		if(world.isNextLevel() == false) {
+			String level = "Lvl " + lvl;
+				
+			GlyphLayout layout = new GlyphLayout();
+			layout.setText(AssetLoader.font, level);
+			float levelWidth = layout.width;
+		
+			AssetLoader.font.draw(batch, level, w - levelWidth - 10, h - 10);
+		}
 		batch.end();
 			
 		drawLives();

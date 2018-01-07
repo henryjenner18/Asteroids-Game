@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 		world.update(delta);
 		collisionDetector.manage();
 		spaceManager.manage();
-		renderer.render();
+		renderer.render(delta);
 	}
 
 	@Override

@@ -37,7 +37,11 @@ public class Rocket extends SpaceObject {
 	
 	public void update(float delta) {
 		checkThrust(delta);
-		asteroidsG(delta);
+		
+		if(invincible == false) {
+			asteroidsG(delta);
+		}
+		
 		terminalVelCheck();
 		position.add(velocity);
 		
