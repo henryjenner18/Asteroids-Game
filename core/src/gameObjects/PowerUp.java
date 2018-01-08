@@ -54,16 +54,18 @@ public class PowerUp extends SpaceObject {
 	private void setColours() {
 		fillColour = new int[3];
 		fillColour[0] = 255;
-		fillColour[1] = 40;
-		fillColour[2] = 40;
+		fillColour[1] = 24;
+		fillColour[2] = 24;
 		
 		lineColour = new int[3];
 		if(flash == true) {
-			lineColour[0] = 204;
-			lineColour[1] = 255;
-			lineColour[2] = 51;
+			lineColour[0] = 20;
+			lineColour[1] = 204;
+			lineColour[2] = 20;
 		} else {
-			lineColour = fillColour;
+			lineColour[0] = 255;
+			lineColour[1] = 215;
+			lineColour[2] = 50;
 		}	
 	}
 	

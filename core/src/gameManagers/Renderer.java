@@ -128,7 +128,7 @@ public class Renderer {
 					str = strAcc + "   " + "New high score!";
 				
 				} else {
-					str = strAcc + " / " + "High score: " + AssetLoader.getHighScore();
+					str = strAcc + "   " + "High score: " + AssetLoader.getHighScore();
 				}
 				
 				layout.setText(AssetLoader.font, str);

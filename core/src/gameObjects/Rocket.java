@@ -135,7 +135,7 @@ public class Rocket extends SpaceObject {
 		lineColour = new int[3];
 		lineColour[0] = 255;
 		lineColour[1] = 51;
-		lineColour[2] = 51;
+		lineColour[2] = 127;
 		
 		missileColour = new int[3];
 		missileColour[0] = 255;
