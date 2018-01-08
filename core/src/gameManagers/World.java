@@ -57,7 +57,6 @@ public class World {
 		UFOAccuracy = 10;
 		objSpawner.rocket(0);
 		currentState = GameState.RUNNING;
-		objSpawner.powerUp(500, 400);
 	}
 	
 	public enum GameState {
