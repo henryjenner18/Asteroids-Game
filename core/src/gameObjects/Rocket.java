@@ -12,7 +12,7 @@ public class Rocket extends SpaceObject {
 	
 	private float[][] flame;
 	private int[] flameFillColour, flameLineColour;
-	private int height, dh, terminalVel, maxMissiles;
+	private int height, dh, terminalVel;
 	private boolean thrusting, left, right, flameOn, tripleMissile, invincible;
 	private float tripleMissileTimer, invincibleTimer;
 	
@@ -24,8 +24,7 @@ public class Rocket extends SpaceObject {
 		r = height / 2;
 		edges = vertices.length;
 		dh = 4;
-		terminalVel = 10;
-		maxMissiles = 8;		
+		terminalVel = 10;		
 		setColours();
 		left = right = flameOn = tripleMissile = invincible = false;
 		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
@@ -222,10 +221,6 @@ public class Rocket extends SpaceObject {
 	
 	public int getHeight() {
 		return height;
-	}
-	
-	public int getMaxMissiles() {
-		return maxMissiles;
 	}
 	
 	public float[][] getFlameVertices() {
