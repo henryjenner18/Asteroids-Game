@@ -63,9 +63,7 @@ public class PowerUp extends SpaceObject {
 			lineColour[1] = 204;
 			lineColour[2] = 20;
 		} else {
-			lineColour[0] = 255;
-			lineColour[1] = 215;
-			lineColour[2] = 50;
+			lineColour = fillColour;
 		}	
 	}
 	

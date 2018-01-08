@@ -201,7 +201,7 @@ public class Renderer {
 			float polygon[] = polygonArray(vertices, 4);
 			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Line);
-			sr.setColor(255/255f, 51/255f, 51/255f, 0.5f);
+			sr.setColor(204/255f, 0/255f, 102/255f, 0.5f);
 			sr.polygon(polygon);
 			sr.end();
 			
