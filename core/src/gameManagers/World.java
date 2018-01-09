@@ -25,7 +25,7 @@ public class World {
 	ArrayList<PowerUp> powerUps;
 	
 	float rocketSpawnTimer;
-	private float ufoSpawnTimer, asteroidSpawnTimer;
+	private float ufoSpawnTimer, asteroidSpawnTimer, gameTimer;
 	float gameOverTimer;
 	boolean respawn;
 	private boolean nextLevel;
@@ -51,6 +51,7 @@ public class World {
 		resetUFOSpawnTimer();
 		resetAsteroidSpawnTimer();
 		resetGameOverTimer();
+		gameTimer = 0;
 		score = level = extraLifeCount = (int) (rocketSpawnTimer = 0);
 		lives = 3;
 		hits = new float[2];
@@ -117,6 +118,10 @@ public class World {
 				resetAsteroidSpawnTimer();
 				nextLevel = false;
 			}
+		}
+		
+		if(!isGameOver()) {
+			gameTimer += delta;
 		}
 	}
 	
@@ -352,6 +357,10 @@ public class World {
 	
 	public int getUFOAccuracy() {
 		return UFOAccuracy;
+	}
+	
+	public float getGameTimer() {
+		return gameTimer;
 	}
 	
 	public boolean isRunning() {

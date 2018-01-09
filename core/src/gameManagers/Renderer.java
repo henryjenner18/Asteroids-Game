@@ -116,21 +116,28 @@ public class Renderer {
 				float[] hits = world.getHits();
 				int acc = (int) ((hits[0] / hits[1]) * 100);
 				String strAcc = acc + "% accuracy";
-				layout.setText(AssetLoader.font, str);
-				strWidth = layout.width;
-				strHeight = layout.height;
-				//AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h-10);
+				
+				// Game time
+				float gameTimer = world.getGameTimer();
+				System.out.println(gameTimer);
+				int mins = MathUtils.floor(gameTimer / 60);
+				int secs = Math.round(gameTimer % 60);
+				String strTimer = "Game time: " + mins + " mins " + secs + " secs";
 				
 				// High score
 				world.compareHighScore();
 				
+				String strHS;
 				if(world.getScore() == AssetLoader.getHighScore()) {
-					str = strAcc + "   " + "New high score!";
+					strHS = "New high score!";
 				
 				} else {
-					str = strAcc + "   " + "High score: " + AssetLoader.getHighScore();
+					strHS = "High score: " + AssetLoader.getHighScore();
 				}
 				
+				String strGap = "  /  ";
+				
+				str = strAcc + strGap + strTimer + strGap + strHS;
 				layout.setText(AssetLoader.font, str);
 				strWidth = layout.width;
 				strHeight = layout.height;
