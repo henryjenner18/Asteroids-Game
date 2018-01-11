@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import gameManagers.World;
+import main.Main;
 
 public class Asteroid extends SpaceObject {
 	
@@ -30,7 +31,7 @@ public class Asteroid extends SpaceObject {
 		angles = new float[edges];
 		radii = new float[edges];
 		vertices = new float[edges][2];	
-		score = (int) (120 - r) * 2;
+		score = (int) (((Main.getWidth() * Main.getHeight()) / 20000) + 10 - r) * 2;
 		generateAngles();
 		generateRadii();
 		setColours();

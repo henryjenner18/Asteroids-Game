@@ -40,7 +40,9 @@ public class ObjectSpawner {
 	}
 	
 	public void newAsteroid() {
-		float r = rand.nextInt(21) + 90;
+		float maxR = (Main.getWidth() * Main.getHeight()) / 20000;
+		float minR = (float) (maxR * 0.95);
+		float r = (float) (minR + (rand.nextFloat() * (maxR - minR)));
 		int hg = rand.nextInt(361);
 		int v = rand.nextInt(81) + 130;
 		float w = Main.getWidth(), h = Main.getHeight();

@@ -20,11 +20,11 @@ public class Rocket extends SpaceObject {
 		super(world);
 		vertices = new float[4][2];
 		flame = new float[3][2];
-		height = 80; 		
+		height = (Main.getWidth() * Main.getHeight()) / 26000; 		
 		r = height / 2;
 		edges = vertices.length;
 		dh = 4;
-		terminalVel = 10;		
+		terminalVel = 10;
 		setColours();
 		left = right = flameOn = tripleMissile = invincible = false;
 		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);

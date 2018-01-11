@@ -174,7 +174,7 @@ public class Renderer {
 	
 	private void drawLives() {
 		int lives = world.getLives();
-		int height = 80;
+		int height = (Main.getWidth() * Main.getHeight()) / 26000;
 		int r = height / 2;
 		int width = (r * lives) + (lives - 1) * 10;
 		Vector2 position = new Vector2((w / 2) - (width / 2) + (r / 2), h - height / 2 - 15);

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import gameManagers.World;
+import main.Main;
 
 public class Missile extends SpaceObject {
 	
@@ -26,7 +27,7 @@ public class Missile extends SpaceObject {
 		vertices = new float[2][2];
 		this.vMult = vMult;
 		edges = vertices.length;
-		height = 30;
+		height = (Main.getWidth() * Main.getHeight()) / 70000;
 		lineColour = colour;
 	}
 	
