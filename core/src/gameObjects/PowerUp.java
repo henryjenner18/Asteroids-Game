@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import gameManagers.World;
-import main.Main;
 
 public class PowerUp extends SpaceObject {
 	
@@ -15,7 +14,7 @@ public class PowerUp extends SpaceObject {
 	public PowerUp(World world, float x, float y) {
 		super(world);
 		position = new Vector2(x, y);
-		r = (Main.getWidth() * Main.getHeight()) / 104000;
+		r = 19;
 		edges = 6;
 		vertices = new float[edges][2];
 		lifespan = 7;

@@ -119,7 +119,6 @@ public class Renderer {
 				
 				// Game time
 				float gameTimer = world.getGameTimer();
-				System.out.println(gameTimer);
 				int mins = MathUtils.floor(gameTimer / 60);
 				int secs = Math.round(gameTimer % 60);
 				String strTimer = "Game time: " + mins + " mins " + secs + " secs";
@@ -174,7 +173,7 @@ public class Renderer {
 	
 	private void drawLives() {
 		int lives = world.getLives();
-		int height = (Main.getWidth() * Main.getHeight()) / 26000;
+		int height = 80;
 		int r = height / 2;
 		int width = (r * lives) + (lives - 1) * 10;
 		Vector2 position = new Vector2((w / 2) - (width / 2) + (r / 2), h - height / 2 - 15);

@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import gameManagers.World;
-import main.Main;
 
 public class UFO extends SpaceObject {
 	
@@ -21,7 +20,7 @@ public class UFO extends SpaceObject {
 		edges = 8;
 		vertices = new float[edges][2];
 		float ran = randFloatInRange(0.6, 1);
-		r = height = (Main.getWidth() * Main.getHeight()) / 41500 * ran;
+		height = r = 50 * ran;
 		dv = 0;
 		while(dv == 0) {
 			dv = rand.nextInt(5) - 2;
