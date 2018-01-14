@@ -11,23 +11,19 @@ public class CollisionDetector {
 	private ArrayList<Integer> asteroidsToRemove;
 	private ArrayList<Integer> missilesToRemove;
 	private ArrayList<Integer> ufosToRemove;
-	int col;
 	
 	public CollisionDetector(World world) {
 		this.world = world;
 	}
 
 	public void manage() {
-		col = 0;
 		rocketsToRemove = new ArrayList<Integer>();
 		asteroidsToRemove = new ArrayList<Integer>();
 		missilesToRemove = new ArrayList<Integer>();
 		ufosToRemove = new ArrayList<Integer>();
 		
-		if(world.getNumRockets() > 0) {
-			boolean invincible = world.getRocket(0).getInvincible();
-			
-			if(invincible == false) {
+		if(world.getNumRockets() > 0) {	
+			if(world.getRocket(0).getInvincible() == false) {
 				checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
 				checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
 				checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');
@@ -69,7 +65,7 @@ public class CollisionDetector {
 							
 							for(int q = 0; q < obj2Edges; q++) {
 								
-								boolean obj1InfG = infinityGradient(obj1Gradients[e]); // Need variables to tell which obj has the infinity gradient
+								boolean obj1InfG = infinityGradient(obj1Gradients[e]);
 								boolean obj2InfG = infinityGradient(obj2Gradients[q]);
 								float x = 0, y = 0;
 								
@@ -83,7 +79,6 @@ public class CollisionDetector {
 									if(coordRangeCheck(x, obj1XCoords, obj2XCoords) == true) {	
 										
 										y = (obj1Gradients[e] * x) + obj1Yintercepts[e];
-										//System.out.println(f + ": collision occurred: no inf; " + obj1Type + "(" + i +"):[" + e +"] with "+ obj2Type + "(" + a +"):[" + q +"]");
 										collisionOccurred(x, y, obj1Type, i, obj2Type, a);
 									}
 
@@ -103,11 +98,10 @@ public class CollisionDetector {
 									
 									if(coordRangeCheck(y, obj1YCoords, obj2YCoords) == true &&
 											coordRangeCheck(x, obj1XCoords, obj2XCoords) == true) {
-										//System.out.println(f + ": collision occurred: inf; " + obj1Type + "(" + i +"):[" + e +"] with "+ obj2Type + "(" + a +"):[" + q +"]");
+										
 										collisionOccurred(x, y, obj1Type, i, obj2Type, a);
 									}
 								}
-							col++;
 							}
 						}
 					}
@@ -121,7 +115,7 @@ public class CollisionDetector {
 			addObjectToList(obj1Type, obj1Index);
 			addObjectToList(obj2Type, obj2Index);
 			
-			if(obj1Type == 'm' && obj2Type == 'm') { // Missile-missile collision, therefore grey boulders not allowed in sparks
+			if(obj1Type == 'm' && obj2Type == 'm') { // Missile-missile collision, therefore grey boulders not required in sparks
 				world.objSpawner.sparks(x, y, true);
 			} else {
 				world.objSpawner.sparks(x, y, false);
@@ -136,16 +130,8 @@ public class CollisionDetector {
 			if(world.getMissile(obj1Index).getCreator() == 'u') {
 				return false;
 			} else {
-				world.setHits(0, 0.5);
 				return true;
 			}
-			
-		} else if((obj1Type == 'm' && obj2Type == 'a') || (obj1Type == 'm' && obj2Type == 'a')) {
-
-			if(world.getMissile(obj1Index).getCreator() == 'r') {
-				world.setHits(0, 0.5);
-			}
-			return true;
 				
 		} else if(obj1Type == 'r' && obj2Type == 'm') {
 			if(world.getMissile(obj2Index).getCreator() == 'r') {

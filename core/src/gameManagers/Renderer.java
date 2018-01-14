@@ -34,8 +34,8 @@ public class Renderer {
 		drawBackground();
 		drawPowerUps();
 		drawSparks();
-		drawFragments();
 		drawAsteroids();
+		drawFragments();
 		drawMissiles();
 		drawUFOs();
 		
@@ -112,16 +112,11 @@ public class Renderer {
 						
 				AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
 				
-				// Shot accuracy
-				float[] hits = world.getHits();
-				int acc = (int) ((hits[0] / hits[1]) * 100);
-				String strAcc = acc + "% accuracy";
-				
 				// Game time
 				float gameTimer = world.getGameTimer();
 				int mins = MathUtils.floor(gameTimer / 60);
 				int secs = Math.round(gameTimer % 60);
-				String strTimer = "Game time: " + mins + " mins " + secs + " secs";
+				String strTimer = mins + " mins " + secs + " secs";
 				
 				// High score
 				world.compareHighScore();
@@ -134,9 +129,7 @@ public class Renderer {
 					strHS = "High score: " + AssetLoader.getHighScore();
 				}
 				
-				String strGap = "  /  ";
-				
-				str = strAcc + strGap + strTimer + strGap + strHS;
+				str = strTimer + "    " + strHS;
 				layout.setText(AssetLoader.font, str);
 				strWidth = layout.width;
 				strHeight = layout.height;
@@ -285,7 +278,7 @@ public class Renderer {
 			batch.begin();
 			
 			BitmapFont f = new BitmapFont();
-			String str = "3";
+			String str = "III";
 			GlyphLayout layout = new GlyphLayout();
 			
 			layout.setText(f, str);

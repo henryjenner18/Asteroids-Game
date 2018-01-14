@@ -7,7 +7,9 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 
+import gameObjects.Asteroid;
 import gameObjects.Rocket;
+import gameObjects.UFO;
 
 public class SpaceManager {
 	
@@ -30,12 +32,12 @@ public class SpaceManager {
 	}
 	
 	private ArrayList<Integer> sortArrayList(ArrayList<Integer> objs) {
-		Set<Integer> noDuplicates = new HashSet<Integer>();
+		Set<Integer> noDuplicates = new HashSet<Integer>(); // Removes duplicates
 		noDuplicates.addAll(objs);
-		objs.clear();
-		objs.addAll(noDuplicates);
-		Collections.sort(objs);
-		Collections.reverse(objs);
+		objs.clear(); // Clears original array list
+		objs.addAll(noDuplicates); // Replaces with new list
+		Collections.sort(objs); // Sorts list ascending
+		Collections.reverse(objs); // Sorts list descending
 		
 		return objs;
 	}
@@ -47,7 +49,7 @@ public class SpaceManager {
 			Rocket rocket = world.getRocket(i);
 			float x = rocket.getX();
 			float y = rocket.getY();
-			float r = (float) (rocket.getR() / 2.2);
+			float r = (float) (rocket.getR() / 2.4);
 			Vector2 objVelocity = rocket.getVelocity();
 			int[] fillColour = rocket.getFillColour();
 			int[] lineColour = rocket.getLineColour();
@@ -61,9 +63,10 @@ public class SpaceManager {
 		ArrayList<Integer> objs = sortArrayList(colDet.getAsteroidsToRemove());
 				
 		for(int i = 0; i < objs.size(); i++) {
-			int score = world.getAsteroid(objs.get(i)).getScore();
+			Asteroid asteroid = world.getAsteroid(objs.get(i));
+			int score = asteroid.getScore();
 			world.addScore(score);
-			world.getAsteroid(objs.get(i)).split();
+			asteroid.split();
 			world.removeAsteroid(objs.get(i));
 		}
 	}
@@ -76,17 +79,12 @@ public class SpaceManager {
 		for(int i = 0; i < numMissiles; i++) {
 			if(world.getMissile(i).getTimeLeft() == 0) {
 				objs.add(i);
-				
-				if(world.getMissile(i).getCreator() == 'r') {
-					world.setHits(1, 1);
-				}
 			}
 		}
 		
 		objs = sortArrayList(objs);
 		
-		for(int i = 0; i < objs.size(); i++) {
-			
+		for(int i = 0; i < objs.size(); i++) {		
 			world.removeMissile(objs.get(i));
 		}
 	}
@@ -95,15 +93,16 @@ public class SpaceManager {
 		ArrayList<Integer> objs = sortArrayList(colDet.getUFOsToRemove());
 				
 		for(int i = 0; i < objs.size(); i++) {
-			int score = world.getUFO(objs.get(i)).getScore();
+			UFO ufo = world.getUFO(objs.get(i));
+			int score = ufo.getScore();
 			world.addScore(score);
 			
-			float x = world.getUFO(i).getX();
-			float y = world.getUFO(i).getY();
-			float r = (world.getUFO(i).getR() * 2) / 5;
-			Vector2 objVelocity = world.getUFO(i).getVelocity();
-			int[] fillColour = world.getUFO(i).getFillColour();
-			int[] lineColour = world.getUFO(i).getLineColour();
+			float x = ufo.getX();
+			float y = ufo.getY();
+			float r = (float) (ufo.getR() / 2.5);
+			Vector2 objVelocity = ufo.getVelocity();
+			int[] fillColour = ufo.getFillColour();
+			int[] lineColour = ufo.getLineColour();
 			
 			world.checkForPowerUp(x, y);
 			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
