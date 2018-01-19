@@ -55,7 +55,6 @@ public class World {
 		lives = 3;
 		UFOAccuracy = 10;
 		objSpawner.rocket(0);
-		objSpawner.ufo();
 		currentState = GameState.RUNNING;
 	}
 	
