@@ -278,7 +278,14 @@ public class Renderer {
 			batch.begin();
 			
 			BitmapFont f = new BitmapFont();
-			String str = "III";
+			String str = null;
+			
+			if(p.getType() == 0) {
+				str = "III";
+			} else if(p.getType() == 1) {
+				str = "";
+			}
+			
 			GlyphLayout layout = new GlyphLayout();
 			
 			layout.setText(f, str);

@@ -28,7 +28,7 @@ public class World {
 	private float ufoSpawnTimer, asteroidSpawnTimer, gameTimer;
 	float gameOverTimer;
 	boolean respawn;
-	private boolean nextLevel;
+	private boolean nextLevel, clearScreen;
 	private int score, level, lives, UFOAccuracy, extraLifeCount;
 	private GameState currentState;	
 	public ObjectSpawner objSpawner;
@@ -219,6 +219,10 @@ public class World {
 		gameOverTimer = 2;
 	}
 	
+	public void setClearScreen(boolean b) {
+		clearScreen = b;
+	}
+	
 	// Remove objects
 	public void removeRocket(int i) {
 		rockets.remove(i);
@@ -371,5 +375,9 @@ public class World {
 	
 	public boolean isNextLevel() {
 		return nextLevel;
+	}
+	
+	public boolean isClearScreen() {
+		return clearScreen;
 	}
 }

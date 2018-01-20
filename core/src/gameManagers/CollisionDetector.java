@@ -142,8 +142,15 @@ public class CollisionDetector {
 			
 		} else if(obj1Type == 'r' && obj2Type == 'p') {
 			world.getPowerUp(obj2Index).setTimeLeft(0);
-			world.getRocket(obj1Index).setTripleMissile(true);
-			world.getRocket(obj1Index).resetTripleMissileTimer();
+			
+			if(world.getPowerUp(obj2Index).getType() == 0) {
+				world.getRocket(obj1Index).setTripleMissile(true);
+				world.getRocket(obj1Index).resetTripleMissileTimer();
+			
+			} else if(world.getPowerUp(obj2Index).getType() == 1) {
+				world.setClearScreen(true);
+			}
+			
 			return false;
 			
 		} else {

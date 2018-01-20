@@ -10,17 +10,19 @@ public class PowerUp extends SpaceObject {
 	private float lifespan, timeLeft;
 	private double flashTimer;
 	private boolean flash;
+	private int type;
 	
 	public PowerUp(World world, float x, float y) {
 		super(world);
+		type = rand.nextInt(2);
 		position = new Vector2(x, y);
 		r = 19;
 		edges = 6;
 		vertices = new float[edges][2];
 		lifespan = 7;
 		setTimeLeft(lifespan);
-		setVertices();
 		setColours();
+		setVertices();
 		resetFlashTimer();
 		flash = true;
 	}
@@ -53,18 +55,34 @@ public class PowerUp extends SpaceObject {
 
 	private void setColours() {
 		fillColour = new int[3];
-		fillColour[0] = 255;
-		fillColour[1] = 24;
-		fillColour[2] = 24;
-		
 		lineColour = new int[3];
-		if(flash == true) {
-			lineColour[0] = 20;
-			lineColour[1] = 204;
-			lineColour[2] = 20;
-		} else {
-			lineColour = fillColour;
-		}	
+		
+		if(type == 0) {
+			fillColour[0] = 255;
+			fillColour[1] = 24;
+			fillColour[2] = 24;
+				
+			if(flash == true) {
+				lineColour[0] = 20;
+				lineColour[1] = 204;
+				lineColour[2] = 20;
+			} else {
+				lineColour = fillColour;
+			}
+			
+		} else if(type == 1) {
+			fillColour[0] = 255;
+			fillColour[1] = 76;
+			fillColour[2] = 31;
+			
+			if(flash == true) {
+				lineColour[0] = 94;
+				lineColour[1] = 62;
+				lineColour[2] = 222;
+			} else {
+				lineColour = fillColour;
+			}
+		}
 	}
 	
 	private void resetFlashTimer() {
@@ -77,5 +95,9 @@ public class PowerUp extends SpaceObject {
 	
 	public float getTimeLeft() {
 		return timeLeft;
+	}
+	
+	public int getType() {
+		return type;
 	}
 }

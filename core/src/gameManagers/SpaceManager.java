@@ -60,7 +60,27 @@ public class SpaceManager {
 	}
 	
 	private void resolveAsteroids() {
-		ArrayList<Integer> objs = sortArrayList(colDet.getAsteroidsToRemove());
+		ArrayList<Integer> asteroids = new ArrayList<Integer>();
+		
+		if(world.isClearScreen()) {
+			int numAsteroids = world.getNumAsteroids();
+			
+			for(int i = 0; i < numAsteroids; i++) {
+				asteroids.add(i);
+				
+				float x = world.getAsteroid(i).getX();
+				float y = world.getAsteroid(i).getY();
+				world.objSpawner.sparks(x, y, false);
+				world.objSpawner.sparks(x, y, false);
+			}
+			
+			world.setClearScreen(false);
+			
+		} else {
+			asteroids = colDet.getAsteroidsToRemove();
+		}
+		
+		ArrayList<Integer> objs = sortArrayList(asteroids);
 				
 		for(int i = 0; i < objs.size(); i++) {
 			Asteroid asteroid = world.getAsteroid(objs.get(i));
