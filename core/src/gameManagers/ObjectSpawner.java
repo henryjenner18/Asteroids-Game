@@ -9,6 +9,7 @@ import gameObjects.Fragment;
 import gameObjects.Missile;
 import gameObjects.PowerUp;
 import gameObjects.Rocket;
+import gameObjects.Shield;
 import gameObjects.Spark;
 import gameObjects.UFO;
 import main.Main;
@@ -124,5 +125,10 @@ public class ObjectSpawner {
 	public void powerUp(float x, float y) {
 		PowerUp powerUp = new PowerUp(world, x, y);
 		world.powerUps.add(powerUp);
+	}
+	
+	public void shield() {
+		Shield shield = new Shield(world);
+		world.shields.add(shield);
 	}
 }

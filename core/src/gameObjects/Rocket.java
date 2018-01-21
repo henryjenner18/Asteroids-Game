@@ -63,6 +63,10 @@ public class Rocket extends SpaceObject {
 				resetInvincibleTimer();
 			}
 		}
+		
+		if(world.getNumShields() > 0) {
+			world.getShield(0).update();
+		}
 	}
 	
 	private void checkThrust(float delta) {

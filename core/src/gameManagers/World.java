@@ -11,6 +11,7 @@ import gameObjects.Fragment;
 import gameObjects.Missile;
 import gameObjects.PowerUp;
 import gameObjects.Rocket;
+import gameObjects.Shield;
 import gameObjects.Spark;
 import gameObjects.UFO;
 
@@ -23,6 +24,7 @@ public class World {
 	ArrayList<Fragment> fragments;
 	ArrayList<Spark> sparks;
 	ArrayList<PowerUp> powerUps;
+	ArrayList<Shield> shields;
 	
 	float rocketSpawnTimer;
 	private float ufoSpawnTimer, asteroidSpawnTimer, gameTimer;
@@ -46,6 +48,7 @@ public class World {
 		fragments = new ArrayList<Fragment>();
 		sparks = new ArrayList<Spark>();
 		powerUps = new ArrayList<PowerUp>();
+		shields = new ArrayList<Shield>();
 		
 		resetUFOSpawnTimer();
 		resetAsteroidSpawnTimer();
@@ -147,6 +150,10 @@ public class World {
 		for(int i = 0; i < powerUps.size(); i++) {
 			powerUps.get(i).update(delta);
 		}
+		
+		//for(int i = 0; i < shields.size(); i++) {
+			//shields.get(i).update(delta);
+		//}
 	}
 	
 	// Gameplay
@@ -252,6 +259,10 @@ public class World {
 		powerUps.remove(i);
 	}
 	
+	public void removeShield(int i) {
+		shields.remove(i);
+	}
+	
 	// Getters	
 	public ArrayList<Rocket> getRockets() {
 		return rockets;
@@ -335,6 +346,18 @@ public class World {
 	
 	public int getNumPowerUps() {
 		return powerUps.size();
+	}
+	
+	public ArrayList<Shield> getShields() {
+		return shields;
+	}
+	
+	public Shield getShield(int i) {
+		return shields.get(i);
+	}
+	
+	public int getNumShields() {
+		return shields.size();
 	}
 	
 	public int getScore() {

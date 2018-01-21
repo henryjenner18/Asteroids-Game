@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import gameHelpers.AssetLoader;
 import gameObjects.PowerUp;
+import gameObjects.Shield;
 import main.Main;
 
 public class Renderer {
@@ -38,6 +39,7 @@ public class Renderer {
 		drawFragments();
 		drawMissiles();
 		drawUFOs();
+		drawShields();
 		
 		if(world.isGameOver() == false) {
 			drawRockets();
@@ -506,6 +508,44 @@ public class Renderer {
 			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
+			sr.polygon(polygon);
+			sr.end();
+		}
+	}
+	
+	private void drawShields() {
+		int numShields = world.getNumShields();
+		
+		for(int i = 0; i < numShields; i++) {
+			Shield s = world.getShield(i);
+			float x = s.getX();
+			float y = s.getY();
+			float vertices[][] = s.getVertices();
+			int edges = s.getEdges();
+			float[] polygon = polygonArray(vertices, edges);
+			
+			// Filled Polygon
+			for(int e = 0; e < edges; e++) {
+				Gdx.gl.glEnable(GL20.GL_BLEND);
+				sr.begin(ShapeType.Filled);
+				sr.setColor(220/255f, 50/255f, 50/255f, 0.2f);
+							
+				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
+					sr.triangle(vertices[e][0], vertices[e][1],
+							vertices[0][0], vertices[0][1],
+							x, y);
+					sr.end();
+				} else {
+					sr.triangle(vertices[e][0], vertices[e][1],
+							vertices[e+1][0], vertices[e+1][1],
+							x, y);
+					sr.end();
+				}
+			}
+						
+			Gdx.gl.glLineWidth(3);
+			sr.begin(ShapeType.Line);
+			sr.setColor(200/255f, 40/255f, 40/255f, 1);
 			sr.polygon(polygon);
 			sr.end();
 		}
