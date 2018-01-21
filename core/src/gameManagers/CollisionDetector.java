@@ -23,11 +23,11 @@ public class CollisionDetector {
 		ufosToRemove = new ArrayList<Integer>();
 		
 		if(world.getNumRockets() > 0) {	
-			if(world.getRocket(0).getInvincible() == false) {
+			//if(world.getRocket(0).getInvincible() == false) {
 				checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
 				checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
 				checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');
-			}
+			//}
 			
 			checkForCollisions(world.getRockets(), 'r', world.getPowerUps(), 'p');
 		}
@@ -111,7 +111,7 @@ public class CollisionDetector {
 	}
 	
 	private void collisionOccurred(float x, float y, char obj1Type, int obj1Index, char obj2Type, int obj2Index) {
-		if(checkValidCollision(obj1Type, obj1Index, obj2Type, obj2Index) == true) {
+		if(checkValidCollision(x, y, obj1Type, obj1Index, obj2Type, obj2Index) == true) {
 			addObjectToList(obj1Type, obj1Index);
 			addObjectToList(obj2Type, obj2Index);
 			
@@ -123,7 +123,7 @@ public class CollisionDetector {
 		}
 	}
 	
-	private boolean checkValidCollision(char obj1Type, int obj1Index, char obj2Type, int obj2Index) {
+	private boolean checkValidCollision(float x, float y, char obj1Type, int obj1Index, char obj2Type, int obj2Index) {
 		
 		if(obj1Type == 'm' && obj2Type == 'u') {
 			
@@ -132,30 +132,46 @@ public class CollisionDetector {
 			} else {
 				return true;
 			}
+			
+		} else if(obj1Type == 'r') { // Rocket involved
+			if(obj2Type == 'm') { // Missile involved
 				
-		} else if(obj1Type == 'r' && obj2Type == 'm') {
-			if(world.getMissile(obj2Index).getCreator() == 'r') {
+				// If missile belongs to the rocket, or rocket is invincible do not collide
+				if((world.getMissile(obj2Index).getCreator() == 'r')
+						|| world.getRocket(0).getInvincible() == true) {
+					
+					world.getMissile(obj2Index).setTimeLeft(0); // But remove missile
+					world.objSpawner.sparks(world.getMissile(obj2Index).getX(), world.getMissile(obj2Index).getY(), true); // Create sparks
+					
+					return false;
+				} else {
+					return true;
+				}
+				
+			} else if(obj2Type == 'p') { // Power up involved
+				world.getPowerUp(obj2Index).setTimeLeft(0);
+				
+				if(world.getPowerUp(obj2Index).getType() == 0) {
+					world.getRocket(obj1Index).setTripleMissile(true);
+					world.getRocket(obj1Index).resetTripleMissileTimer();
+				
+				} else if(world.getPowerUp(obj2Index).getType() == 1) {
+					world.setClearScreen(true);
+				}
+				
 				return false;
-			} else {
-				return true;
+			
+			} else if(world.getRocket(0).getInvincible() == true) {
+				addObjectToList(obj2Type, obj2Index); // Still remove obj2
+				world.objSpawner.sparks(x, y, false); // Create sparks
+				return false; // Don't collide rocket as it's invincible
 			}
 			
-		} else if(obj1Type == 'r' && obj2Type == 'p') {
-			world.getPowerUp(obj2Index).setTimeLeft(0);
-			
-			if(world.getPowerUp(obj2Index).getType() == 0) {
-				world.getRocket(obj1Index).setTripleMissile(true);
-				world.getRocket(obj1Index).resetTripleMissileTimer();
-			
-			} else if(world.getPowerUp(obj2Index).getType() == 1) {
-				world.setClearScreen(true);
-			}
-			
-			return false;
-			
-		} else {
+		} else { // Collide in any other rocket situation
 			return true;
 		}
+		
+		return true; // Collide if not mentioned
 	}
 
 	private void addObjectToList(char z, int i) {

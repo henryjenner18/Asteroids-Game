@@ -98,7 +98,7 @@ public class World {
 			objSpawner.rocket(delta);
 		}
 		
-		if(asteroids.size() == 0 && ufos.size() == 0) {
+		if(asteroids.size() == 0 && ufos.size() == 0 && !isGameOver()) {
 			nextLevel = true;
 		}
 		
@@ -109,7 +109,7 @@ public class World {
 			} else {
 				levelUp();
 				
-				for(int a = 0; a < level; a ++) {
+				for(int a = 0; a < level + 1; a ++) {
 					objSpawner.newAsteroid();
 				}
 				

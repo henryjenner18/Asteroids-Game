@@ -63,9 +63,9 @@ public class PowerUp extends SpaceObject {
 			fillColour[2] = 24;
 				
 			if(flash == true) {
-				lineColour[0] = 20;
-				lineColour[1] = 204;
-				lineColour[2] = 20;
+				lineColour[0] = 221;
+				lineColour[1] = 218;
+				lineColour[2] = 55;
 			} else {
 				lineColour = fillColour;
 			}

@@ -149,7 +149,7 @@ public class MainMenuScreen implements Screen {
 			}
 			
 			// Polygon outline
-			Gdx.gl.glLineWidth(5);
+			Gdx.gl.glLineWidth(6);
 			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 			sr.polygon(polygon);
@@ -169,7 +169,7 @@ public class MainMenuScreen implements Screen {
 	}
 	
 	private void drawBackground() {
-		Gdx.gl.glClearColor(5/255f, 5/255f, 5/255f, 1);
+		Gdx.gl.glClearColor(2/255f, 2/255f, 2/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		sr.begin(ShapeType.Point);

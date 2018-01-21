@@ -273,27 +273,6 @@ public class Renderer {
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 			sr.polygon(polygon);
 			sr.end();
-			
-			SpriteBatch batch = new SpriteBatch();
-			batch.begin();
-			
-			BitmapFont f = new BitmapFont();
-			String str = null;
-			
-			if(p.getType() == 0) {
-				str = "III";
-			} else if(p.getType() == 1) {
-				str = "";
-			}
-			
-			GlyphLayout layout = new GlyphLayout();
-			
-			layout.setText(f, str);
-			float strWidth = layout.width;
-			float strHeight = layout.height;
-			f.draw(batch, str, x - strWidth/2, y + strHeight/2);
-			
-			batch.end();
 		}
 	}
 	
@@ -316,6 +295,7 @@ public class Renderer {
 
 	private void drawRockets() {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glLineWidth(3);
 		
 		int numRockets = world.getNumRockets();
 		
@@ -376,7 +356,6 @@ public class Renderer {
 			sr.end();
 						
 			// Polygon outline
-			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Line);
 			
 			if(invincible == true) {
@@ -423,7 +402,7 @@ public class Renderer {
 			}
 			
 			// Polygon outline
-			Gdx.gl.glLineWidth(5);
+			Gdx.gl.glLineWidth(6);
 			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
 			sr.polygon(polygon);
@@ -544,7 +523,7 @@ public class Renderer {
 	}
 
 	private void drawBackground() {
-		Gdx.gl.glClearColor(5/255f, 5/255f, 5/255f, 1);
+		Gdx.gl.glClearColor(2/255f, 2/255f, 2/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		sr.begin(ShapeType.Point);

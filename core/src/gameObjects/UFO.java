@@ -19,8 +19,8 @@ public class UFO extends SpaceObject {
 		velocity = new Vector2();
 		edges = 8;
 		vertices = new float[edges][2];
-		float ran = randFloatInRange(0.6, 1);
-		height = r = 50 * ran;
+		float ran = randFloatInRange(0.7, 1);
+		height = r = 45 * ran;
 		dv = 0;
 		while(dv == 0) {
 			dv = rand.nextInt(5) - 2;
@@ -33,14 +33,14 @@ public class UFO extends SpaceObject {
 	
 	private void setColours() {	
 		fillColour = new int[3];
-		fillColour[0] = 102;
-		fillColour[1] = 255;
-		fillColour[2] = 102;
+		fillColour[0] = (int) (102 * randFloatInRange(0.7, 1.2));
+		fillColour[1] = (int) (255 * randFloatInRange(0.7, 1));
+		fillColour[2] = (int) (102 * randFloatInRange(0.7, 1.2));
 		
 		lineColour = new int[3];
-		lineColour[0] = 125;
-		lineColour[1] = 50;
-		lineColour[2] = 255;
+		lineColour[0] = (int) (125 * randFloatInRange(0.7, 1.2));
+		lineColour[1] = (int) (50 * randFloatInRange(0.7, 1.2));
+		lineColour[2] = (int) (255 * randFloatInRange(0.7, 1));
 		
 		missileColour = new int[3];
 		missileColour[0] = 250;
