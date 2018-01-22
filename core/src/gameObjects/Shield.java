@@ -7,7 +7,7 @@ import gameManagers.World;
 
 public class Shield extends SpaceObject {
 	
-	private float lifespan, timeLeft;
+	private float lifespan, timeLeft, dAngle, targetR, inc, dh;
 
 	public Shield(World world) {
 		super(world);
@@ -18,6 +18,10 @@ public class Shield extends SpaceObject {
 		setColours();
 		lifespan = 20;
 		setTimeLeft(lifespan);
+		dh = 0;
+		targetR = 65;
+		dAngle = 3 * (360 / edges);
+		inc = dAngle / targetR;
 	}
 	
 	public void update(float delta, float x, float y, double heading) {
@@ -31,8 +35,9 @@ public class Shield extends SpaceObject {
 		this.heading = heading;
 		setVertices();
 		
-		if(r < 75) {
+		if(r < targetR) {
 			r += 0.5;
+			dh += inc;
 		}
 		
 		setColours();
@@ -43,7 +48,7 @@ public class Shield extends SpaceObject {
 		float radians;
 		
 		for(int i = 0; i < edges; i++) {
-			radians = (float) Math.toRadians(a * i + heading);
+			radians = (float) Math.toRadians(a * i + heading + dh);
 			
 			vertices[i][0] = position.x + MathUtils.cos(radians) * r;
 			vertices[i][1] = position.y + MathUtils.sin(radians) * r;
@@ -54,9 +59,9 @@ public class Shield extends SpaceObject {
 		fillColour = new int[3];
 		lineColour = new int[3];
 		
-		fillColour[0] = rand.nextInt(255);
-		fillColour[1] = rand.nextInt(255);
-		fillColour[2] = rand.nextInt(255);
+		fillColour[0] = 40;
+		fillColour[1] = 100;
+		fillColour[2] = 150;
 				
 		lineColour[0] = rand.nextInt(255);
 		lineColour[1] = rand.nextInt(255);
