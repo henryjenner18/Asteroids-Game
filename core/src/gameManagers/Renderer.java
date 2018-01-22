@@ -524,11 +524,14 @@ public class Renderer {
 			int edges = s.getEdges();
 			float[] polygon = polygonArray(vertices, edges);
 			
+			int[] fillColour = s.getFillColour();
+			int[] lineColour = s.getLineColour();
+			
 			// Filled Polygon
 			for(int e = 0; e < edges; e++) {
 				Gdx.gl.glEnable(GL20.GL_BLEND);
 				sr.begin(ShapeType.Filled);
-				sr.setColor(220/255f, 50/255f, 50/255f, 0.2f);
+				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.3f);
 							
 				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
 					sr.triangle(vertices[e][0], vertices[e][1],
@@ -545,7 +548,7 @@ public class Renderer {
 						
 			Gdx.gl.glLineWidth(3);
 			sr.begin(ShapeType.Line);
-			sr.setColor(200/255f, 40/255f, 40/255f, 1);
+			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.3f);
 			sr.polygon(polygon);
 			sr.end();
 		}

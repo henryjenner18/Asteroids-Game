@@ -29,6 +29,7 @@ public class SpaceManager {
 		resolveFragments();
 		resolveSparks();
 		resolvePowerUps();
+		resolveShields();
 	}
 	
 	private ArrayList<Integer> sortArrayList(ArrayList<Integer> objs) {
@@ -181,6 +182,25 @@ public class SpaceManager {
 		
 		for(int i = 0; i < objs.size(); i++) {
 			world.removePowerUp(objs.get(i));
+		}
+	}
+	
+	private void resolveShields() {
+		ArrayList<Integer> objs = new ArrayList<Integer>();
+		
+		int numShields = world.getNumShields();
+		
+		for(int i = 0; i < numShields; i++) {
+			if(world.getShield(i).getTimeLeft() == 0) {
+				objs.add(i);
+			}
+		}
+		
+		objs = sortArrayList(objs);
+		
+		for(int i = 0; i < objs.size(); i++) {
+			world.removeShield(objs.get(i));
+			world.getRocket(0).setShield(false);
 		}
 	}
 }

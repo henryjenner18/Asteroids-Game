@@ -22,19 +22,22 @@ public class CollisionDetector {
 		missilesToRemove = new ArrayList<Integer>();
 		ufosToRemove = new ArrayList<Integer>();
 		
-		if(world.getNumRockets() > 0) {	
-			//if(world.getRocket(0).getInvincible() == false) {
-				checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
-				checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
-				checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');
-			//}
-			
-			checkForCollisions(world.getRockets(), 'r', world.getPowerUps(), 'p');
-		}
-		
+		checkForCollisions(world.getShields(), 's', world.getAsteroids(), 'a');
+		checkForCollisions(world.getShields(), 's', world.getUFOs(), 'u');
+		checkForCollisions(world.getMissiles(), 'm', world.getShields(), 's');
 		checkForCollisions(world.getMissiles(), 'm', world.getAsteroids(), 'a');
 		checkForCollisions(world.getMissiles(), 'm', world.getUFOs(), 'u');
 		checkForCollisions(world.getMissiles(), 'm', world.getMissiles(), 'm');
+		
+		if(world.getNumRockets() > 0) {
+			if(!world.getRocket(0).getShield()) {
+				checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
+				checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
+				checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');	
+			}
+				
+			checkForCollisions(world.getRockets(), 'r', world.getPowerUps(), 'p');
+		}
 	}
 	
 	public void checkForCollisions(ArrayList<?> obj1, char obj1Type, ArrayList<?> obj2, char obj2Type) {
@@ -125,12 +128,21 @@ public class CollisionDetector {
 	
 	private boolean checkValidCollision(float x, float y, char obj1Type, int obj1Index, char obj2Type, int obj2Index) {
 		
-		if(obj1Type == 'm' && obj2Type == 'u') {
+		if(obj1Type == 'm') {
 			
-			if(world.getMissile(obj1Index).getCreator() == 'u') {
-				return false;
-			} else {
-				return true;
+			if(obj2Type == 'u') {
+				if(world.getMissile(obj1Index).getCreator() == 'u') {
+					return false;
+				} else {
+					return true;
+				}
+				
+			} else if(obj2Type == 's') {
+				if(world.getMissile(obj1Index).getCreator() == 'r') {
+					return false;
+				} else {
+					return true;
+				}
 			}
 			
 		} else if(obj1Type == 'r') { // Rocket involved
