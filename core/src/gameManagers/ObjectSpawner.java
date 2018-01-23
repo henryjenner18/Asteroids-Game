@@ -128,8 +128,13 @@ public class ObjectSpawner {
 	}
 	
 	public void shield() {
-		Shield shield = new Shield(world);
-		world.shields.add(shield);
-		world.getRocket(0).setShield(true);
+		if(world.getNumShields() > 0) {
+			world.getShield(0).resetTimeLeft();
+			
+		} else {
+			Shield shield = new Shield(world);
+			world.shields.add(shield);
+			world.getRocket(0).setShield(true);
+		}
 	}
 }

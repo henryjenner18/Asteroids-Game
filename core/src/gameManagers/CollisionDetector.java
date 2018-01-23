@@ -169,6 +169,9 @@ public class CollisionDetector {
 				
 				} else if(world.getPowerUp(obj2Index).getType() == 1) {
 					world.setClearScreen(true);
+				
+				} else if(world.getPowerUp(obj2Index).getType() == 2) {
+					world.objSpawner.shield();
 				}
 				
 				return false;

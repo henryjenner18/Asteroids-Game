@@ -16,8 +16,8 @@ public class Shield extends SpaceObject {
 		vertices = new float[edges][2];
 		r = 0;
 		setColours();
-		lifespan = 20;
-		setTimeLeft(lifespan);
+		lifespan = 10;
+		resetTimeLeft();
 		dh = 0;
 		targetR = 65;
 		dAngle = 3 * (360 / edges);
@@ -74,5 +74,9 @@ public class Shield extends SpaceObject {
 	
 	public float getTimeLeft() {
 		return timeLeft;
+	}
+	
+	public void resetTimeLeft() {
+		timeLeft = lifespan;
 	}
 }

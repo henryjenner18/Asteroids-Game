@@ -1,6 +1,7 @@
 package gameHelpers;
 
 import com.badlogic.gdx.InputProcessor;
+
 import com.badlogic.gdx.Input.Keys;
 
 import gameManagers.World;
@@ -39,8 +40,6 @@ public class InputHandler implements InputProcessor {
 					}
 					
 					world.objSpawner.missile('r', num, rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getMissileV(), rocket.getMissileColour());
-				} else if(keycode == Keys.ENTER) {
-					world.objSpawner.shield();
 				}
 			}
 		}
