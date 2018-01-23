@@ -7,21 +7,21 @@ import gameManagers.World;
 
 public class Shield extends SpaceObject {
 	
-	private float lifespan, timeLeft, dAngle, targetR, inc, dh;
+	private float lifespan, timeLeft, dAngle, targetR, dh;
+	private int rValue;
 
 	public Shield(World world) {
 		super(world);
 		position = new Vector2();
 		edges = 5;
 		vertices = new float[edges][2];
-		r = 0;
-		setColours();
 		lifespan = 10;
 		resetTimeLeft();
-		dh = 0;
+		r = dh = 0;
 		targetR = 65;
-		dAngle = 3 * (360 / edges);
-		inc = dAngle / targetR;
+		rValue = 40;
+		dAngle = (3 * (360 / edges)) / targetR;
+		setColours();
 	}
 	
 	public void update(float delta, float x, float y, double heading) {
@@ -37,7 +37,7 @@ public class Shield extends SpaceObject {
 		
 		if(r < targetR) {
 			r += 0.5;
-			dh += inc;
+			dh += dAngle;
 		}
 		
 		setColours();
@@ -56,10 +56,18 @@ public class Shield extends SpaceObject {
 	}
 	
 	private void setColours() {
+		if(timeLeft <= 2.5) {
+			if(rValue + 2 < 255) {
+				rValue += 2;
+			} else {
+				rValue = 255;
+			}
+		}
+	
 		fillColour = new int[3];
 		lineColour = new int[3];
 		
-		fillColour[0] = 40;
+		fillColour[0] = rValue;
 		fillColour[1] = 100;
 		fillColour[2] = 150;
 				

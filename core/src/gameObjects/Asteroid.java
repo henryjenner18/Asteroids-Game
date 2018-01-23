@@ -40,7 +40,7 @@ public class Asteroid extends SpaceObject {
 	
 	private void setColours() {
 		fillColour = new int[3];
-		int c = (int) (160 * randFloatInRange(0.7, 1.3));
+		int c = (int) (150 * randFloatInRange(0.8, 1.2));
 		
 		fillColour[0] = c;
 		fillColour[1] = c;

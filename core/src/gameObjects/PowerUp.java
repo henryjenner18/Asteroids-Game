@@ -7,7 +7,7 @@ import gameManagers.World;
 
 public class PowerUp extends SpaceObject {
 	
-	private float lifespan, timeLeft;
+	private float lifespan, timeLeft, dh;
 	private double flashTimer;
 	private boolean flash;
 	private int type;
@@ -25,6 +25,7 @@ public class PowerUp extends SpaceObject {
 		setVertices();
 		resetFlashTimer();
 		flash = true;
+		dh = 0;
 	}
 	
 	public void update(float delta) {
@@ -39,6 +40,9 @@ public class PowerUp extends SpaceObject {
 			flash = !flash;
 			resetFlashTimer();
 		}
+		
+		dh ++;
+		setVertices();
 	}
 	
 	private void setVertices() {
@@ -46,7 +50,7 @@ public class PowerUp extends SpaceObject {
 		float radians;
 		
 		for(int i = 0; i < edges; i++) {
-			radians = (float) Math.toRadians(a * i);
+			radians = (float) Math.toRadians(a * i + dh);
 			
 			vertices[i][0] = position.x + MathUtils.cos(radians) * r;
 			vertices[i][1] = position.y + MathUtils.sin(radians) * r;
