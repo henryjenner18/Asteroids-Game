@@ -86,5 +86,6 @@ public class Shield extends SpaceObject {
 	
 	public void resetTimeLeft() {
 		timeLeft = lifespan;
+		rValue = 40; // Need to reset colour change also
 	}
 }

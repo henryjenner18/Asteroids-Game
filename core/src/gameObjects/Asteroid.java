@@ -29,7 +29,7 @@ public class Asteroid extends SpaceObject {
 		setProperties();
 		angles = new float[edges];
 		radii = new float[edges];
-		vertices = new float[edges][2];	
+		vertices = new float[edges][2];
 		float ran = randFloatInRange(0.6, 1);
 		r = 50 * ran;
 		score = (int) (120 - r) * 2;
