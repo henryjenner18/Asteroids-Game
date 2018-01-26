@@ -19,7 +19,7 @@ public class Shield extends SpaceObject {
 		resetTimeLeft();
 		r = dh = 0;
 		targetR = 65;
-		rValue = 40;
+		rValue = 0;
 		dAngle = (5 * (360 / edges)) / targetR;
 		setColours();
 	}
