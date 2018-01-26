@@ -13,8 +13,8 @@ public class Rocket extends SpaceObject {
 	private float[][] flame;
 	private int[] flameFillColour, flameLineColour;
 	private int height, dh, terminalVel;
-	private boolean thrusting, left, right, flameOn, tripleMissile, invincible, shield;
-	private float tripleMissileTimer, invincibleTimer;
+	private boolean thrusting, left, right, flameOn, tripleMissile, invincible, shield, continuousFire;
+	private float tripleMissileTimer, invincibleTimer, continuousFireTimer;
 	
 	public Rocket(World world) {
 		super(world);
@@ -26,12 +26,13 @@ public class Rocket extends SpaceObject {
 		dh = 4;
 		terminalVel = 10;
 		setColours();
-		left = right = flameOn = tripleMissile = invincible = shield = false;
+		left = right = flameOn = tripleMissile = invincible = shield =  continuousFire = false;
 		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
 		velocity = new Vector2(0, 0);
 		heading = 90;
 		resetTripleMissileTimer();
 		resetInvincibleTimer();
+		resetContinuousFireTimer();
 	}
 	
 	public void update(float delta) {
@@ -63,9 +64,29 @@ public class Rocket extends SpaceObject {
 				resetInvincibleTimer();
 			}
 		}
+		
+		if(continuousFire == true) {
+			continuousFireTimer -= delta;
+			
+			if(continuousFireTimer <= 0) {
+				setContinuousFire(false);
+				resetContinuousFireTimer();
+			}
+		}
 
 		if(shield == true) {
 			world.getShield(0).update(delta, position.x, position.y, heading);
+		}
+		
+		if(continuousFire == true) {
+			int n;
+			if(tripleMissile == true) {
+				n = 3;
+			} else {
+				n = 1;
+			}
+			
+			world.objSpawner.missile('r', n, position.x, position.y, heading, height, velocity, missileV, missileColour);
 		}
 	}
 	
@@ -207,12 +228,24 @@ public class Rocket extends SpaceObject {
 		shield = b;
 	}
 	
+	public void setContinuousFire(boolean b) {
+		if(continuousFire == true) {
+			resetContinuousFireTimer();
+		}
+		
+		continuousFire = b;
+	}
+	
 	public void resetTripleMissileTimer() {
 		tripleMissileTimer = 5;
 	}
 	
 	private void resetInvincibleTimer() {
 		invincibleTimer = 3;
+	}
+	
+	private void resetContinuousFireTimer() {
+		continuousFireTimer = 5;
 	}
 	
 	public int[] getFlameFillColour() {
@@ -245,5 +278,9 @@ public class Rocket extends SpaceObject {
 	
 	public boolean getShield() {
 		return shield;
+	}
+	
+	public boolean getContinuousFire() {
+		return continuousFire;
 	}
 }

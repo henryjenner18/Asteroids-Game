@@ -14,7 +14,7 @@ public class PowerUp extends SpaceObject {
 	
 	public PowerUp(World world, float x, float y) {
 		super(world);
-		type = rand.nextInt(3);
+		type = rand.nextInt(4);
 		position = new Vector2(x, y);
 		r = 19;
 		edges = 6;
@@ -96,6 +96,19 @@ public class PowerUp extends SpaceObject {
 				lineColour[0] = 51;
 				lineColour[1] = 102;
 				lineColour[2] = 255;
+			} else {
+				lineColour = fillColour;
+			}
+		
+		} else if(type == 3) {
+			fillColour[0] = 0;
+			fillColour[1] = 102;
+			fillColour[2] = 225;
+			
+			if(flash == true) {
+				lineColour[0] = 255;
+				lineColour[1] = 204;
+				lineColour[2] = 153;
 			} else {
 				lineColour = fillColour;
 			}

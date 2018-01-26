@@ -172,6 +172,9 @@ public class CollisionDetector {
 				
 				} else if(world.getPowerUp(obj2Index).getType() == 2) {
 					world.objSpawner.shield();
+				
+				} else if(world.getPowerUp(obj2Index).getType() == 3) {
+					world.getRocket(obj1Index).setContinuousFire(true);
 				}
 				
 				return false;
