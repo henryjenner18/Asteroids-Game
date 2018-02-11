@@ -1,7 +1,5 @@
 package gameObjects;
 
-import java.util.Random;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,7 +9,6 @@ public class UFO extends SpaceObject {
 	
 	private float height, dv, countdown;
 	private int terminalVel;
-	Random rand = new Random();
 	
 	public UFO(World world, float x, float y) {
 		super(world);
@@ -50,7 +47,7 @@ public class UFO extends SpaceObject {
 
 	public void update(float delta) {
 		countdown -= delta;
-		moveTowardsRocket(delta);
+		moveInRelationToRocket(delta);
 		terminalVelCheck();
 		position.add(velocity);
 		wrap();
@@ -135,7 +132,7 @@ public class UFO extends SpaceObject {
 		countdown = 3;
 	}
 	
-	private void moveTowardsRocket(float delta) {
+	private void moveInRelationToRocket(float delta) {
 		int numRockets = world.getNumRockets();
 		
 		for(int a = 0; a < numRockets; a++) {

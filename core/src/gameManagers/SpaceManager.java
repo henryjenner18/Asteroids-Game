@@ -1,10 +1,6 @@
 package gameManagers;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.badlogic.gdx.math.Vector2;
 
 import gameObjects.Asteroid;
@@ -32,20 +28,56 @@ public class SpaceManager {
 		resolveShields();
 	}
 	
-	private ArrayList<Integer> sortArrayList(ArrayList<Integer> objs) {
-		Set<Integer> noDuplicates = new HashSet<Integer>(); // Removes duplicates
-		noDuplicates.addAll(objs);
-		objs.clear(); // Clears original array list
-		objs.addAll(noDuplicates); // Replaces with new list
-		Collections.sort(objs); // Sorts list ascending
-		Collections.reverse(objs); // Sorts list descending
+	private ArrayList<Integer> sortArrayList(ArrayList<Integer> orig) {
+		int origLength = orig.size(); // Length of original list
 		
-		return objs;
+		if(origLength > 0) {
+			// Remove duplicates
+			ArrayList<Integer> noDuplicates = new ArrayList<Integer>(); // New list to fill
+				
+			for(int i = 0; i < origLength; i++) {
+				int currentNum = orig.get(i); // Current number in original list to check
+				int noDupsLength = noDuplicates.size(); // Update size of no dups list
+				boolean found = false;
+					
+				for(int e = 0; e < noDupsLength; e++) { // Check against every value in dups list
+					int noDupsNum = noDuplicates.get(e); // Current number in no dups list to check
+						
+					if(currentNum == noDupsNum) { // Already in no dups list
+						found = true;
+					}
+				}
+				
+				if(found == false) { // Not already in no dups list
+					noDuplicates.add(currentNum);
+				}
+			}
+				
+			int noDupsLength = noDuplicates.size();		
+			
+			// Bubble sort the no duplicates list in descending order
+			for(int i = 0; i < noDupsLength-1; i++) {
+				
+				for(int j = 0; j < noDupsLength-i-1; j++) {
+					
+					if(noDuplicates.get(j) < noDuplicates.get(j+1)) { // Compare adjacent elements
+						 // Switch values
+						int temp = noDuplicates.get(j+1);
+						noDuplicates.set(j+1, noDuplicates.get(j));
+						noDuplicates.set(j, temp);
+					}
+				}
+			}
+			
+			return noDuplicates;
+		}
+		
+		return orig;
 	}
 	
 	private void resolveRockets() {
 		ArrayList<Integer> objs = sortArrayList(colDet.getRocketsToRemove());
-		
+
 		for(int i = 0; i < objs.size(); i++) {
 			Rocket rocket = world.getRocket(i);
 			float x = rocket.getX();
@@ -80,7 +112,7 @@ public class SpaceManager {
 		} else {
 			asteroids = colDet.getAsteroidsToRemove();
 		}
-		
+
 		ArrayList<Integer> objs = sortArrayList(asteroids);
 				
 		for(int i = 0; i < objs.size(); i++) {

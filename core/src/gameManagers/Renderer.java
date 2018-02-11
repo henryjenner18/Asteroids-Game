@@ -13,8 +13,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import gameHelpers.AssetLoader;
+import gameObjects.Asteroid;
+import gameObjects.Fragment;
+import gameObjects.Missile;
 import gameObjects.PowerUp;
+import gameObjects.Rocket;
 import gameObjects.Shield;
+import gameObjects.Spark;
+import gameObjects.UFO;
 import main.Main;
 
 public class Renderer {
@@ -22,13 +28,15 @@ public class Renderer {
 	private World world;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
-	private int w = Main.getWidth();
-	private int h = Main.getHeight();
+	private int w;
+	private int h;
 	
 	public Renderer(World world) {
 		this.world = world;
 		batch = AssetLoader.batch;
 		sr = AssetLoader.sr;
+		w = Main.getWidth();
+		h = Main.getHeight();
 	}
 
 	public void render(float delta) {
@@ -245,36 +253,17 @@ public class Renderer {
 			float x = p.getX();
 			float y = p.getY();
 			float vertices[][] = p.getVertices();
-			int edges = p.getEdges();
-			float[] polygon = polygonArray(vertices, edges);
-			
+			int edges = p.getEdges();	
 			int[] fillColour = p.getFillColour();
 			int[] lineColour = p.getLineColour();
 			
-			// Filled Polygon
-			for(int e = 0; e < edges; e++) {
-				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-				
-				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[0][0], vertices[0][1],
-							x, y);
-					sr.end();
-				} else {
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[e+1][0], vertices[e+1][1],
-							x, y);
-					sr.end();
-				}
-			}
+			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+			drawFilledPolygon(x, y, vertices, edges);
 			
 			// Polygon outline
 			Gdx.gl.glLineWidth(3);
-			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-			sr.polygon(polygon);
-			sr.end();
+			drawPolygonOutline(vertices, edges);
 		}
 	}
 	
@@ -282,11 +271,12 @@ public class Renderer {
 		int numSparks = world.getNumSparks();
 		
 		for(int i = 0; i < numSparks; i++) {
-			float x = world.getSpark(i).getX();
-			float y = world.getSpark(i).getY();
-			float r = world.getSpark(i).getR();
+			Spark s = world.getSpark(i);
 			
-			int[] fillColour = world.getSpark(i).getFillColour();
+			float x = s.getX();
+			float y = s.getY();
+			float r = s.getR();			
+			int[] fillColour = s.getFillColour();
 			
 			sr.begin(ShapeType.Filled);
 			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
@@ -301,22 +291,25 @@ public class Renderer {
 		
 		int numRockets = world.getNumRockets();
 		
-		for(int i = 0; i < numRockets; i++) {		
-			float vertices[][] = world.getRocket(i).getFlameVertices();
+		for(int i = 0; i < numRockets; i++) {
+			Rocket r = world.getRocket(i);
+			
+			// Flame
+			float vertices[][] = r.getFlameVertices();
 			int edges = vertices.length;
 			float[] polygon = polygonArray(vertices, edges);
 			
-			int[] fillColour = world.getRocket(i).getFlameFillColour();
-			int[] lineColour = world.getRocket(i).getFlameLineColour();
+			int[] fillColour = r.getFlameFillColour();
+			int[] lineColour = r.getFlameLineColour();
 			
 			boolean invincible;		
-			if(world.getRocket(i).getInvincible() == true) {
+			if(r.getInvincible() == true) {
 				invincible = true;
 			} else {
 				invincible = false;
 			}
 			
-			if(world.getRocket(i).getFlameOn() == true && invincible == false) {
+			if(r.getFlameOn() == true && invincible == false) {
 				// Filled flame
 				sr.begin(ShapeType.Filled);
 				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);			
@@ -332,12 +325,12 @@ public class Renderer {
 				sr.end();
 			}
 			
-			vertices = world.getRocket(i).getVertices();
-			edges = world.getRocket(i).getEdges();
-			polygon = polygonArray(vertices, edges);
-			
-			fillColour = world.getRocket(i).getFillColour();
-			lineColour = world.getRocket(i).getLineColour();
+			// Rocket
+			vertices = r.getVertices();
+			edges = r.getEdges();
+			polygon = polygonArray(vertices, edges);		
+			fillColour = r.getFillColour();
+			lineColour = r.getLineColour();
 			
 			// Filled polygon
 			sr.begin(ShapeType.Filled);
@@ -376,39 +369,22 @@ public class Renderer {
 		int numAsteroids = world.getNumAsteroids();
 		
 		for(int i = 0; i < numAsteroids; i++) {
-			float x = world.getAsteroid(i).getX();
-			float y = world.getAsteroid(i).getY();
-			float vertices[][] = world.getAsteroid(i).getVertices();
-			int edges = world.getAsteroid(i).getEdges();
-			float[] polygon = polygonArray(vertices, edges);
+			Asteroid a = world.getAsteroid(i);
 			
-			int[] fillColour = world.getAsteroid(i).getFillColour();
-			int[] lineColour = world.getAsteroid(i).getLineColour();
+			float x = a.getX();
+			float y = a.getY();
+			float vertices[][] = a.getVertices();
+			int edges = a.getEdges();		
+			int[] fillColour = a.getFillColour();
+			int[] lineColour = a.getLineColour();
 			
-			// Filled Polygon
-			for(int e = 0; e < edges; e++) {
-				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-				
-				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[0][0], vertices[0][1],
-							x, y);
-					sr.end();
-				} else {
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[e+1][0], vertices[e+1][1],
-							x, y);
-					sr.end();
-				}
-			}
+			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+			drawFilledPolygon(x, y, vertices, edges);
 			
 			// Polygon outline
 			Gdx.gl.glLineWidth(6);
-			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-			sr.polygon(polygon);
-			sr.end();
+			drawPolygonOutline(vertices, edges);
 		}
 	}
 	
@@ -416,8 +392,10 @@ public class Renderer {
 		int numMissiles = world.getNumMissiles();
 		
 		for(int i = 0; i < numMissiles; i++) {
-			float vertices[][] = world.getMissile(i).getVertices();
-			int[] lineColour = world.getMissile(i).getLineColour();
+			Missile m = world.getMissile(i);
+			
+			float vertices[][] = m.getVertices();
+			int[] lineColour = m.getLineColour();
 			Gdx.gl.glLineWidth(5);
 			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
@@ -431,39 +409,21 @@ public class Renderer {
 		int numUFOs = world.getNumUFOs();
 		
 		for(int i = 0; i < numUFOs; i++) {
-			float x = world.getUFO(i).getX();
-			float y = world.getUFO(i).getY();
-			float vertices[][] = world.getUFO(i).getVertices();
-			int edges = world.getUFO(i).getEdges();
-			float[] polygon = polygonArray(vertices, edges);
+			UFO u = world.getUFO(i);
 			
-			int[] fillColour = world.getUFO(i).getFillColour();
-			int[] lineColour = world.getUFO(i).getLineColour();
+			float x = u.getX();
+			float y = u.getY();
+			float vertices[][] = u.getVertices();
+			int edges = u.getEdges();
+			int[] fillColour = u.getFillColour();
+			int[] lineColour = u.getLineColour();
 			
-			// Filled Polygon
-			for(int e = 0; e < edges; e++) {
-				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-						
-				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[0][0], vertices[0][1],
-							x, y);
-					sr.end();
-				} else {
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[e+1][0], vertices[e+1][1],
-							x, y);
-					sr.end();
-				}
-			}
+			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+			drawFilledPolygon(x, y, vertices, edges);
 			
-			// Polygon outline
 			Gdx.gl.glLineWidth(3);
-			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-			sr.polygon(polygon);
-			sr.end();
+			drawPolygonOutline(vertices, edges);
 			
 			//Horizontal lines
 			sr.begin(ShapeType.Line);
@@ -477,39 +437,21 @@ public class Renderer {
 		int numFragments = world.getNumFragments();
 		
 		for(int i = 0; i < numFragments; i++) {
-			float x = world.getFragment(i).getX();
-			float y = world.getFragment(i).getY();
-			float vertices[][] = world.getFragment(i).getVertices();
-			int edges = world.getFragment(i).getEdges();
-			float[] polygon = polygonArray(vertices, edges);
+			Fragment f = world.getFragment(i);
 			
-			int[] fillColour = world.getFragment(i).getFillColour();
-			int[] lineColour = world.getFragment(i).getLineColour();
+			float x = f.getX();
+			float y = f.getY();
+			float vertices[][] = f.getVertices();
+			int edges = f.getEdges();	
+			int[] fillColour = f.getFillColour();
+			int[] lineColour = f.getLineColour();
 			
-			// Filled Polygon
-			for(int e = 0; e < edges; e++) {
-				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-				
-				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[0][0], vertices[0][1],
-							x, y);
-					sr.end();
-				} else {
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[e+1][0], vertices[e+1][1],
-							x, y);
-					sr.end();
-				}
-			}			
+			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+			drawFilledPolygon(x, y, vertices, edges);			
 			
-			// Polygon outline
 			Gdx.gl.glLineWidth(3);
-			sr.begin(ShapeType.Line);
 			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-			sr.polygon(polygon);
-			sr.end();
+			drawPolygonOutline(vertices, edges);
 		}
 	}
 	
@@ -518,40 +460,48 @@ public class Renderer {
 		
 		for(int i = 0; i < numShields; i++) {
 			Shield s = world.getShield(i);
+			
 			float x = s.getX();
 			float y = s.getY();
 			float vertices[][] = s.getVertices();
 			int edges = s.getEdges();
-			float[] polygon = polygonArray(vertices, edges);
-			
 			int[] fillColour = s.getFillColour();
 			int[] lineColour = s.getLineColour();
 			
-			// Filled Polygon
-			for(int e = 0; e < edges; e++) {
-				Gdx.gl.glEnable(GL20.GL_BLEND);
-				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.3f);
-							
-				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[0][0], vertices[0][1],
-							x, y);
-					sr.end();
-				} else {
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[e+1][0], vertices[e+1][1],
-							x, y);
-					sr.end();
-				}
-			}
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.3f);			
+			drawFilledPolygon(x, y, vertices, edges);
 						
 			Gdx.gl.glLineWidth(3);
-			sr.begin(ShapeType.Line);
-			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.3f);
-			sr.polygon(polygon);
-			sr.end();
+			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.5f);
+			drawPolygonOutline(vertices, edges);
 		}
+	}
+	
+	private void drawFilledPolygon(float x, float y, float[][] vertices, int edges) {
+		
+		for(int e = 0; e < edges; e++) {
+			sr.begin(ShapeType.Filled);
+			
+			if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
+				sr.triangle(vertices[e][0], vertices[e][1],
+						vertices[0][0], vertices[0][1],
+						x, y);
+				sr.end();
+			} else {
+				sr.triangle(vertices[e][0], vertices[e][1],
+						vertices[e+1][0], vertices[e+1][1],
+						x, y);
+				sr.end();
+			}
+		}
+	}
+	
+	private void drawPolygonOutline(float[][] vertices, int edges) {
+		float[] polygon = polygonArray(vertices, edges);
+		sr.begin(ShapeType.Line);
+		sr.polygon(polygon);
+		sr.end();		
 	}
 	
 	private float[] polygonArray(float[][] vertices, int edges) {

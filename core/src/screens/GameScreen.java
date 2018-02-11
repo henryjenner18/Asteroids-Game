@@ -15,7 +15,6 @@ public class GameScreen implements Screen {
 	private CollisionDetector collisionDetector;
 	private SpaceManager spaceManager;
 	private Renderer renderer;
-	//private TextInputHandler textInputHandler;
 	
 	public GameScreen() {
 		world = new World();
@@ -23,11 +22,8 @@ public class GameScreen implements Screen {
 		spaceManager = new SpaceManager(world, collisionDetector);
 		renderer = new Renderer(world);
 		
-		Gdx.input.setInputProcessor(new InputHandler(world));
-		
+		Gdx.input.setInputProcessor(new InputHandler(world));	
 		Gdx.input.setCursorCatched(true);
-		//TextInputHandler textInputHandler = new TextInputHandler();
-		//Gdx.input.getTextInput(textInputHandler, "Enter your name", null, null);
 	}
 
 	@Override

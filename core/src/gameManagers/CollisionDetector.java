@@ -22,36 +22,36 @@ public class CollisionDetector {
 		missilesToRemove = new ArrayList<Integer>();
 		ufosToRemove = new ArrayList<Integer>();
 		
-		checkForCollisions(world.getShields(), 's', world.getAsteroids(), 'a');
-		checkForCollisions(world.getShields(), 's', world.getUFOs(), 'u');
-		checkForCollisions(world.getMissiles(), 'm', world.getShields(), 's');
-		checkForCollisions(world.getMissiles(), 'm', world.getAsteroids(), 'a');
-		checkForCollisions(world.getMissiles(), 'm', world.getUFOs(), 'u');
-		checkForCollisions(world.getMissiles(), 'm', world.getMissiles(), 'm');
+		checkForCollisions(world.getShields(), world.getAsteroids());
+		checkForCollisions(world.getShields(), world.getUFOs());
+		checkForCollisions(world.getMissiles(), world.getShields());
+		checkForCollisions(world.getMissiles(), world.getAsteroids());
+		checkForCollisions(world.getMissiles(), world.getUFOs());
+		checkForCollisions(world.getMissiles(), world.getMissiles());
 		
 		if(world.getNumRockets() > 0) {
 			if(!world.getRocket(0).getShield()) {
-				checkForCollisions(world.getRockets(), 'r', world.getAsteroids(), 'a');
-				checkForCollisions(world.getRockets(), 'r', world.getMissiles(), 'm');
-				checkForCollisions(world.getRockets(), 'r', world.getUFOs(), 'u');	
+				checkForCollisions(world.getRockets(), world.getAsteroids());
+				checkForCollisions(world.getRockets(), world.getMissiles());
+				checkForCollisions(world.getRockets(), world.getUFOs());	
 			}
 				
-			checkForCollisions(world.getRockets(), 'r', world.getPowerUps(), 'p');
+			checkForCollisions(world.getRockets(), world.getPowerUps());
 		}
 	}
 	
-	public void checkForCollisions(ArrayList<?> obj1, char obj1Type, ArrayList<?> obj2, char obj2Type) {
+	private void checkForCollisions(ArrayList<?> obj1, ArrayList<?> obj2) {
 		
 		for(int i = 0; i < obj1.size(); i++) {
 			if(obj1.get(i) instanceof SpaceObject) {
 				
 				SpaceObject space1 = (SpaceObject) obj1.get(i);
-
 				space1.linearEquation();
 				float[][] obj1Vertices = space1.getVertices();
 				float[] obj1Gradients = space1.getGradients();
 				float[] obj1Yintercepts = space1.getYintercepts();
 				int obj1Edges = space1.getEdges();
+				String obj1Class = space1.getClass().getName();
 				
 				for(int e = 0; e < obj1Edges; e++) {
 					
@@ -65,6 +65,7 @@ public class CollisionDetector {
 							float[] obj2Gradients = space2.getGradients();
 							float[] obj2Yintercepts = space2.getYintercepts();
 							int obj2Edges = space2.getEdges();
+							String obj2Class = space2.getClass().getName();
 							
 							for(int q = 0; q < obj2Edges; q++) {
 								
@@ -82,7 +83,7 @@ public class CollisionDetector {
 									if(coordRangeCheck(x, obj1XCoords, obj2XCoords) == true) {	
 										
 										y = (obj1Gradients[e] * x) + obj1Yintercepts[e];
-										collisionOccurred(x, y, obj1Type, i, obj2Type, a);
+										collisionOccurred(x, y, obj1Class, i, obj2Class, a);
 									}
 
 								} else { // Infinity gradient
@@ -102,7 +103,7 @@ public class CollisionDetector {
 									if(coordRangeCheck(y, obj1YCoords, obj2YCoords) == true &&
 											coordRangeCheck(x, obj1XCoords, obj2XCoords) == true) {
 										
-										collisionOccurred(x, y, obj1Type, i, obj2Type, a);
+										collisionOccurred(x, y, obj1Class, i, obj2Class, a);
 									}
 								}
 							}
@@ -113,12 +114,12 @@ public class CollisionDetector {
 		}
 	}
 	
-	private void collisionOccurred(float x, float y, char obj1Type, int obj1Index, char obj2Type, int obj2Index) {
-		if(checkValidCollision(x, y, obj1Type, obj1Index, obj2Type, obj2Index) == true) {
-			addObjectToList(obj1Type, obj1Index);
-			addObjectToList(obj2Type, obj2Index);
+	private void collisionOccurred(float x, float y, String obj1Class, int obj1Index, String obj2Class, int obj2Index) {
+		if(checkValidCollision(x, y, obj1Class, obj1Index, obj2Class, obj2Index) == true) {
+			addObjectToList(obj1Class, obj1Index);
+			addObjectToList(obj2Class, obj2Index);
 			
-			if(obj1Type == 'm' && obj2Type == 'm') { // Missile-missile collision, therefore grey boulders not required in sparks
+			if(obj1Class == "gameObjects.Missile" && obj2Class == "gameObjects.Missile") { // Missile-missile collision, therefore grey boulders not required in sparks
 				world.objSpawner.sparks(x, y, true);
 			} else {
 				world.objSpawner.sparks(x, y, false);
@@ -126,18 +127,18 @@ public class CollisionDetector {
 		}
 	}
 	
-	private boolean checkValidCollision(float x, float y, char obj1Type, int obj1Index, char obj2Type, int obj2Index) {
+	private boolean checkValidCollision(float x, float y, String obj1Class, int obj1Index, String obj2Class, int obj2Index) {
 		
-		if(obj1Type == 'm') {
+		if(obj1Class == "gameObjects.Missile") {
 			
-			if(obj2Type == 'u') {
+			if(obj2Class == "gameObjects.UFO") {
 				if(world.getMissile(obj1Index).getCreator() == 'u') {
 					return false;
 				} else {
 					return true;
 				}
 				
-			} else if(obj2Type == 's') {
+			} else if(obj2Class == "gameObjects.Shield") {
 				if(world.getMissile(obj1Index).getCreator() == 'r') {
 					return false;
 				} else {
@@ -145,8 +146,8 @@ public class CollisionDetector {
 				}
 			}
 			
-		} else if(obj1Type == 'r') { // Rocket involved
-			if(obj2Type == 'm') { // Missile involved
+		} else if(obj1Class == "gameObjects.Rocket") { // Rocket involved
+			if(obj2Class == "gameObjects.Missile") { // Missile involved
 				
 				// If missile belongs to the rocket, or rocket is invincible do not collide
 				if((world.getMissile(obj2Index).getCreator() == 'r')
@@ -160,7 +161,7 @@ public class CollisionDetector {
 					return true;
 				}
 				
-			} else if(obj2Type == 'p') { // Power up involved
+			} else if(obj2Class == "gameObjects.PowerUp") { // Power up involved
 				world.getPowerUp(obj2Index).setTimeLeft(0);
 				
 				if(world.getPowerUp(obj2Index).getType() == 0) {
@@ -180,7 +181,7 @@ public class CollisionDetector {
 				return false;
 			
 			} else if(world.getRocket(0).getInvincible() == true) {
-				addObjectToList(obj2Type, obj2Index); // Still remove obj2
+				addObjectToList(obj2Class, obj2Index); // Still remove obj2
 				world.objSpawner.sparks(x, y, false); // Create sparks
 				return false; // Don't collide rocket as it's invincible
 			}
@@ -192,22 +193,22 @@ public class CollisionDetector {
 		return true; // Collide if not mentioned
 	}
 
-	private void addObjectToList(char z, int i) {
-		switch(z) {
-		case 'r': rocketsToRemove.add(i);
-			break;
-				
-		case 'a': asteroidsToRemove.add(i);
-			break;
-				
-		case 'm': world.getMissile(i).setTimeLeft(0);
-			break;
-				
-		case 'u': ufosToRemove.add(i);
-			break;
+	private void addObjectToList(String z, int i) {
+
+		if(z == "gameObjects.Rocket") {
+			rocketsToRemove.add(i);
 			
-		case 'p': world.getPowerUp(i).setTimeLeft(0);
-			break;
+		} else if(z == "gameObjects.Asteroid") {
+			asteroidsToRemove.add(i);
+			
+		} else if(z == "gameObjects.Missile") {
+			world.getMissile(i).setTimeLeft(0);
+			
+		} else if(z == "gameObjects.UFO") {
+			ufosToRemove.add(i);
+			
+		} else if(z == "gameObjects.PowerUp") {
+			world.getPowerUp(i).setTimeLeft(0);
 		}
 	}
 	

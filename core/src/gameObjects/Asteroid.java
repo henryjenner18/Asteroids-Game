@@ -1,8 +1,6 @@
 package gameObjects;
 
 import java.util.Arrays;
-import java.util.Random;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,7 +13,6 @@ public class Asteroid extends SpaceObject {
 	private double area;
 	private float rotation;
 	private int v, dr;
-	Random rand = new Random();
 	
 	public Asteroid(World world, float x, float y, float r, int v, int hg) {
 		super(world);
@@ -25,7 +22,7 @@ public class Asteroid extends SpaceObject {
 		this.v = v;
 		heading = hg;
 		rotation = 0;
-		dr = rand.nextInt(21) - 20;	
+		dr = rand.nextInt(41) - 20;	
 		setProperties();
 		angles = new float[edges];
 		radii = new float[edges];

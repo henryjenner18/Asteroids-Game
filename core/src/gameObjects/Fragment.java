@@ -1,8 +1,6 @@
 package gameObjects;
 
 import java.util.Arrays;
-import java.util.Random;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,15 +9,13 @@ import gameManagers.World;
 public class Fragment extends SpaceObject {
 	
 	private int v, dr;
-	final Vector2 objVelocity;
+	private Vector2 objVelocity;
 	private float timeLeft, rotation;
 	private float[] angles;
 	private float[] radii;
-	Random rand;
 	
 	public Fragment(World world, float x, float y, float r, Vector2 objVelocity, int[] fillColour, int[] lineColour) {
 		super(world);
-		rand = new Random();
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		this.objVelocity = new Vector2(objVelocity.x, objVelocity.y).scl((float) 0.5);
@@ -31,7 +27,7 @@ public class Fragment extends SpaceObject {
 		vertices = new float[edges][2];
 		this.r = r;
 		rotation = 0;
-		dr = rand.nextInt(31) - 10;
+		dr = rand.nextInt(41) - 20;
 		setTimeLeft(randFloatInRange(1.5, 2));
 		generateAngles();
 		generateRadii();
@@ -87,9 +83,9 @@ public class Fragment extends SpaceObject {
 		double minRadius = r - diff;
 
 		for(int i = 0; i < edges; i++) {
-			double rd = (rand.nextInt((int) ((maxRadius - minRadius) + 1)) + minRadius);
+			double rad = randFloatInRange(minRadius, maxRadius);
 			
-			radii[i] = (float) rd;
+			radii[i] = (float) rad;
 		}
 	}
 	

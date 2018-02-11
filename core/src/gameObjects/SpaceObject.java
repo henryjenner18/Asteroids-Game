@@ -17,11 +17,12 @@ public class SpaceObject {
 	protected double heading;
 	protected int edges, missileV, score;
 	protected float r;
-	Random rand = new Random();
+	protected Random rand;
 	
 	public SpaceObject(World world) {
 		this.world = world;
 		missileV = 900;
+		rand = new Random();
 	}
 	
 	public void linearEquation() {

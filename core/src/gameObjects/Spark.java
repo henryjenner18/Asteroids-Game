@@ -1,7 +1,5 @@
 package gameObjects;
 
-import java.util.Random;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,7 +10,6 @@ public class Spark extends SpaceObject {
 	private int v, colour;
 	private float timeLeft;
 	private boolean missilesOnly;
-	Random rand = new Random();
 	
 	public Spark(World world, float x, float y, boolean missilesOnly) {
 		super(world);
@@ -21,7 +18,7 @@ public class Spark extends SpaceObject {
 		r = 1;
 		setTimeLeft(rand.nextFloat() * rand.nextFloat());
 		heading = rand.nextInt(361);
-		v = rand.nextInt(80) + 80;
+		v = rand.nextInt(81) + 80;
 		this.missilesOnly = missilesOnly;
 		setColour();
 	}
