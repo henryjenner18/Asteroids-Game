@@ -31,7 +31,7 @@ public class SpaceManager {
 	private ArrayList<Integer> sortArrayList(ArrayList<Integer> orig) {
 		int origLength = orig.size(); // Length of original list
 		
-		if(origLength > 0) {
+		if(origLength > 1) {
 			// Remove duplicates
 			ArrayList<Integer> noDuplicates = new ArrayList<Integer>(); // New list to fill
 				

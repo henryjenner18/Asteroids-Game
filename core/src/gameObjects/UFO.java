@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import gameManagers.World;
+import screens.GameScreen;
 
 public class UFO extends SpaceObject {
 	
@@ -55,57 +56,67 @@ public class UFO extends SpaceObject {
 		checkCountdown(delta);
 	}
 	
-	private void missile(float delta) {
+	private void findMissileAngle() {
 		int numRockets = world.getNumRockets();
 		
 		for(int i = 0; i < numRockets; i++) {
-			Rocket target = world.getRocket(0);	
-			Vector2 targetPos = new Vector2(target.getX(), target.getY());
-			Vector2 targetVel = target.getVelocity();	
+			Rocket target = world.getRocket(i);	
+			Vector2 targPos = new Vector2(target.getX(), target.getY());
+			Vector2 targVel = target.getVelocity();	
 			
 			Vector2 origPos = position;
 			Vector2 origVel = velocity;		
 			
-			double missileSpeed = delta * missileV;
+			double speed = GameScreen.getAvgDelta() * missileV;
 			
-			Vector2 relPos = new Vector2(targetPos.x - origPos.x, targetPos.y - origPos.y);
-			Vector2 relVel = new Vector2(targetVel.x - origVel.x, targetVel.y - origVel.y);
+			Vector2 relPos = new Vector2(targPos.x - origPos.x, targPos.y - origPos.y);
+			Vector2 relVel = new Vector2(targVel.x - origVel.x, targVel.y - origVel.y);
 			
-			double a = dotProduct(relVel, relVel) - Math.pow(missileSpeed, 2);
+			double a = dotProduct(relVel, relVel) - Math.pow(speed, 2);
 			double b = dotProduct(relPos, relVel) * 2;
 			double c = dotProduct(relPos, relPos);
 			
 			double D = Math.pow(b, 2) - (4 * a * c);
 			
 			if(D >= 0) { // There are real root(s)
-				double t;
+				double t = 0;
+				boolean foundPosT = false;
 				
 				if(D == 0) { // One repeated real root
 					t = -b / (2 * a);
+					
+					if(t > 0) {
+						foundPosT = true;
+					}
+					
 				} else { // Two real roots
 					double q = Math.sqrt(D); // Let q equal the square root of the discriminant
 					double r0 = (-b - q) / (2 * a);
 					double r1 = (-b + q) / (2 * a);
-					//System.out.println(r0 + ", " + r1);
 					
-					if(r0 > 0) { // We know r0 > r1, but need to find the smallest positive root
+					if(r0 > 0) { // We know r1 > r0, but need to find the smallest positive root
 						t = r0;
-					} else {
+						foundPosT = true;
+					} else if (r1 > 0) {
 						t = r1;
+						foundPosT = true;
 					}
 				}
 				
-				double vx = (relPos.x / t) + relVel.x;
-				double vy = (relPos.y / t) + relVel.y;
-				
-				double alpha = Math.toDegrees(Math.atan(vy / vx));
-				if(origPos.x > targetPos.x) {
-					alpha += 180;
-				}
-				
-				alpha += rand.nextInt(2 * world.getUFOAccuracy() + 2) - world.getUFOAccuracy();
-	
-				shootMissile(alpha);
+				if(foundPosT == true) {
+					double vx = (relPos.x / t) + relVel.x;
+					double vy = (relPos.y / t) + relVel.y;
+					
+					double alpha = Math.toDegrees(Math.atan(vy / vx));
+					
+					if(vx < 0) {
+						alpha += 180;
+					}
+					
+					alpha += rand.nextInt(2 * world.getUFOAccuracy() + 1) - world.getUFOAccuracy();
+		
+					shootMissile(alpha);
+				}				
 			}
 		}
 	}
@@ -123,7 +134,7 @@ public class UFO extends SpaceObject {
 	
 	private void checkCountdown(float delta) {
 		if(countdown <= 0) {
-			missile(delta);
+			findMissileAngle();
 			resetCountdown();
 		}
 	}

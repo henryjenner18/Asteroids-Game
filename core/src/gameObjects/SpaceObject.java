@@ -32,11 +32,11 @@ public class SpaceObject {
 		for(int i = 0; i < edges; i++) {
 			float x1, y1, x2, y2, m, c;
 			
-			x1 = vertices[i][0]; // Set x1 to i
-			y1 = vertices[i][1]; // y1 is the element after x1
+			x1 = vertices[i][0]; // Find 1st x-coordinate
+			y1 = vertices[i][1]; // Find 1st y-coordinate
 			
 			if(i == edges - 1) { // Check to see if looking at the last vertex of the polygon
-				// Need to compare against the first vertex if we are currently checking the last vertex
+				// Need to compare against 1st vertex if we are currently checking the last vertex
 				x2 = vertices[0][0]; // Set x2 to the x value of the first vertex
 				y2 = vertices[0][1]; // Set x2 to the x value of the first vertex
 				

@@ -1,7 +1,5 @@
 package gameObjects;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -102,28 +100,27 @@ public class Rocket extends SpaceObject {
 	
 	private void asteroidsG(float delta) {
 		int numAsteroids = world.getNumAsteroids();
-		ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>(numAsteroids);
 		
-		for(int a = 0; a < numAsteroids; a++) {
-			asteroids.add(world.getAsteroid(a));
+		for(int a = 0; a < numAsteroids; a++) { // Force required from each asteroid
+			Asteroid ast = world.getAsteroid(a);
 			Vector2 gForce = new Vector2();
-			Vector2 asteroid = new Vector2(asteroids.get(a).getX(), asteroids.get(a).getY());
+			Vector2 asteroid = new Vector2(ast.getX(), ast.getY());
 			
-			float i = asteroid.x - position.x;
+			float i = asteroid.x - position.x; // Relative position
 			float j = asteroid.y - position.y;
-			double r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
+			double r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2)); // Magnitude of i and j
 			
-			double theta = Math.atan(j / i) * (180 / Math.PI);
+			double theta = Math.atan(j / i) * (180 / Math.PI); // Angle for force to be directed
 			if(position.x > asteroid.x) {
 				theta += 180;
 			}
 			
-			double mag = 3 * asteroids.get(a).getArea() / Math.pow(r, 2); // Representation of gravitational force equation, F = GMm / r^2
+			double mag = 3 * ast.getArea() / Math.pow(r, 2); // Representation of gravitational force equation, F = GMm / r^2
 			
 			float radians = (float) Math.toRadians(theta);		
 			gForce.x = (float) (MathUtils.cos(radians) * delta * mag);
 			gForce.y = (float) (MathUtils.sin(radians) * delta * mag);
-			velocity.add(gForce);
+			velocity.add(gForce); // Apply gravitational force
 		}
 	}
 	
