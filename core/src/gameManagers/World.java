@@ -50,7 +50,7 @@ public class World {
 		powerUps = new ArrayList<PowerUp>();
 		shields = new ArrayList<Shield>();
 		
-		ufoDelta = 18;
+		ufoDelta = 20;
 		resetUFOSpawnTimer();
 		resetAsteroidSpawnTimer();
 		resetGameOverTimer();
@@ -121,10 +121,8 @@ public class World {
 					
 				resetAsteroidSpawnTimer();
 				
-				if(level >= 8) {
-					if(ufoDelta > 6) {
-						ufoDelta -= 2;
-					}
+				if(ufoDelta > 4) {
+					ufoDelta -= 2;
 				}			
 			
 				nextLevel = false;
