@@ -50,15 +50,17 @@ public class World {
 		powerUps = new ArrayList<PowerUp>();
 		shields = new ArrayList<Shield>();
 		
-		ufoDelta = 20;
-		resetUFOSpawnTimer();
-		resetAsteroidSpawnTimer();
-		resetGameOverTimer();
-		gameTimer = 0;		
+		ufoDelta = 18;
+		gameTimer = 0;
 		score = level = extraLifeCount = (int) (rocketSpawnTimer = 0);
 		lives = 3;
 		ufoAccuracy = 10;
 		objSpawner.rocket(0);
+		
+		resetUFOSpawnTimer();
+		resetAsteroidSpawnTimer();
+		resetGameOverTimer();
+		
 		currentState = GameState.RUNNING;
 	}
 	
@@ -114,20 +116,11 @@ public class World {
 				levelUp();
 				
 				for(int a = 0; a < level + 1; a ++) {
-					if(a < 8) {
-						objSpawner.newAsteroid();
-					}			
+					objSpawner.newAsteroid();
 				}
-					
+				
 				resetAsteroidSpawnTimer();
-				
-				if(ufoDelta > 4) {
-					ufoDelta -= 2;
-				}			
-			
 				nextLevel = false;
-				
-				System.out.println("Level: " + level + ", ufoAccuracy: " + ufoAccuracy + ", ufoDelta: " + ufoDelta);
 			}
 		}
 		
@@ -167,6 +160,10 @@ public class World {
 		level++;
 		if(ufoAccuracy > 0) {
 			ufoAccuracy--;
+		}
+		
+		if(ufoDelta > 8) {
+			ufoDelta--;
 		}
 	}
 	
