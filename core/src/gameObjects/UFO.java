@@ -10,6 +10,7 @@ public class UFO extends SpaceObject {
 	
 	private float height, dv, countdown;
 	private int terminalVel;
+	private int[] flashColour;
 	
 	public UFO(World world, float x, float y) {
 		super(world);
@@ -17,33 +18,43 @@ public class UFO extends SpaceObject {
 		velocity = new Vector2();
 		edges = 8;
 		vertices = new float[edges][2];
-		float ran = randFloatInRange(0.7, 1);
+		float ran = randFloatInRange(0.8, 1);
 		height = r = 45 * ran;
 		dv = 0;
 		while(dv == 0) {
 			dv = rand.nextInt(5) - 2;
 		}
 		terminalVel = 6;
-		score = (int) (500 / ran);
+		score = (int) (1000 / ran);
 		resetCountdown();
 		setColours();
 	}
 	
+	private void setFlashColour() {
+		flashColour = new int[3];
+		
+		for(int i = 0; i < 3; i++) {
+			flashColour[i] = rand.nextInt(256);
+		}	
+	}
+	
 	private void setColours() {	
 		fillColour = new int[3];
-		fillColour[0] = (int) (102 * randFloatInRange(0.7, 1.2));
-		fillColour[1] = (int) (255 * randFloatInRange(0.7, 1));
-		fillColour[2] = (int) (102 * randFloatInRange(0.7, 1.2));
+		fillColour[0] = 102;
+		fillColour[1] = 255;
+		fillColour[2] = 102;
 		
 		lineColour = new int[3];
-		lineColour[0] = (int) (125 * randFloatInRange(0.7, 1.2));
-		lineColour[1] = (int) (50 * randFloatInRange(0.7, 1.2));
-		lineColour[2] = (int) (255 * randFloatInRange(0.7, 1));
+		lineColour[0] = 125;
+		lineColour[1] = 50;
+		lineColour[2] = 255;
 		
 		missileColour = new int[3];
 		missileColour[0] = 250;
 		missileColour[1] = 0;
 		missileColour[2] = 0;
+		
+		setFlashColour();
 	}
 
 	public void update(float delta) {
@@ -54,6 +65,7 @@ public class UFO extends SpaceObject {
 		wrap();
 		setVertices();
 		checkCountdown(delta);
+		setFlashColour();
 	}
 	
 	private void findMissileAngle() {
@@ -207,5 +219,9 @@ public class UFO extends SpaceObject {
 		
 		vertices[3][0] = position.x + r/4;
 		vertices[3][1] = (float) (position.y + 2.1*height/3);		
+	}
+	
+	public int[] getFlashColour() {
+		return flashColour;
 	}
 }
