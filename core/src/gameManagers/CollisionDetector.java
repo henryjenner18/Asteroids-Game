@@ -119,7 +119,8 @@ public class CollisionDetector {
 			addObjectToList(obj1Class, obj1Index);
 			addObjectToList(obj2Class, obj2Index);
 			
-			if(obj1Class == "gameObjects.Missile" && obj2Class == "gameObjects.Missile") { // Missile-missile collision, therefore grey boulders not required in sparks
+			if((obj1Class == "gameObjects.Missile" && obj2Class == "gameObjects.Missile") ||
+					(obj1Class == "gameObjects.Missile" && obj2Class == "gameObjects.Shield")) { // Missile-missile collision, therefore grey boulders not required in sparks
 				world.objSpawner.sparks(x, y, true);
 			} else {
 				world.objSpawner.sparks(x, y, false);
