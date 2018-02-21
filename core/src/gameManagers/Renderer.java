@@ -417,6 +417,7 @@ public class Renderer {
 			int edges = u.getEdges();
 			int[] fillColour = u.getFillColour();
 			int[] lineColour = u.getLineColour();
+			int[] flashColour = u.getFlashColour();
 			
 			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
 			drawFilledPolygon(x, y, vertices, edges);
@@ -428,6 +429,7 @@ public class Renderer {
 			//Horizontal lines
 			sr.begin(ShapeType.Line);
 			sr.line(vertices[0][0], vertices[0][1], vertices[5][0], vertices[5][1]);
+			sr.setColor(flashColour[0]/255f, flashColour[1]/255f, flashColour[2]/255f, 1);	
 			sr.line(vertices[1][0], vertices[1][1], vertices[4][0], vertices[4][1]);
 			sr.end();
 		}
