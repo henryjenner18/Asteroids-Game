@@ -95,7 +95,7 @@ public class World {
 			ufoSpawnTimer -= delta;
 			
 			if(ufoSpawnTimer <= 0) {
-				objSpawner.ufo();
+				objSpawner.ufo(false, 0, 0);
 				resetUFOSpawnTimer();
 			}
 		}

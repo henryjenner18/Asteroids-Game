@@ -28,6 +28,7 @@ public class UFO extends SpaceObject {
 		score = (int) (1000 / ran);
 		resetCountdown();
 		setColours();
+		System.out.println(height);
 	}
 	
 	private void setFlashColour() {
@@ -66,6 +67,16 @@ public class UFO extends SpaceObject {
 		setVertices();
 		checkCountdown(delta);
 		setFlashColour();
+		spawnCloneCheck();
+	}
+	
+	private void spawnCloneCheck() {
+		if(world.getNumUFOs() < 4) {
+			int n = rand.nextInt(600);
+			if(n == 0) {
+				world.objSpawner.ufo(true, getX(), getY());
+			}
+		}	
 	}
 	
 	private void findMissileAngle() {

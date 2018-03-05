@@ -75,15 +75,18 @@ public class ObjectSpawner {
 		}	
 	}
 	
-	public void ufo() {
+	public void ufo(boolean clone, float x, float y) {
 		int num = rand.nextInt(2);
-		float x, y;
-		if(num == 0) {
-			x = 0;
-		} else {
-			x = Main.getWidth();
+
+		if(clone == false) {
+			if(num == 0) {
+				x = 0;
+			} else {
+				x = Main.getWidth();
+			}
+			y = rand.nextInt(1251);
 		}
-		y = rand.nextInt(1251);
+		
 		UFO ufo = new UFO(world, x, y);
 		world.ufos.add(ufo);
 	}
