@@ -24,6 +24,9 @@ public class UFO extends SpaceObject {
 		float ran;
 		if(daughter == true) { 
 			ran = randFloatInRange(0.7, 0.8);
+			
+			velocity.x = rand.nextInt(21) - 10;
+			velocity.y = rand.nextInt(21) - 10;
 		} else {
 			ran = randFloatInRange(0.8, 1);
 		}
