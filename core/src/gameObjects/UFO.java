@@ -12,23 +12,31 @@ public class UFO extends SpaceObject {
 	private int terminalVel;
 	private int[] flashColour;
 	
-	public UFO(World world, float x, float y) {
+	public UFO(World world, float x, float y, boolean daughter) {
 		super(world);
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		edges = 8;
 		vertices = new float[edges][2];
-		float ran = randFloatInRange(0.8, 1);
-		height = r = 45 * ran;
+		
+		float ran;
+		if(daughter == true) { 
+			ran = randFloatInRange(0.7, 0.8);
+		} else {
+			ran = randFloatInRange(0.8, 1);
+		}
+		
+		height = r = 45 * ran; //41
 		dv = 0;
+		
 		while(dv == 0) {
 			dv = rand.nextInt(5) - 2;
 		}
+		
 		terminalVel = 6;
 		score = (int) (1000 / ran);
 		resetCountdown();
-		setColours();
-		System.out.println(height);
+		setColours(daughter);
 	}
 	
 	private void setFlashColour() {
@@ -39,21 +47,36 @@ public class UFO extends SpaceObject {
 		}	
 	}
 	
-	private void setColours() {	
-		fillColour = new int[3];
-		fillColour[0] = 102;
-		fillColour[1] = 255;
-		fillColour[2] = 102;
+	private void setColours(boolean daughter) {
+		if(daughter == false) {
+			fillColour = new int[3];
+			fillColour[0] = 102;
+			fillColour[1] = 255;
+			fillColour[2] = 102;
+			
+			missileColour = new int[3];
+			missileColour[0] = 250;
+			missileColour[1] = 0;
+			missileColour[2] = 0;
+		} else {
+			fillColour = new int[3];
+			fillColour[0] = 255;
+			fillColour[1] = 153;
+			fillColour[2] = 200;
+			
+			missileColour = new int[3];
+			missileColour[0] = 204;
+			missileColour[1] = 0;
+			missileColour[2] = 102;
+		}
+		
 		
 		lineColour = new int[3];
 		lineColour[0] = 125;
 		lineColour[1] = 50;
 		lineColour[2] = 255;
 		
-		missileColour = new int[3];
-		missileColour[0] = 250;
-		missileColour[1] = 0;
-		missileColour[2] = 0;
+		
 		
 		setFlashColour();
 	}
@@ -71,11 +94,9 @@ public class UFO extends SpaceObject {
 	}
 	
 	private void spawnCloneCheck() {
-		if(world.getNumUFOs() < 4) {
-			int n = rand.nextInt(600);
-			if(n == 0) {
-				world.objSpawner.ufo(true, getX(), getY());
-			}
+		int n = rand.nextInt(600);
+		if(n == 0) {
+			world.objSpawner.ufoDaughter(getX(), getY());
 		}	
 	}
 	

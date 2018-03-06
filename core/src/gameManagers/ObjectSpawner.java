@@ -75,20 +75,28 @@ public class ObjectSpawner {
 		}	
 	}
 	
-	public void ufo(boolean clone, float x, float y) {
-		int num = rand.nextInt(2);
-
-		if(clone == false) {
+	public void newUFO() {
+		if(world.getNumUFOs() < 4) {
+			float x, y;
+			int num = rand.nextInt(2);
+			
 			if(num == 0) {
 				x = 0;
 			} else {
 				x = Main.getWidth();
 			}
 			y = rand.nextInt(1251);
+			
+			UFO ufo = new UFO(world, x, y, false);
+			world.ufos.add(ufo);
 		}
-		
-		UFO ufo = new UFO(world, x, y);
-		world.ufos.add(ufo);
+	}
+	
+	public void ufoDaughter(float x, float y) {
+		if(world.getNumUFOs() < 4) {	
+			UFO ufo = new UFO(world, x, y, true);
+			world.ufos.add(ufo);
+		}
 	}
 	
 	public void missile(char creator, int num, float x, float y, double heading, int height, Vector2 velocity, int vMult, int[] colour) {
