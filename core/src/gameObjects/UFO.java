@@ -11,9 +11,11 @@ public class UFO extends SpaceObject {
 	private float height, dv, countdown;
 	private int terminalVel;
 	private int[] flashColour;
+	private boolean daughter;
 	
 	public UFO(World world, float x, float y, boolean daughter) {
 		super(world);
+		this.daughter = daughter;
 		position = new Vector2(x, y);
 		velocity = new Vector2();
 		edges = 8;
@@ -36,7 +38,7 @@ public class UFO extends SpaceObject {
 		terminalVel = 6;
 		score = (int) (1000 / ran);
 		resetCountdown();
-		setColours(daughter);
+		setColours();
 	}
 	
 	private void setFlashColour() {
@@ -47,7 +49,7 @@ public class UFO extends SpaceObject {
 		}	
 	}
 	
-	private void setColours(boolean daughter) {
+	private void setColours() {
 		if(daughter == false) {
 			fillColour = new int[3];
 			fillColour[0] = 102;
@@ -90,7 +92,10 @@ public class UFO extends SpaceObject {
 		setVertices();
 		checkCountdown(delta);
 		setFlashColour();
-		spawnCloneCheck();
+		
+		if(daughter == false) {
+			spawnCloneCheck();
+		}		
 	}
 	
 	private void spawnCloneCheck() {
