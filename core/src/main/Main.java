@@ -12,11 +12,13 @@ public class Main extends Game { // Main game class
 	private static int width; // Dimensions used for whole program
 	private static int height;
 	private static int[][] stars;
-	
+	private static boolean sound;
+
 	public Main(int width, int height) {
 		Main.width = width;
 		Main.height = height;
 		generateStars(500);
+		sound = true;
 	}
 	
 	private void generateStars(int n) {
@@ -46,6 +48,23 @@ public class Main extends Game { // Main game class
 	
 	public void setGameScreen() {
 		setScreen(new GameScreen());
+		
+		if(isSound()) {
+			AssetLoader.inPlayMusic.setVolume(0.13f);
+		}
+	}
+	
+	public static boolean isSound() {
+		return sound;
+	}
+
+	public static void toggleSound() {
+		sound = !sound;	
+		if(sound == false && AssetLoader.inPlayMusic.isPlaying()) {
+			AssetLoader.inPlayMusic.pause();
+		} else if(sound == true && AssetLoader.inPlayMusic.isPlaying() == false){
+			AssetLoader.inPlayMusic.play();
+		}
 	}
 	
 	public static int getWidth() {

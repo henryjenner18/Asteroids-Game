@@ -1,7 +1,9 @@
 package screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -44,6 +46,10 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
+			Main.toggleSound();
+		}
+		
 		AssetLoader.zoomOut();
 		world.update(delta);
 		drawBackground();
@@ -72,6 +78,17 @@ public class MainMenuScreen implements Screen {
 		strWidth = layout.width;
 		strHeight = layout.height;
 		f.draw(batch, str, w - strWidth - 10, strHeight + 10);
+		
+		// Sound
+		if(Main.isSound()) {
+			str = "Press S to turn sound OFF";
+		} else {
+			str = "Press S to turn sound ON";
+		}
+		layout.setText(f, str);
+		strWidth = layout.width;
+		strHeight = layout.height;
+		f.draw(batch, str, 10, strHeight + 10);
 		
 		// Play
 		str = "Play";	

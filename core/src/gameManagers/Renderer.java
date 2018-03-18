@@ -28,8 +28,7 @@ public class Renderer {
 	private World world;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
-	private int w;
-	private int h;
+	private int w, h, g;
 	
 	public Renderer(World world) {
 		this.world = world;
@@ -37,6 +36,7 @@ public class Renderer {
 		sr = AssetLoader.sr;
 		w = Main.getWidth();
 		h = Main.getHeight();
+		g = h + 150;
 	}
 
 	public void render(float delta) {
@@ -64,7 +64,9 @@ public class Renderer {
 		float strWidth, strHeight;
 		
 		if(world.isGameOver()) {
-			Gdx.input.setCursorCatched(false);
+			if(Main.isSound()) {
+				AssetLoader.inPlayMusic.setVolume((float) (AssetLoader.inPlayMusic.getVolume()*0.95));
+			}
 			
 			int x = Gdx.input.getX();
 			int y = h - Gdx.input.getY();
@@ -74,7 +76,11 @@ public class Renderer {
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 2*strHeight);
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, g);
+			
+			if(g > h/2 + 2*strHeight) {
+				g -= 5;
+			}
 			
 			if(world.gameOverTimer > 0) {
 				world.gameOverTimer -= delta;
@@ -85,7 +91,13 @@ public class Renderer {
 					AssetLoader.resetCam();
 				}
 				
-			} else {			
+			} else {
+				if(Main.isSound()) {
+					AssetLoader.inPlayMusic.stop();
+				}
+			
+				Gdx.input.setCursorCatched(false);
+				
 				// Play again
 				str = "Play again";	
 				layout.setText(AssetLoader.font, str);
@@ -102,6 +114,7 @@ public class Renderer {
 							
 					if(Gdx.input.isTouched()) {
 						world.restart();
+						g = h + 150;
 					}
 				}
 						
@@ -168,6 +181,17 @@ public class Renderer {
 			strWidth = layout.width;
 			strHeight = layout.height;
 			f.draw(batch, str, w - strWidth - 10, strHeight + 10);
+			
+			// Sound
+			if(Main.isSound()) {
+				str = "Press S to turn sound OFF";
+			} else {
+				str = "Press S to turn sound ON";
+			}
+			layout.setText(f, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+			f.draw(batch, str, 10, strHeight + 10);
 			
 			if(Gdx.input.isKeyPressed(Input.Keys.E)) {
 				Gdx.app.exit();

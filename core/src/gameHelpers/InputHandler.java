@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 
 import gameManagers.World;
 import gameObjects.Rocket;
+import main.Main;
 
 public class InputHandler implements InputProcessor {
 	
@@ -51,6 +52,10 @@ public class InputHandler implements InputProcessor {
 			} else {
 				world.pause();
 			}
+		}
+		
+		if(keycode == Keys.S) {
+			Main.toggleSound();
 		}
 		
 		return true;

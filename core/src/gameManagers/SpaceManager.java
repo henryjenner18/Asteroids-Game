@@ -7,6 +7,7 @@ import gameHelpers.AssetLoader;
 import gameObjects.Asteroid;
 import gameObjects.Rocket;
 import gameObjects.UFO;
+import main.Main;
 
 public class SpaceManager {
 	
@@ -90,7 +91,10 @@ public class SpaceManager {
 			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
 			world.removeRocket(i);
 			world.loseLife();
-			AssetLoader.rocketExplosion.play(0.5f);
+			
+			if(Main.isSound()) {
+				AssetLoader.rocketExplosion.play(0.5f);
+			}
 		}
 	}
 	
@@ -125,7 +129,7 @@ public class SpaceManager {
 			world.removeAsteroid(objs.get(i));
 		}
 		
-		if(objs.size() > 0) {
+		if(objs.size() > 0 && Main.isSound()) {		
 			AssetLoader.asteroidExplosion.play(0.3f);
 		}
 	}
@@ -167,8 +171,10 @@ public class SpaceManager {
 			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
 			world.removeUFO(objs.get(i));
 			
-			AssetLoader.ufoExplosion.play(0.4f);
-			AssetLoader.ufoSpawn.stop();
+			if(Main.isSound()) {
+				AssetLoader.ufoExplosion.play(0.4f);
+				AssetLoader.ufoSpawn.stop();
+			}		
 		}
 	}
 	

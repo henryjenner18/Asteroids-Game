@@ -14,6 +14,7 @@ import gameObjects.Rocket;
 import gameObjects.Shield;
 import gameObjects.Spark;
 import gameObjects.UFO;
+import main.Main;
 
 public class World {
 	
@@ -166,7 +167,7 @@ public class World {
 			ufoDelta--;
 		}
 		
-		if(level > 1) {
+		if(level > 1 && Main.isSound()) {
 			AssetLoader.levelUp.play(1f);
 		}	
 	}
@@ -187,7 +188,11 @@ public class World {
 		
 		if(lives <= 0) {
 			currentState = GameState.GAMEOVER;
-			AssetLoader.gameOver.play(0.7f);
+			
+			if(Main.isSound()) {
+				AssetLoader.gameOver.play(0.7f);
+			}
+			
 		} else {
 			respawn = true;
 		}
@@ -206,33 +211,45 @@ public class World {
 	// Game states
 	public void start() {
 		currentState = GameState.RUNNING;
-		AssetLoader.inPlayMusic.play();
-		AssetLoader.asteroidExplosion.resume();
-		AssetLoader.ufoSpawn.resume();
-		AssetLoader.rocketExplosion.resume();
-		AssetLoader.ufoMissile.resume();
-		AssetLoader.rocketMissile.resume();
-		AssetLoader.ufoExplosion.resume();
-		AssetLoader.levelUp.resume();
-		AssetLoader.powerUp.resume();
+		
+		if(Main.isSound()) {
+			AssetLoader.inPlayMusic.play();
+			AssetLoader.asteroidExplosion.resume();
+			AssetLoader.ufoSpawn.resume();
+			AssetLoader.rocketExplosion.resume();
+			AssetLoader.ufoMissile.resume();
+			AssetLoader.rocketMissile.resume();
+			AssetLoader.ufoExplosion.resume();
+			AssetLoader.levelUp.resume();
+			AssetLoader.powerUp.resume();
+		}	
 	}
 	
 	public void restart() {
 		init();
 		Gdx.input.setCursorCatched(true);
+		
+		if(Main.isSound()) {
+			AssetLoader.inPlayMusic.setLooping(true);
+			AssetLoader.inPlayMusic.setVolume((float) 0.2);
+			AssetLoader.inPlayMusic.play();
+		}		
 	}
 	
 	public void pause() {
 		currentState = GameState.PAUSE;
-		AssetLoader.inPlayMusic.pause();
-		AssetLoader.asteroidExplosion.pause();
-		AssetLoader.ufoSpawn.pause();
-		AssetLoader.rocketExplosion.pause();
-		AssetLoader.ufoMissile.pause();
-		AssetLoader.rocketMissile.pause();
-		AssetLoader.ufoExplosion.pause();
-		AssetLoader.levelUp.pause();
-		AssetLoader.powerUp.pause();
+		
+		if(Main.isSound()) {
+			AssetLoader.inPlayMusic.pause();
+			AssetLoader.asteroidExplosion.pause();
+			AssetLoader.ufoSpawn.pause();
+			AssetLoader.rocketExplosion.pause();
+			AssetLoader.ufoMissile.pause();
+			AssetLoader.rocketMissile.pause();
+			AssetLoader.ufoExplosion.pause();
+			AssetLoader.levelUp.pause();
+			AssetLoader.powerUp.pause();
+		}
 	}
 	
 	// Setters
@@ -249,7 +266,7 @@ public class World {
 	}
 	
 	private void resetGameOverTimer() {
-		gameOverTimer = 2;
+		gameOverTimer = 3;
 	}
 	
 	public void setClearScreen(boolean b) {

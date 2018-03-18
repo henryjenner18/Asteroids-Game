@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import gameHelpers.AssetLoader;
 import gameObjects.SpaceObject;
+import main.Main;
 
 public class CollisionDetector {
 	
@@ -178,7 +179,9 @@ public class CollisionDetector {
 					world.getRocket(obj1Index).setContinuousFire(true);
 				}
 				
-				AssetLoader.powerUp.play(0.4f);
+				if(Main.isSound()) {
+					AssetLoader.powerUp.play(0.4f);
+				}			
 				
 				return false;
 			

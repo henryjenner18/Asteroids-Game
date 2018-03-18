@@ -97,7 +97,9 @@ public class ObjectSpawner {
 			UFO ufo = new UFO(world, x, y, false);
 			world.ufos.add(ufo);
 			
-			AssetLoader.ufoSpawn.play(0.25f);
+			if(Main.isSound()) {
+				AssetLoader.ufoSpawn.play(0.25f);
+			}		
 		}
 	}
 	
@@ -127,16 +129,18 @@ public class ObjectSpawner {
 			newHeading = initHeading + dh;
 		}
 		
-		if(creator == 'r') {
-			if(world.getRocket(0).getContinuousFire() == true) {
-				AssetLoader.rocketMissile.play(0.05f);
-			} else {
-				AssetLoader.rocketMissile.play(0.2f);
+		if(Main.isSound()) {
+			if(creator == 'r') {
+				if(world.getRocket(0).getContinuousFire() == true) {
+					AssetLoader.rocketMissile.play(0.05f);
+				} else {
+					AssetLoader.rocketMissile.play(0.2f);
+				}
+				
+			} else if(creator == 'u') {
+				AssetLoader.ufoMissile.play(0.3f);
 			}
-			
-		} else if(creator == 'u') {
-			AssetLoader.ufoMissile.play(0.3f);
-		}
+		}		
 	}
 	
 	public void fragments(float x, float y, float r, Vector2 objVelocity, int[] fillColour, int[] lineColour) {

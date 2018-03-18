@@ -26,7 +26,7 @@ public class AssetLoader {
 	private static int h = Main.getHeight();
 	
 	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion, rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver;
-	public static Music spaceMusic, inPlayMusic;
+	public static Music inPlayMusic;
 	
 	public static void load() {
 		r = new Random();
@@ -44,15 +44,12 @@ public class AssetLoader {
 			prefs.putInteger("highScore", 0);
 		}
 		
-		spaceMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/spaceMusic.mp3"));
-		spaceMusic.setLooping(true);
-		spaceMusic.setVolume((float) 0.1);
-		//spaceMusic.play();
-		
+		// Music
 		inPlayMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/pixelatedCosmos.mp3"));
-		inPlayMusic.setLooping(true);
-		inPlayMusic.setVolume((float) 0.2);
+		inPlayMusic.setLooping(true); // Music is on a constant loop
+		inPlayMusic.setVolume(0.2f);
 		
+		// Sound FX
 		asteroidExplosion = Gdx.audio.newSound(Gdx.files.internal("audio/asteroidExplosion.wav"));
 		rocketExplosion = Gdx.audio.newSound(Gdx.files.internal("audio/rocketExplosion.wav"));
 		ufoExplosion = Gdx.audio.newSound(Gdx.files.internal("audio/ufoExplosion.wav"));
@@ -74,8 +71,17 @@ public class AssetLoader {
 	}
 	
 	public static void dispose() {
-		font.dispose();
+		font.dispose(); // Tidying up
 		batch.dispose();
+		asteroidExplosion.dispose();
+		rocketExplosion.dispose();
+		ufoExplosion.dispose();
+		rocketMissile.dispose();
+		ufoMissile.dispose();
+		powerUp.dispose();
+		levelUp.dispose();
+		ufoSpawn.dispose();
+		gameOver.dispose();
 	}
 	
 	public static void zoomOut() {
@@ -83,7 +89,10 @@ public class AssetLoader {
 			cam.zoom += 0.01;
 		} else {
 			cam.zoom = 1;
-			inPlayMusic.play();
+			
+			if(Main.isSound()) {
+				inPlayMusic.play();
+			}		
 		}
 		
 		setCam();
