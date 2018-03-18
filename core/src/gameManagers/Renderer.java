@@ -79,6 +79,12 @@ public class Renderer {
 			if(world.gameOverTimer > 0) {
 				world.gameOverTimer -= delta;
 				
+				if(world.gameOverTimer > 1) {
+					AssetLoader.translate();
+				} else {
+					AssetLoader.resetCam();
+				}
+				
 			} else {			
 				// Play again
 				str = "Play again";	
@@ -157,7 +163,7 @@ public class Renderer {
 			
 			// Exit and restart
 			BitmapFont f = new BitmapFont();
-			str = "Press E to exit, R to restart";
+			str = "Press E to exit, R to restart or P to resume";
 			layout.setText(f, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
@@ -484,7 +490,7 @@ public class Renderer {
 		
 		for(int e = 0; e < edges; e++) {
 			sr.begin(ShapeType.Filled);
-			
+
 			if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
 				sr.triangle(vertices[e][0], vertices[e][1],
 						vertices[0][0], vertices[0][1],

@@ -165,6 +165,10 @@ public class World {
 		if(ufoDelta > 8) {
 			ufoDelta--;
 		}
+		
+		if(level > 1) {
+			AssetLoader.levelUp.play(1f);
+		}	
 	}
 	
 	public void compareHighScore() {
@@ -183,6 +187,7 @@ public class World {
 		
 		if(lives <= 0) {
 			currentState = GameState.GAMEOVER;
+			AssetLoader.gameOver.play(0.7f);
 		} else {
 			respawn = true;
 		}
@@ -201,6 +206,15 @@ public class World {
 	// Game states
 	public void start() {
 		currentState = GameState.RUNNING;
+		AssetLoader.inPlayMusic.play();
+		AssetLoader.asteroidExplosion.resume();
+		AssetLoader.ufoSpawn.resume();
+		AssetLoader.rocketExplosion.resume();
+		AssetLoader.ufoMissile.resume();
+		AssetLoader.rocketMissile.resume();
+		AssetLoader.ufoExplosion.resume();
+		AssetLoader.levelUp.resume();
+		AssetLoader.powerUp.resume();
 	}
 	
 	public void restart() {
@@ -210,6 +224,15 @@ public class World {
 	
 	public void pause() {
 		currentState = GameState.PAUSE;
+		AssetLoader.inPlayMusic.pause();
+		AssetLoader.asteroidExplosion.pause();
+		AssetLoader.ufoSpawn.pause();
+		AssetLoader.rocketExplosion.pause();
+		AssetLoader.ufoMissile.pause();
+		AssetLoader.rocketMissile.pause();
+		AssetLoader.ufoExplosion.pause();
+		AssetLoader.levelUp.pause();
+		AssetLoader.powerUp.pause();
 	}
 	
 	// Setters

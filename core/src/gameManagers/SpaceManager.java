@@ -3,6 +3,7 @@ package gameManagers;
 import java.util.ArrayList;
 import com.badlogic.gdx.math.Vector2;
 
+import gameHelpers.AssetLoader;
 import gameObjects.Asteroid;
 import gameObjects.Rocket;
 import gameObjects.UFO;
@@ -89,6 +90,7 @@ public class SpaceManager {
 			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
 			world.removeRocket(i);
 			world.loseLife();
+			AssetLoader.rocketExplosion.play(0.5f);
 		}
 	}
 	
@@ -121,6 +123,10 @@ public class SpaceManager {
 			world.addScore(score);
 			asteroid.split();
 			world.removeAsteroid(objs.get(i));
+		}
+		
+		if(objs.size() > 0) {
+			AssetLoader.asteroidExplosion.play(0.3f);
 		}
 	}
 	
@@ -160,6 +166,9 @@ public class SpaceManager {
 			world.checkForPowerUp(x, y);
 			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
 			world.removeUFO(objs.get(i));
+			
+			AssetLoader.ufoExplosion.play(0.4f);
+			AssetLoader.ufoSpawn.stop();
 		}
 	}
 	

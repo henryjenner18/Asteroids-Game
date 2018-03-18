@@ -2,6 +2,7 @@ package gameManagers;
 
 import java.util.ArrayList;
 
+import gameHelpers.AssetLoader;
 import gameObjects.SpaceObject;
 
 public class CollisionDetector {
@@ -9,7 +10,6 @@ public class CollisionDetector {
 	private World world;
 	private ArrayList<Integer> rocketsToRemove;
 	private ArrayList<Integer> asteroidsToRemove;
-	private ArrayList<Integer> missilesToRemove;
 	private ArrayList<Integer> ufosToRemove;
 	
 	public CollisionDetector(World world) {
@@ -19,7 +19,6 @@ public class CollisionDetector {
 	public void manage() {
 		rocketsToRemove = new ArrayList<Integer>();
 		asteroidsToRemove = new ArrayList<Integer>();
-		missilesToRemove = new ArrayList<Integer>();
 		ufosToRemove = new ArrayList<Integer>();
 		
 		checkForCollisions(world.getShields(), world.getAsteroids());
@@ -179,6 +178,8 @@ public class CollisionDetector {
 					world.getRocket(obj1Index).setContinuousFire(true);
 				}
 				
+				AssetLoader.powerUp.play(0.4f);
+				
 				return false;
 			
 			} else if(world.getRocket(0).getInvincible() == true) {
@@ -298,10 +299,6 @@ public class CollisionDetector {
 	
 	public ArrayList<Integer> getAsteroidsToRemove() {
 		return asteroidsToRemove;
-	}
-	
-	public ArrayList<Integer> getMissilesToRemove() {
-		return missilesToRemove;
 	}
 	
 	public ArrayList<Integer> getUFOsToRemove() {

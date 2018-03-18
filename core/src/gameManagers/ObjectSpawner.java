@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+import gameHelpers.AssetLoader;
 import gameObjects.Asteroid;
 import gameObjects.Fragment;
 import gameObjects.Missile;
@@ -27,6 +28,12 @@ public class ObjectSpawner {
 	void rocket(float delta) {
 		if(world.rocketSpawnTimer > 0) {
 			world.rocketSpawnTimer -= delta;
+			
+			if(world.rocketSpawnTimer > 1) {
+				AssetLoader.translate();
+			} else {
+				AssetLoader.resetCam();
+			}
 			
 		} else {
 			Rocket rocket = new Rocket(world);
@@ -89,6 +96,8 @@ public class ObjectSpawner {
 			
 			UFO ufo = new UFO(world, x, y, false);
 			world.ufos.add(ufo);
+			
+			AssetLoader.ufoSpawn.play(0.25f);
 		}
 	}
 	
@@ -116,7 +125,18 @@ public class ObjectSpawner {
 			}
 			
 			newHeading = initHeading + dh;
-		}	
+		}
+		
+		if(creator == 'r') {
+			if(world.getRocket(0).getContinuousFire() == true) {
+				AssetLoader.rocketMissile.play(0.05f);
+			} else {
+				AssetLoader.rocketMissile.play(0.2f);
+			}
+			
+		} else if(creator == 'u') {
+			AssetLoader.ufoMissile.play(0.3f);
+		}
 	}
 	
 	public void fragments(float x, float y, float r, Vector2 objVelocity, int[] fillColour, int[] lineColour) {

@@ -29,6 +29,7 @@ public class MainMenuScreen implements Screen {
 		this.main = main;
 		sr = AssetLoader.sr;
 		world = new World();
+		AssetLoader.closeZoom();
 		
 		for(int i = 0; i < 5; i++) {
 			world.objSpawner.newAsteroid();
@@ -43,8 +44,8 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		AssetLoader.zoomOut();
 		world.update(delta);
-		
 		drawBackground();
 		drawAsteroids();
 		drawText();	
@@ -57,11 +58,28 @@ public class MainMenuScreen implements Screen {
 		batch.begin();
 		GlyphLayout layout = new GlyphLayout();
 		
-		// Play
-		String str = "Play";	
+		// Title - Asteroids
+		String str = "ASTEROIDS";	
 		layout.setText(AssetLoader.font, str);
 		float strWidth = layout.width;
 		float strHeight = layout.height;
+		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 2*strHeight);
+				
+		// Copyright
+		BitmapFont f = new BitmapFont();
+		str = "C 2017-18 Henry Jenner";
+		layout.setText(f, str);
+		strWidth = layout.width;
+		strHeight = layout.height;
+		f.draw(batch, str, w - strWidth - 10, strHeight + 10);
+		
+		// Play
+		str = "Play";	
+		layout.setText(AssetLoader.font, str);
+		strWidth = layout.width;
+		strHeight = layout.height;
+		
+		if(AssetLoader.cam.zoom == 1) {
 		
 		if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 				y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
@@ -98,22 +116,7 @@ public class MainMenuScreen implements Screen {
 		}
 		
 		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
-		
-		// Title - Asteroids
-		str = "ASTEROIDS";	
-		layout.setText(AssetLoader.font, str);
-		strWidth = layout.width;
-		strHeight = layout.height;
-		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 + 2*strHeight);
-		
-		// Copyright
-		BitmapFont f = new BitmapFont();
-		str = "C 2017-18 Henry Jenner";
-		layout.setText(f, str);
-		strWidth = layout.width;
-		strHeight = layout.height;
-		f.draw(batch, str, w - strWidth - 10, strHeight + 10);
-		
+		}
 		batch.end();
 	}
 	

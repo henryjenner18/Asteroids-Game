@@ -1,7 +1,11 @@
 package gameHelpers;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,28 +19,49 @@ public class AssetLoader {
 	public static BitmapFont font;
 	public static ShapeRenderer sr;
 	private static Preferences prefs;
+	private static boolean left, up;
+	private static Random r;
 	
 	private static int w = Main.getWidth();
 	private static int h = Main.getHeight();
 	
+	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion, rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver;
+	public static Music spaceMusic, inPlayMusic;
+	
 	public static void load() {
-		cam = new OrthographicCamera(w, h);
-		cam.translate(w / 2, h / 2);
-		cam.update();
+		r = new Random();
 		
-		batch = new SpriteBatch();
-		batch.setProjectionMatrix(cam.combined);
-		
+		cam = new OrthographicCamera(w, h);	
+		batch = new SpriteBatch();	
 		sr = new ShapeRenderer();
-		sr.setProjectionMatrix(cam.combined);
+		resetCam();
 		
 		font = new BitmapFont(Gdx.files.internal("text.fnt"));
 		
 		prefs = Gdx.app.getPreferences("HighScore");
-
+		
 		if(!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
 		}
+		
+		spaceMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/spaceMusic.mp3"));
+		spaceMusic.setLooping(true);
+		spaceMusic.setVolume((float) 0.1);
+		//spaceMusic.play();
+		
+		inPlayMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/pixelatedCosmos.mp3"));
+		inPlayMusic.setLooping(true);
+		inPlayMusic.setVolume((float) 0.2);
+		
+		asteroidExplosion = Gdx.audio.newSound(Gdx.files.internal("audio/asteroidExplosion.wav"));
+		rocketExplosion = Gdx.audio.newSound(Gdx.files.internal("audio/rocketExplosion.wav"));
+		ufoExplosion = Gdx.audio.newSound(Gdx.files.internal("audio/ufoExplosion.wav"));
+		rocketMissile = Gdx.audio.newSound(Gdx.files.internal("audio/rocketMissile.wav"));
+		ufoMissile = Gdx.audio.newSound(Gdx.files.internal("audio/ufoMissile.wav"));
+		powerUp = Gdx.audio.newSound(Gdx.files.internal("audio/powerUp.mp3"));
+		levelUp = Gdx.audio.newSound(Gdx.files.internal("audio/levelUp.mp3"));
+		ufoSpawn = Gdx.audio.newSound(Gdx.files.internal("audio/ufoSpawn.wav"));
+		gameOver = Gdx.audio.newSound(Gdx.files.internal("audio/gameOver.wav"));
 	}
 	
 	public static void setHighScore(int val) {
@@ -50,6 +75,62 @@ public class AssetLoader {
 	
 	public static void dispose() {
 		font.dispose();
+		batch.dispose();
 	}
-
+	
+	public static void zoomOut() {
+		if(cam.zoom < 1) {
+			cam.zoom += 0.01;
+		} else {
+			cam.zoom = 1;
+			inPlayMusic.play();
+		}
+		
+		setCam();
+	}
+	
+	public static void closeZoom() {
+		cam.zoom = 0;
+		setCam();
+	}
+	
+	public static void translate() {		
+		float x = 0, y = 0;
+		int t = 6;
+		
+		int n = r.nextInt(3);	
+		if(n == 0) {	
+			if(left) {
+				x = -t;
+			} else {
+				x = t;
+			}
+			left = !left;
+		}
+		
+		n = r.nextInt(3);	
+		if(n == 0) {	
+			if(up) {
+				y = t;
+			} else {
+				y = -t;
+			}
+			up = !up;
+		}
+		
+		cam.translate(x, y);
+		setCam();
+	}
+	
+	public static void resetCam() {
+		cam.setToOrtho(false);
+		cam.zoom = 1;
+		setCam();
+	}
+	
+	public static void setCam() {
+		cam.update();
+		sr.setProjectionMatrix(cam.combined);
+		batch.setProjectionMatrix(cam.combined);
+	}
 }

@@ -102,7 +102,7 @@ public class UFO extends SpaceObject {
 	}
 	
 	private void spawnCloneCheck() {
-		int n = rand.nextInt(600);
+		int n = rand.nextInt(800);
 		if(n == 0) {
 			world.objSpawner.ufoDaughter(getX(), getY());
 		}	

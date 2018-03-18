@@ -8,16 +8,17 @@ import main.Main;
 
 public class DesktopLauncher {
 	
-	private static int width, height;
-	
 	public static void main (String[] arg) {		
 		DisplayMode displayMode = LwjglApplicationConfiguration.getDesktopDisplayMode();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.setFromDisplayMode(displayMode);
 		
-		width = displayMode.width;
-		height = displayMode.height;
+		//config.fullscreen = false;
+		//config.width *= 0.8;
+		//config.height *= 0.8;
+		//width = displayMode.width;
+		//height = displayMode.height;
 		
-		new LwjglApplication(new Main(width, height), config);
+		new LwjglApplication(new Main(config.width, config.height), config);
 	}
 }
