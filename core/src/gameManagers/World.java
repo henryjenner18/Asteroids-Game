@@ -63,6 +63,7 @@ public class World {
 		resetGameOverTimer();
 		
 		currentState = GameState.RUNNING;
+		objSpawner.powerUp(500, 500);
 	}
 	
 	public enum GameState {

@@ -35,9 +35,12 @@ public class Shield extends SpaceObject {
 		this.heading = heading;
 		setVertices();
 		
-		if(r < targetR) {
+		if(timeLeft > 5 && r < targetR) {
 			r += 0.5;
 			dh += dAngle;
+		} else if(timeLeft < 1.5 && r > 0) {
+			r -= 0.5;
+			dh -= dAngle;
 		}
 		
 		setColours();
