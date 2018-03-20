@@ -25,7 +25,7 @@ public class AssetLoader {
 	private static int w = Main.getWidth();
 	private static int h = Main.getHeight();
 	
-	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion, rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver;
+	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion, rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver, ricochet;
 	public static Music inPlayMusic;
 	
 	public static void load() {
@@ -59,6 +59,7 @@ public class AssetLoader {
 		levelUp = Gdx.audio.newSound(Gdx.files.internal("audio/levelUp.mp3"));
 		ufoSpawn = Gdx.audio.newSound(Gdx.files.internal("audio/ufoSpawn.wav"));
 		gameOver = Gdx.audio.newSound(Gdx.files.internal("audio/gameOver.wav"));
+		ricochet = Gdx.audio.newSound(Gdx.files.internal("audio/ricochet.wav"));
 	}
 	
 	public static void setHighScore(int val) {
@@ -82,6 +83,7 @@ public class AssetLoader {
 		levelUp.dispose();
 		ufoSpawn.dispose();
 		gameOver.dispose();
+		ricochet.dispose();
 	}
 	
 	public static void zoomOut() {
@@ -105,7 +107,7 @@ public class AssetLoader {
 	
 	public static void translate() {		
 		float x = 0, y = 0;
-		int t = 6;
+		int t = 7;
 		
 		int n = r.nextInt(3);	
 		if(n == 0) {	

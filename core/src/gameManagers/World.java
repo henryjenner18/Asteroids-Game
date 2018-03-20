@@ -63,7 +63,6 @@ public class World {
 		resetGameOverTimer();
 		
 		currentState = GameState.RUNNING;
-		objSpawner.powerUp(500, 500);
 	}
 	
 	public enum GameState {
@@ -223,6 +222,7 @@ public class World {
 			AssetLoader.ufoExplosion.resume();
 			AssetLoader.levelUp.resume();
 			AssetLoader.powerUp.resume();
+			AssetLoader.ricochet.resume();
 		}	
 	}
 	
@@ -250,6 +250,7 @@ public class World {
 			AssetLoader.ufoExplosion.pause();
 			AssetLoader.levelUp.pause();
 			AssetLoader.powerUp.pause();
+			AssetLoader.ricochet.pause();
 		}
 	}
 	

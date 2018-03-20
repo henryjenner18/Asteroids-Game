@@ -143,6 +143,7 @@ public class CollisionDetector {
 				if(world.getMissile(obj1Index).getCreator() == 'r') {
 					return false;
 				} else {
+					AssetLoader.ricochet.play(0.2f);
 					return true;
 				}
 			}

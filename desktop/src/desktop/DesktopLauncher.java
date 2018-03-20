@@ -14,8 +14,8 @@ public class DesktopLauncher {
 		config.setFromDisplayMode(displayMode);
 		
 		//config.fullscreen = false;
-		//config.width *= 0.8;
-		//config.height *= 0.8;
+		//config.width *= 0.85;
+		//config.height *= 0.85;
 		//width = displayMode.width;
 		//height = displayMode.height;
 		

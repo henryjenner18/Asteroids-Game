@@ -35,7 +35,8 @@ public class Main extends Game { // Main game class
 	@Override
 	public void create() {
 		AssetLoader.load();
-		setMainMenuScreen(this);
+		//setMainMenuScreen(this);
+		setGameScreen();
 	}
 	
 	public void dispose() {
