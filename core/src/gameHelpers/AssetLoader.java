@@ -25,7 +25,7 @@ public class AssetLoader {
 	private static int w = Main.getWidth();
 	private static int h = Main.getHeight();
 	
-	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion, rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver, ricochet;
+	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion, rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver;
 	public static Music inPlayMusic;
 	
 	public static void load() {
@@ -40,13 +40,17 @@ public class AssetLoader {
 		
 		prefs = Gdx.app.getPreferences("HighScore");
 		
-		if(!prefs.contains("highScore")) {
-			prefs.putInteger("highScore", 0);
+		if(!prefs.contains("highScore1P")) {
+			prefs.putInteger("highScore1P", 0);
+		}
+		
+		if(!prefs.contains("highScore2P")) {
+			prefs.putInteger("highScore2P", 0);
 		}
 		
 		// Music
 		inPlayMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/pixelatedCosmos.mp3"));
-		inPlayMusic.setLooping(true); // Music is on a constant loop
+		inPlayMusic.setLooping(true);
 		inPlayMusic.setVolume(0.2f);
 		
 		// Sound FX
@@ -59,16 +63,24 @@ public class AssetLoader {
 		levelUp = Gdx.audio.newSound(Gdx.files.internal("audio/levelUp.mp3"));
 		ufoSpawn = Gdx.audio.newSound(Gdx.files.internal("audio/ufoSpawn.wav"));
 		gameOver = Gdx.audio.newSound(Gdx.files.internal("audio/gameOver.wav"));
-		ricochet = Gdx.audio.newSound(Gdx.files.internal("audio/ricochet.wav"));
 	}
 	
-	public static void setHighScore(int val) {
-		prefs.putInteger("highScore", val);
+	public static void setHighScore1P(int val) {
+		prefs.putInteger("highScore1P", val);
 		prefs.flush();
 	}
 	
-	public static int getHighScore() {
-		return prefs.getInteger("highScore");
+	public static void setHighScore2P(int val) {
+		prefs.putInteger("highScore2P", val);
+		prefs.flush();
+	}
+	
+	public static int getHighScore1P() {
+		return prefs.getInteger("highScore1P");
+	}
+	
+	public static int getHighScore2P() {
+		return prefs.getInteger("highScore2P");
 	}
 	
 	public static void dispose() {
@@ -83,7 +95,36 @@ public class AssetLoader {
 		levelUp.dispose();
 		ufoSpawn.dispose();
 		gameOver.dispose();
-		ricochet.dispose();
+	}
+	
+	public static void playMusic() {
+		inPlayMusic.setLooping(true);
+		inPlayMusic.setVolume(0.2f);
+		inPlayMusic.play();
+	}
+	
+	public static void pauseAudio() {
+		inPlayMusic.pause();
+		asteroidExplosion.pause();
+		ufoSpawn.pause();
+		rocketExplosion.pause();
+		ufoMissile.pause();
+		rocketMissile.pause();
+		ufoExplosion.pause();
+		levelUp.pause();
+		powerUp.pause();
+	}
+	
+	public static void resumeAudio() {
+		inPlayMusic.play();
+		asteroidExplosion.resume();
+		ufoSpawn.resume();
+		rocketExplosion.resume();
+		ufoMissile.resume();
+		rocketMissile.resume();
+		ufoExplosion.resume();
+		levelUp.resume();
+		powerUp.resume();
 	}
 	
 	public static void zoomOut() {

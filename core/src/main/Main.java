@@ -12,7 +12,7 @@ public class Main extends Game { // Main game class
 	private static int width; // Dimensions used for whole program
 	private static int height;
 	private static int[][] stars;
-	private static boolean sound;
+	private static boolean sound, twoPlayer;
 
 	public Main(int width, int height) {
 		Main.width = width;
@@ -35,8 +35,7 @@ public class Main extends Game { // Main game class
 	@Override
 	public void create() {
 		AssetLoader.load();
-		//setMainMenuScreen(this);
-		setGameScreen();
+		setMainMenuScreen(this);
 	}
 	
 	public void dispose() {
@@ -47,7 +46,8 @@ public class Main extends Game { // Main game class
 		setScreen(new MainMenuScreen(this));
 	}
 	
-	public void setGameScreen() {
+	public void setGameScreen(boolean twoPlayer) {
+		Main.twoPlayer = twoPlayer;
 		setScreen(new GameScreen());
 		
 		if(isSound()) {
@@ -78,5 +78,9 @@ public class Main extends Game { // Main game class
 	
 	public static int[][] getStars() {
 		return stars;
+	}
+	
+	public static boolean isTwoPlayer() {
+		return twoPlayer;
 	}
 }

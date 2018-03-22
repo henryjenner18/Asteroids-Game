@@ -11,10 +11,11 @@ public class Rocket extends SpaceObject {
 	private float[][] flame;
 	private int[] flameFillColour, flameLineColour;
 	private int height, dh, terminalVel;
-	private boolean thrusting, left, right, flameOn, tripleMissile, invincible, shield, continuousFire;
-	private float tripleMissileTimer, invincibleTimer, continuousFireTimer;
+	private boolean thrusting, left, right, flameOn, tripleMissile, invincible, shieldOn, continuousFire, respawn;
+	private float tripleMissileTimer, invincibleTimer, continuousFireTimer, respawnTimer;
+	private Shield shield;
 	
-	public Rocket(World world) {
+	public Rocket(World world, int player) {
 		super(world);
 		vertices = new float[4][2];
 		flame = new float[3][2];
@@ -23,27 +24,44 @@ public class Rocket extends SpaceObject {
 		edges = vertices.length;
 		dh = 4;
 		terminalVel = 10;
-		setColours();
-		left = right = flameOn = tripleMissile = invincible = shield =  continuousFire = false;
-		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
-		velocity = new Vector2(0, 0);
-		heading = 90;
+		setColours(player);
+		init();
 		resetTripleMissileTimer();
 		resetInvincibleTimer();
 		resetContinuousFireTimer();
+		resetRespawnTimer();
+		respawn = false;
+		shield = new Shield(world);
+	}
+	
+	public void init() {
+		left = right = flameOn = tripleMissile = invincible = shieldOn =  continuousFire = false;
+		position = new Vector2(Main.getWidth() / 2, Main.getHeight() / 2);
+		velocity = new Vector2(0, 0);
+		heading = 90;
+		respawn = true;
 	}
 	
 	public void update(float delta) {
-		checkThrust(delta);	
-		asteroidsG(delta);	
-		terminalVelCheck();
-		position.add(velocity);
-		
-		if(left) heading += dh;
-		if(right) heading -= dh;
-		
-		wrap();
-		setVertices();
+		if(respawn == false) {
+			checkThrust(delta);	
+			asteroidsG(delta);	
+			terminalVelCheck();
+			position.add(velocity);
+			
+			if(left) heading += dh;
+			if(right) heading -= dh;
+			
+			wrap();
+			setVertices();
+			
+		} else {
+			respawnTimer -= delta;
+			if(respawnTimer <= 0) {
+				respawn = false;
+				invincible = true;
+			}
+		}
 		
 		if(tripleMissile == true) {
 			tripleMissileTimer -= delta;
@@ -72,8 +90,8 @@ public class Rocket extends SpaceObject {
 			}
 		}
 
-		if(shield == true) {
-			world.getShield(0).update(delta, position.x, position.y, heading);
+		if(shieldOn == true) {
+			shield.update(delta, position.x, position.y, heading);
 		}
 		
 		if(continuousFire == true) {
@@ -143,18 +161,29 @@ public class Rocket extends SpaceObject {
 		}
 	}
 	
-	private void setColours() {
+	private void setColours(int player) {
 		fillColour = new int[3];
-		fillColour[0] = 51;
-		fillColour[1] = 153;
-		fillColour[2] = 255;
-		
 		lineColour = new int[3];
-		lineColour[0] = 204;
-		lineColour[1] = 0;
-		lineColour[2] = 102;
-		
 		missileColour = new int[3];
+		
+		if(player == 1) {
+			fillColour[0] = 51;
+			fillColour[1] = 153;
+			fillColour[2] = 255;
+			
+			lineColour[0] = 204;
+			lineColour[1] = 0;
+			lineColour[2] = 102;
+		} else {
+			fillColour[0] = 255;
+			fillColour[1] = 51;
+			fillColour[2] = 51;
+			
+			lineColour[0] = 102;
+			lineColour[1] = 102;
+			lineColour[2] = 255;
+		}
+	
 		missileColour[0] = 255;
 		missileColour[1] = 255;
 		missileColour[2] = 0;
@@ -201,6 +230,10 @@ public class Rocket extends SpaceObject {
 		flame[2][1] = position.y + MathUtils.sin(radians) * height / 2;
 	}
 	
+	public void setRespawn(boolean b) {
+		respawn = b;
+	}
+	
 	public void setThrusting(boolean b) {
 		thrusting = b;
 	}
@@ -221,8 +254,8 @@ public class Rocket extends SpaceObject {
 		invincible = b;
 	}
 	
-	public void setShield(boolean b) {
-		shield = b;
+	public void setShieldOn(boolean b) {
+		shieldOn = b;
 	}
 	
 	public void setContinuousFire(boolean b) {
@@ -243,6 +276,10 @@ public class Rocket extends SpaceObject {
 	
 	private void resetContinuousFireTimer() {
 		continuousFireTimer = 5;
+	}
+	
+	private void resetRespawnTimer() {
+		respawnTimer = 2;
 	}
 	
 	public int[] getFlameFillColour() {
@@ -273,11 +310,19 @@ public class Rocket extends SpaceObject {
 		return invincible;
 	}
 	
-	public boolean getShield() {
-		return shield;
+	public boolean getShieldOn() {
+		return shieldOn;
 	}
 	
 	public boolean getContinuousFire() {
 		return continuousFire;
+	}
+	
+	public boolean getRespawn() {
+		return respawn;
+	}
+
+	public Shield getShield() {
+		return shield;
 	}
 }

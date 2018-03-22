@@ -45,7 +45,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
+		if(Gdx.input.isKeyJustPressed(Input.Keys.O)){
 			Main.toggleSound();
 		}
 		
@@ -80,58 +80,79 @@ public class MainMenuScreen implements Screen {
 		
 		// Sound
 		if(Main.isSound()) {
-			str = "Press S to turn sound OFF";
+			str = "Press O to turn sound OFF";
 		} else {
-			str = "Press S to turn sound ON";
+			str = "Press O to turn sound ON";
 		}
 		layout.setText(f, str);
 		strWidth = layout.width;
 		strHeight = layout.height;
 		f.draw(batch, str, 10, strHeight + 10);
-		
-		// Play
-		str = "Play";	
-		layout.setText(AssetLoader.font, str);
-		strWidth = layout.width;
-		strHeight = layout.height;
-		
+				
 		if(AssetLoader.cam.zoom == 1) {
-		
-		if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
-				y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
 			
-			str = "[Play]";
+			// Play solo
+			str = "Solo";	
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
 			
-			if(Gdx.input.isTouched()) {
-				main.setGameScreen();
+			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
+					y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
+				
+				str = "[Solo]";
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+				
+				if(Gdx.input.isTouched()) {
+					main.setGameScreen(false);
+				}
 			}
-		}
-		
-		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
-		
-		// Exit
-		str = "Exit";
-		layout.setText(AssetLoader.font, str);
-		strWidth = layout.width;
-		strHeight = layout.height;
-		
-		if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
-				y >= h/2 - 5*strHeight && y <= h/2 - 4*strHeight) {
-
-			str = "[Exit]";
+			
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
+			
+			// Play co-op
+			str = "Co-op";	
+			layout.setText(AssetLoader.font, str);
+			strWidth = layout.width;
+			strHeight = layout.height;
+						
+			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
+					y >= h/2 - 4*strHeight && y <= h/2 - 3*strHeight) {
+							
+				str = "[Co-op]";
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+							
+				if(Gdx.input.isTouched()) {
+					main.setGameScreen(true);
+				}
+			}
+						
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 3*strHeight);			
+			
+			// Exit
+			str = "Exit";
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
 			
-			if(Gdx.input.isTouched()) {
-				Gdx.app.exit();
+			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
+					y >= h/2 - 6*strHeight && y <= h/2 - 5*strHeight) {
+	
+				str = "[Exit]";
+				layout.setText(AssetLoader.font, str);
+				strWidth = layout.width;
+				strHeight = layout.height;
+				
+				if(Gdx.input.isTouched()) {
+					Gdx.app.exit();
+				}
 			}
-		}
-		
-		AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
+			
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 5*strHeight);
 		}
 		batch.end();
 	}

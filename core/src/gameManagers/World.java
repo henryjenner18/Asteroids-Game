@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 import gameHelpers.AssetLoader;
 import gameObjects.Asteroid;
@@ -25,9 +26,7 @@ public class World {
 	ArrayList<Fragment> fragments;
 	ArrayList<Spark> sparks;
 	ArrayList<PowerUp> powerUps;
-	ArrayList<Shield> shields;
 	
-	float rocketSpawnTimer;
 	private float ufoSpawnTimer, asteroidSpawnTimer, gameTimer;
 	float gameOverTimer;
 	boolean respawn;
@@ -49,18 +48,21 @@ public class World {
 		fragments = new ArrayList<Fragment>();
 		sparks = new ArrayList<Spark>();
 		powerUps = new ArrayList<PowerUp>();
-		shields = new ArrayList<Shield>();
 		
 		ufoDelta = 18;
 		gameTimer = 0;
-		score = level = extraLifeCount = (int) (rocketSpawnTimer = 0);
+		score = level = extraLifeCount = 0;
 		lives = 3;
 		ufoAccuracy = 10;
-		objSpawner.rocket(0);
 		
 		resetUFOSpawnTimer();
 		resetAsteroidSpawnTimer();
 		resetGameOverTimer();
+		
+		objSpawner.rocket(1);
+		if(Main.isTwoPlayer() == true) {
+			objSpawner.rocket(2);
+		}
 		
 		currentState = GameState.RUNNING;
 	}
@@ -88,7 +90,7 @@ public class World {
 			lives += 1;
 		}
 		
-		if(isRunning() && !isRespawn()) {
+		if(isRunning()) {
 			for(int i = 0; i < rockets.size(); i++) {
 				rockets.get(i).update(delta);
 			}
@@ -99,10 +101,6 @@ public class World {
 				objSpawner.newUFO();
 				resetUFOSpawnTimer();
 			}
-		}
-		
-		if(isRespawn()) {
-			objSpawner.rocket(delta);
 		}
 		
 		if(asteroids.size() == 0 && ufos.size() == 0 && !isGameOver()) {
@@ -172,10 +170,18 @@ public class World {
 		}	
 	}
 	
-	public void compareHighScore() {
-		if(score > AssetLoader.getHighScore()) {
-			AssetLoader.setHighScore(score);
+	public void compareHighScore(boolean twoPlayer) {		
+		if(twoPlayer == false) {
+			if(score > AssetLoader.getHighScore1P()) {
+				AssetLoader.setHighScore1P(score);
+			}
+			
+		} else {
+			if(score > AssetLoader.getHighScore2P()) {
+				AssetLoader.setHighScore2P(score);
+			}
 		}
+		
 	}
 	
 	public void addScore(int s) {
@@ -188,6 +194,18 @@ public class World {
 		
 		if(lives <= 0) {
 			currentState = GameState.GAMEOVER;
+
+			for(int i = getNumRockets()-1; i >= 0 ; i--) {
+				Rocket rocket = getRocket(i);
+				float x = rocket.getX();
+				float y = rocket.getY();
+				float r = (float) (rocket.getR() / 2.4);
+				Vector2 objVelocity = rocket.getVelocity();
+				int[] fillColour = rocket.getFillColour();
+				int[] lineColour = rocket.getLineColour();
+				objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
+				removeRocket(i);
+			}
 			
 			if(Main.isSound()) {
 				AssetLoader.gameOver.play(0.7f);
@@ -213,16 +231,7 @@ public class World {
 		currentState = GameState.RUNNING;
 		
 		if(Main.isSound()) {
-			AssetLoader.inPlayMusic.play();
-			AssetLoader.asteroidExplosion.resume();
-			AssetLoader.ufoSpawn.resume();
-			AssetLoader.rocketExplosion.resume();
-			AssetLoader.ufoMissile.resume();
-			AssetLoader.rocketMissile.resume();
-			AssetLoader.ufoExplosion.resume();
-			AssetLoader.levelUp.resume();
-			AssetLoader.powerUp.resume();
-			AssetLoader.ricochet.resume();
+			AssetLoader.resumeAudio();
 		}	
 	}
 	
@@ -231,9 +240,7 @@ public class World {
 		Gdx.input.setCursorCatched(true);
 		
 		if(Main.isSound()) {
-			AssetLoader.inPlayMusic.setLooping(true);
-			AssetLoader.inPlayMusic.setVolume((float) 0.2);
-			AssetLoader.inPlayMusic.play();
+			AssetLoader.playMusic();
 		}		
 	}
 	
@@ -241,24 +248,11 @@ public class World {
 		currentState = GameState.PAUSE;
 		
 		if(Main.isSound()) {
-			AssetLoader.inPlayMusic.pause();
-			AssetLoader.asteroidExplosion.pause();
-			AssetLoader.ufoSpawn.pause();
-			AssetLoader.rocketExplosion.pause();
-			AssetLoader.ufoMissile.pause();
-			AssetLoader.rocketMissile.pause();
-			AssetLoader.ufoExplosion.pause();
-			AssetLoader.levelUp.pause();
-			AssetLoader.powerUp.pause();
-			AssetLoader.ricochet.pause();
+			AssetLoader.pauseAudio();
 		}
 	}
 	
-	// Setters
-	public void resetRocketSpawnTimer() {
-		rocketSpawnTimer = 2;
-	}
-	
+	// Setters	
 	public void resetAsteroidSpawnTimer() {
 		asteroidSpawnTimer = 2;
 	}
@@ -304,13 +298,21 @@ public class World {
 		powerUps.remove(i);
 	}
 	
-	public void removeShield(int i) {
-		shields.remove(i);
-	}
-	
 	// Getters	
 	public ArrayList<Rocket> getRockets() {
 		return rockets;
+	}
+	
+	public ArrayList<Rocket> getRocketsWithoutShields() {
+		ArrayList<Rocket> noShields = new ArrayList<Rocket>();
+		
+		for(int i = 0; i < getNumRockets(); i++) {
+			Rocket r = getRocket(i);
+			if(r.getShieldOn() == false) {
+				noShields.add(r);
+			}
+		}
+		return noShields;
 	}
 	
 	public Rocket getRocket(int i) {
@@ -394,15 +396,16 @@ public class World {
 	}
 	
 	public ArrayList<Shield> getShields() {
+		ArrayList<Shield> shields = new ArrayList<Shield>();
+		
+		for(int i = 0; i < getNumRockets(); i++) {
+			Rocket r = getRocket(i);
+			if(r.getShieldOn() == true) {
+				shields.add(r.getShield());
+			}
+		}
+		
 		return shields;
-	}
-	
-	public Shield getShield(int i) {
-		return shields.get(i);
-	}
-	
-	public int getNumShields() {
-		return shields.size();
 	}
 	
 	public int getScore() {
@@ -435,10 +438,6 @@ public class World {
 	
 	public boolean isPause() {
 		return currentState == GameState.PAUSE;
-	}
-	
-	public boolean isRespawn() {
-		return respawn;
 	}
 	
 	public boolean isNextLevel() {

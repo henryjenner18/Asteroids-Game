@@ -81,20 +81,24 @@ public class SpaceManager {
 		ArrayList<Integer> objs = sortArrayList(colDet.getRocketsToRemove());
 
 		for(int i = 0; i < objs.size(); i++) {
-			Rocket rocket = world.getRocket(i);
-			float x = rocket.getX();
-			float y = rocket.getY();
-			float r = (float) (rocket.getR() / 2.4);
-			Vector2 objVelocity = rocket.getVelocity();
-			int[] fillColour = rocket.getFillColour();
-			int[] lineColour = rocket.getLineColour();
-			world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
-			world.removeRocket(i);
-			world.loseLife();
+			Rocket rocket = world.getRocket(objs.get(i));
 			
-			if(Main.isSound()) {
-				AssetLoader.rocketExplosion.play(0.5f);
-			}
+			if(rocket.getInvincible() == false && rocket.getRespawn() == false) {
+				float x = rocket.getX();
+				float y = rocket.getY();
+				float r = (float) (rocket.getR() / 2.4);
+				Vector2 objVelocity = rocket.getVelocity();
+				int[] fillColour = rocket.getFillColour();
+				int[] lineColour = rocket.getLineColour();
+				world.objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
+				world.loseLife();
+				
+				if(Main.isSound()) {
+					AssetLoader.rocketExplosion.play(0.5f);
+				}
+				
+				rocket.init();
+			}		
 		}
 	}
 	
@@ -232,22 +236,13 @@ public class SpaceManager {
 		}
 	}
 	
-	private void resolveShields() {
-		ArrayList<Integer> objs = new ArrayList<Integer>();
+	private void resolveShields() {		
+		int numRockets = world.getNumRockets();
 		
-		int numShields = world.getNumShields();
-		
-		for(int i = 0; i < numShields; i++) {
-			if(world.getShield(i).getTimeLeft() == 0) {
-				objs.add(i);
+		for(int i = numRockets-1; i >= 0; i--) {
+			if(world.getRocket(i).getShield().getTimeLeft() == 0) {
+				world.getRocket(i).setShieldOn(false);
 			}
-		}
-		
-		objs = sortArrayList(objs);
-		
-		for(int i = 0; i < objs.size(); i++) {
-			world.removeShield(objs.get(i));
-			world.getRocket(0).setShield(false);
 		}
 	}
 }

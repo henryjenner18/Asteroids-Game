@@ -48,11 +48,7 @@ public class Renderer {
 		drawMissiles();
 		drawUFOs();
 		drawShields();
-		
-		if(world.isGameOver() == false) {
-			drawRockets();
-		}
-		
+		drawRockets();	
 		drawGameStats();
 		drawText(delta);
 	}
@@ -148,16 +144,27 @@ public class Renderer {
 				String strTimer = mins + " mins " + secs + " secs";
 				
 				// High score
-				world.compareHighScore();
+				world.compareHighScore(Main.isTwoPlayer());
 				
 				String strHS;
-				if(world.getScore() == AssetLoader.getHighScore()) {
-					strHS = "New high score!";
 				
+				if(Main.isTwoPlayer() == false) {
+					if(world.getScore() == AssetLoader.getHighScore1P()) {
+						strHS = "New solo high score!";
+					
+					} else {
+						strHS = "Solo high score: " + AssetLoader.getHighScore1P();
+					}
+					
 				} else {
-					strHS = "High score: " + AssetLoader.getHighScore();
+					if(world.getScore() == AssetLoader.getHighScore2P()) {
+						strHS = "New co-op high score!";
+					
+					} else {
+						strHS = "Co-op high score: " + AssetLoader.getHighScore2P();
+					}
 				}
-				
+		
 				str = strTimer + "    " + strHS;
 				layout.setText(AssetLoader.font, str);
 				strWidth = layout.width;
@@ -184,9 +191,9 @@ public class Renderer {
 			
 			// Sound
 			if(Main.isSound()) {
-				str = "Press S to turn sound OFF";
+				str = "Press O to turn sound OFF";
 			} else {
-				str = "Press S to turn sound ON";
+				str = "Press O to turn sound ON";
 			}
 			layout.setText(f, str);
 			strWidth = layout.width;
@@ -324,74 +331,76 @@ public class Renderer {
 		for(int i = 0; i < numRockets; i++) {
 			Rocket r = world.getRocket(i);
 			
-			// Flame
-			float vertices[][] = r.getFlameVertices();
-			int edges = vertices.length;
-			float[] polygon = polygonArray(vertices, edges);
-			
-			int[] fillColour = r.getFlameFillColour();
-			int[] lineColour = r.getFlameLineColour();
-			
-			boolean invincible;		
-			if(r.getInvincible() == true) {
-				invincible = true;
-			} else {
-				invincible = false;
-			}
-			
-			if(r.getFlameOn() == true && invincible == false) {
-				// Filled flame
+			if(r.getRespawn() == false) {
+				// Flame
+				float vertices[][] = r.getFlameVertices();
+				int edges = vertices.length;
+				float[] polygon = polygonArray(vertices, edges);
+				
+				int[] fillColour = r.getFlameFillColour();
+				int[] lineColour = r.getFlameLineColour();
+				
+				boolean invincible;		
+				if(r.getInvincible() == true) {
+					invincible = true;
+				} else {
+					invincible = false;
+				}
+				
+				if(r.getFlameOn() == true && invincible == false) {
+					// Filled flame
+					sr.begin(ShapeType.Filled);
+					sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);			
+					sr.triangle(vertices[0][0], vertices[0][1],
+							vertices[1][0], vertices[1][1],
+							vertices[2][0], vertices[2][1]);
+					sr.end();
+					
+					// Flame outline
+					sr.begin(ShapeType.Line);
+					sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
+					sr.polygon(polygon);
+					sr.end();
+				}
+				
+				// Rocket
+				vertices = r.getVertices();
+				edges = r.getEdges();
+				polygon = polygonArray(vertices, edges);		
+				fillColour = r.getFillColour();
+				lineColour = r.getLineColour();
+				
+				// Filled polygon
 				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);			
+				
+				if(invincible == true) {
+					sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.5f);
+
+				} else {
+					sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
+				}
+				
 				sr.triangle(vertices[0][0], vertices[0][1],
 						vertices[1][0], vertices[1][1],
 						vertices[2][0], vertices[2][1]);
+				sr.triangle(vertices[0][0], vertices[0][1],
+						vertices[3][0], vertices[3][1],
+						vertices[2][0], vertices[2][1]);
 				sr.end();
-				
-				// Flame outline
+							
+				// Polygon outline
 				sr.begin(ShapeType.Line);
-				sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
+				
+				if(invincible == true) {
+					sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.5f);
+
+				} else {
+					sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
+				}
+				
 				sr.polygon(polygon);
 				sr.end();
 			}
-			
-			// Rocket
-			vertices = r.getVertices();
-			edges = r.getEdges();
-			polygon = polygonArray(vertices, edges);		
-			fillColour = r.getFillColour();
-			lineColour = r.getLineColour();
-			
-			// Filled polygon
-			sr.begin(ShapeType.Filled);
-			
-			if(invincible == true) {
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.5f);
-
-			} else {
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-			}
-			
-			sr.triangle(vertices[0][0], vertices[0][1],
-					vertices[1][0], vertices[1][1],
-					vertices[2][0], vertices[2][1]);
-			sr.triangle(vertices[0][0], vertices[0][1],
-					vertices[3][0], vertices[3][1],
-					vertices[2][0], vertices[2][1]);
-			sr.end();
-						
-			// Polygon outline
-			sr.begin(ShapeType.Line);
-			
-			if(invincible == true) {
-				sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.5f);
-
-			} else {
-				sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-			}
-			
-			sr.polygon(polygon);
-			sr.end();
 		}
 	}
 	
@@ -488,25 +497,29 @@ public class Renderer {
 	}
 	
 	private void drawShields() {
-		int numShields = world.getNumShields();
+		int numRockets = world.getNumRockets();
 		
-		for(int i = 0; i < numShields; i++) {
-			Shield s = world.getShield(i);
+		for(int i = 0; i < numRockets; i++) {
+			Rocket r = world.getRocket(i);
 			
-			float x = s.getX();
-			float y = s.getY();
-			float vertices[][] = s.getVertices();
-			int edges = s.getEdges();
-			int[] fillColour = s.getFillColour();
-			int[] lineColour = s.getLineColour();
-			
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.3f);			
-			drawFilledPolygon(x, y, vertices, edges);
-						
-			Gdx.gl.glLineWidth(3);
-			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.5f);
-			drawPolygonOutline(vertices, edges);
+			if(r.getShieldOn() == true) {
+				Shield s = r.getShield();
+				
+				float x = s.getX();
+				float y = s.getY();
+				float vertices[][] = s.getVertices();
+				int edges = s.getEdges();
+				int[] fillColour = s.getFillColour();
+				int[] lineColour = s.getLineColour();
+				
+				Gdx.gl.glEnable(GL20.GL_BLEND);
+				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 0.3f);			
+				drawFilledPolygon(x, y, vertices, edges);
+							
+				Gdx.gl.glLineWidth(3);
+				sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 0.5f);
+				drawPolygonOutline(vertices, edges);
+			}			
 		}
 	}
 	

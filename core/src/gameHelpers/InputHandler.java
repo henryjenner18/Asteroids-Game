@@ -11,36 +11,74 @@ import main.Main;
 public class InputHandler implements InputProcessor {
 	
 	private World world;
+	private int numRockets;
 	
 	public InputHandler(World world) {
 		this.world = world;
+		numRockets = world.getNumRockets();
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if(world.isRunning() && !world.isRespawn()) {
-			if(world.getNumRockets() > 0) {
-				Rocket rocket = world.getRocket(0);
+		if(world.isRunning()) {
+			if(numRockets > 0) {
+				Rocket r = world.getRocket(0);
 				
-				if(keycode == Keys.UP || keycode == Keys.W) {
-					rocket.setThrusting(true);
-						
-				} else if(keycode == Keys.LEFT || keycode == Keys.A) {
-					rocket.setLeft(true);
-						
-				} else if(keycode == Keys.RIGHT  || keycode == Keys.D) {
-					rocket.setRight(true);
-						
-				} else if(keycode == Keys.SPACE) {
-					int num;
-					
-					if(rocket.getTripleMissile() == true) {
-						num = 3;
-					} else {
-						num = 1;
+				if(r.getRespawn() == false) {
+					switch(keycode) {
+					case Keys.UP:
+						r.setThrusting(true);
+						break;
+					case Keys.LEFT:
+						r.setLeft(true);
+						break;
+					case Keys.RIGHT:
+						r.setRight(true);
+						break;
+					case Keys.SPACE:
+					case Keys.CONTROL_RIGHT:
+						int num;
+						if(r.getTripleMissile() == true) {
+							num = 3;
+						} else {
+							num = 1;
+						}
+						world.objSpawner.missile('r', num, r.getX(), r.getY(), r.getHeading(),
+								r.getHeight(), r.getVelocity(), r.getMissileV(), r.getMissileColour());
+						break;
+					default:
+						break;
 					}
+				}						
+				
+				if(numRockets > 1) {
+					r = world.getRocket(1);
 					
-					world.objSpawner.missile('r', num, rocket.getX(), rocket.getY(), rocket.getHeading(), rocket.getHeight(), rocket.getVelocity(), rocket.getMissileV(), rocket.getMissileColour());
+					if(r.getRespawn() == false) {
+						switch(keycode) {
+						case Keys.W:
+							r.setThrusting(true);
+							break;
+						case Keys.A:
+							r.setLeft(true);
+							break;
+						case Keys.D:
+							r.setRight(true);
+							break;
+						case Keys.CONTROL_LEFT:
+							int num;
+							if(r.getTripleMissile() == true) {
+								num = 3;
+							} else {
+								num = 1;
+							}
+							world.objSpawner.missile('r', num, r.getX(), r.getY(), r.getHeading(),
+									r.getHeight(), r.getVelocity(), r.getMissileV(), r.getMissileColour());
+							break;
+						default:
+							break;
+						}
+					}			
 				}
 			}
 		}
@@ -54,7 +92,7 @@ public class InputHandler implements InputProcessor {
 			}
 		}
 		
-		if(keycode == Keys.S) {
+		if(keycode == Keys.O) {
 			Main.toggleSound();
 		}
 		
@@ -64,17 +102,39 @@ public class InputHandler implements InputProcessor {
 	@Override
 	public boolean keyUp(int keycode) {
 		if(world.isRunning() || world.isNextLevel() || world.isPause()) {
-			if(world.getNumRockets() > 0) {
-				Rocket rocket = world.getRocket(0);
+			if(numRockets > 0) {
+				Rocket r = world.getRocket(0);
 				
-				if(keycode == Keys.UP || keycode == Keys.W) {
-					rocket.setThrusting(false);
+				switch(keycode) {
+				case Keys.UP:
+					r.setThrusting(false);
+					break;
+				case Keys.LEFT:
+					r.setLeft(false);
+					break;
+				case Keys.RIGHT:
+					r.setRight(false);
+					break;
+				default:
+					break;
+				}
+				
+				if(numRockets > 1) {
+					r = world.getRocket(1);
 					
-				} else if(keycode == Keys.LEFT || keycode == Keys.A) {
-					rocket.setLeft(false);
-					
-				} else if(keycode == Keys.RIGHT || keycode == Keys.D) {
-					rocket.setRight(false);
+					switch(keycode) {
+					case Keys.W:
+						r.setThrusting(false);
+						break;
+					case Keys.A:
+						r.setLeft(false);
+						break;
+					case Keys.D:
+						r.setRight(false);
+						break;
+					default:
+						break;
+					}
 				}
 			}
 		}

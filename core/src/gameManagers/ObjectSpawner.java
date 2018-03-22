@@ -10,7 +10,6 @@ import gameObjects.Fragment;
 import gameObjects.Missile;
 import gameObjects.PowerUp;
 import gameObjects.Rocket;
-import gameObjects.Shield;
 import gameObjects.Spark;
 import gameObjects.UFO;
 import main.Main;
@@ -25,26 +24,9 @@ public class ObjectSpawner {
 		rand = new Random();
 	}
 	
-	void rocket(float delta) {
-		if(world.rocketSpawnTimer > 0) {
-			world.rocketSpawnTimer -= delta;
-			
-			if(world.rocketSpawnTimer > 1) {
-				AssetLoader.translate();
-			} else {
-				AssetLoader.resetCam();
-			}
-			
-		} else {
-			Rocket rocket = new Rocket(world);
-			world.rockets.add(rocket);
-			world.resetRocketSpawnTimer();
-			world.respawn = false;
-				
-			if(world.getLevel() != 0) {
-				world.rockets.get(0).setInvincible(true);
-			}
-		}
+	void rocket(int player) {
+		Rocket rocket = new Rocket(world, player);
+		world.rockets.add(rocket);
 	}
 	
 	public void newAsteroid() {
@@ -162,14 +144,14 @@ public class ObjectSpawner {
 		world.powerUps.add(powerUp);
 	}
 	
-	public void shield() {
-		if(world.getNumShields() > 0) {
-			world.getShield(0).resetTimeLeft();
+	public void shield(int i) {
+		Rocket r = world.getRocket(i);
+		
+		if(r.getShieldOn() == true) {
+			r.getShield().resetTimeLeft();
 			
 		} else {
-			Shield shield = new Shield(world);
-			world.shields.add(shield);
-			world.getRocket(0).setShield(true);
+			r.setShieldOn(true);
 		}
 	}
 }

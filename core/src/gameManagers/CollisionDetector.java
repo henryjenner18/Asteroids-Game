@@ -9,9 +9,7 @@ import main.Main;
 public class CollisionDetector {
 	
 	private World world;
-	private ArrayList<Integer> rocketsToRemove;
-	private ArrayList<Integer> asteroidsToRemove;
-	private ArrayList<Integer> ufosToRemove;
+	private ArrayList<Integer> rocketsToRemove, asteroidsToRemove, ufosToRemove;
 	
 	public CollisionDetector(World world) {
 		this.world = world;
@@ -27,17 +25,11 @@ public class CollisionDetector {
 		checkForCollisions(world.getMissiles(), world.getShields());
 		checkForCollisions(world.getMissiles(), world.getAsteroids());
 		checkForCollisions(world.getMissiles(), world.getUFOs());
-		checkForCollisions(world.getMissiles(), world.getMissiles());
-		
-		if(world.getNumRockets() > 0) {
-			if(!world.getRocket(0).getShield()) {
-				checkForCollisions(world.getRockets(), world.getAsteroids());
-				checkForCollisions(world.getRockets(), world.getMissiles());
-				checkForCollisions(world.getRockets(), world.getUFOs());	
-			}
-				
-			checkForCollisions(world.getRockets(), world.getPowerUps());
-		}
+		checkForCollisions(world.getMissiles(), world.getMissiles());		
+		checkForCollisions(world.getRocketsWithoutShields(), world.getAsteroids());
+		checkForCollisions(world.getRocketsWithoutShields(), world.getMissiles());
+		checkForCollisions(world.getRocketsWithoutShields(), world.getUFOs());					
+		checkForCollisions(world.getRockets(), world.getPowerUps());
 	}
 	
 	private void checkForCollisions(ArrayList<?> obj1, ArrayList<?> obj2) {
@@ -143,54 +135,60 @@ public class CollisionDetector {
 				if(world.getMissile(obj1Index).getCreator() == 'r') {
 					return false;
 				} else {
-					AssetLoader.ricochet.play(0.2f);
 					return true;
 				}
 			}
 			
 		} else if(obj1Class == "gameObjects.Rocket") { // Rocket involved
-			if(obj2Class == "gameObjects.Missile") { // Missile involved
+			
+			if(world.getRocket(obj1Index).getRespawn() == true) {
+				return false;
 				
-				// If missile belongs to the rocket, or rocket is invincible do not collide
-				if((world.getMissile(obj2Index).getCreator() == 'r')
-						|| world.getRocket(0).getInvincible() == true) {
+			} else {
+				
+				if(obj2Class == "gameObjects.Missile") { // Missile involved
 					
-					world.getMissile(obj2Index).setTimeLeft(0); // But remove missile
-					world.objSpawner.sparks(world.getMissile(obj2Index).getX(), world.getMissile(obj2Index).getY(), true); // Create sparks
+					// If missile belongs to the rocket, or rocket is invincible do not collide
+					if((world.getMissile(obj2Index).getCreator() == 'r')
+							|| world.getRocket(obj1Index).getInvincible() == true) {
+						
+						world.getMissile(obj2Index).setTimeLeft(0); // But remove missile
+						world.objSpawner.sparks(world.getMissile(obj2Index).getX(), world.getMissile(obj2Index).getY(), true); // Create sparks
+						
+						return false;
+					} else {
+						return true;
+					}
+					
+				} else if(obj2Class == "gameObjects.PowerUp") { // Power up involved
+					world.getPowerUp(obj2Index).setTimeLeft(0);
+					
+					if(world.getPowerUp(obj2Index).getType() == 0) {
+						world.getRocket(obj1Index).setTripleMissile(true);
+						world.getRocket(obj1Index).resetTripleMissileTimer();
+					
+					} else if(world.getPowerUp(obj2Index).getType() == 1) {
+						world.setClearScreen(true);
+					
+					} else if(world.getPowerUp(obj2Index).getType() == 2) {
+						world.objSpawner.shield(obj1Index);
+					
+					} else if(world.getPowerUp(obj2Index).getType() == 3) {
+						world.getRocket(obj1Index).setContinuousFire(true);
+					}
+					
+					if(Main.isSound()) {
+						AssetLoader.powerUp.play(0.4f);
+					}			
 					
 					return false;
-				} else {
-					return true;
+				
+				} else if(world.getRocket(obj1Index).getInvincible() == true) {
+					addObjectToList(obj2Class, obj2Index); // Still remove obj2
+					world.objSpawner.sparks(x, y, false); // Create sparks
+					return false; // Don't collide rocket as it's invincible
 				}
-				
-			} else if(obj2Class == "gameObjects.PowerUp") { // Power up involved
-				world.getPowerUp(obj2Index).setTimeLeft(0);
-				
-				if(world.getPowerUp(obj2Index).getType() == 0) {
-					world.getRocket(obj1Index).setTripleMissile(true);
-					world.getRocket(obj1Index).resetTripleMissileTimer();
-				
-				} else if(world.getPowerUp(obj2Index).getType() == 1) {
-					world.setClearScreen(true);
-				
-				} else if(world.getPowerUp(obj2Index).getType() == 2) {
-					world.objSpawner.shield();
-				
-				} else if(world.getPowerUp(obj2Index).getType() == 3) {
-					world.getRocket(obj1Index).setContinuousFire(true);
-				}
-				
-				if(Main.isSound()) {
-					AssetLoader.powerUp.play(0.4f);
-				}			
-				
-				return false;
-			
-			} else if(world.getRocket(0).getInvincible() == true) {
-				addObjectToList(obj2Class, obj2Index); // Still remove obj2
-				world.objSpawner.sparks(x, y, false); // Create sparks
-				return false; // Don't collide rocket as it's invincible
-			}
+			}		
 			
 		} else { // Collide in any other rocket situation
 			return true;
