@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 
+import gameHelpers.AssetLoader;
 import gameHelpers.InputHandler;
 import gameManagers.CollisionDetector;
 import gameManagers.Renderer;
@@ -24,7 +26,6 @@ public class GameScreen implements Screen {
 		collisionDetector = new CollisionDetector(world);
 		spaceManager = new SpaceManager(world, collisionDetector);
 		renderer = new Renderer(world);
-		
 		deltas = new ArrayList<Float>();
 		
 		Gdx.input.setInputProcessor(new InputHandler(world));	

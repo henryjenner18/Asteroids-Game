@@ -48,7 +48,7 @@ public class Renderer {
 		drawMissiles();
 		drawUFOs();
 		drawShields();
-		drawRockets();	
+		drawRockets();
 		drawGameStats();
 		drawText(delta);
 	}
@@ -69,10 +69,13 @@ public class Renderer {
 			
 			// Game over
 			str = "GAME OVER";	
+			AssetLoader.font.setColor(Color.FIREBRICK);
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
 			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, g);
+			
+			AssetLoader.resetFont();
 			
 			if(g > h/2 + 2*strHeight) {
 				g -= 5;
@@ -95,7 +98,7 @@ public class Renderer {
 				Gdx.input.setCursorCatched(false);
 				
 				// Play again
-				str = "Play again";	
+				str = "Play again";
 				layout.setText(AssetLoader.font, str);
 				strWidth = layout.width;
 				strHeight = layout.height;

@@ -1,5 +1,7 @@
 package screens;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -11,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import gameHelpers.AssetLoader;
-import gameManagers.World;
 import main.Main;
 
 public class MainMenuScreen implements Screen {
@@ -23,18 +24,12 @@ public class MainMenuScreen implements Screen {
 	private int h = Main.getHeight();
 	
 	final Main main;
-	private World world;
 	
 	public MainMenuScreen(final Main main) {
 		batch = AssetLoader.batch;
 		this.main = main;
 		sr = AssetLoader.sr;
-		world = new World();
 		AssetLoader.closeZoom();
-		
-		for(int i = 0; i < 5; i++) {
-			world.objSpawner.newAsteroid();
-		}
 	}
 
 	@Override
@@ -44,16 +39,17 @@ public class MainMenuScreen implements Screen {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta) {	
+		checkSound();
+		AssetLoader.zoomOut();
+		drawBackground();
+		drawText();
+	}
+	
+	private void checkSound() {
 		if(Gdx.input.isKeyJustPressed(Input.Keys.O)){
 			Main.toggleSound();
 		}
-		
-		AssetLoader.zoomOut();
-		world.update(delta);
-		drawBackground();
-		drawAsteroids();
-		drawText();	
 	}
 	
 	private void drawText() {
@@ -64,7 +60,8 @@ public class MainMenuScreen implements Screen {
 		GlyphLayout layout = new GlyphLayout();
 		
 		// Title - Asteroids
-		String str = "ASTEROIDS";	
+		String str = "ASTEROIDS";
+		AssetLoader.font.setColor(Color.ROYAL);
 		layout.setText(AssetLoader.font, str);
 		float strWidth = layout.width;
 		float strHeight = layout.height;
@@ -90,7 +87,7 @@ public class MainMenuScreen implements Screen {
 		f.draw(batch, str, 10, strHeight + 10);
 				
 		if(AssetLoader.cam.zoom == 1) {
-			
+			AssetLoader.resetFont();
 			// Play solo
 			str = "Solo";	
 			layout.setText(AssetLoader.font, str);
@@ -157,7 +154,7 @@ public class MainMenuScreen implements Screen {
 		batch.end();
 	}
 	
-	private void drawAsteroids() {
+	/*private void drawAsteroids() {
 		int numAsteroids = world.getNumAsteroids();
 		
 		for(int i = 0; i < numAsteroids; i++) {
@@ -195,18 +192,7 @@ public class MainMenuScreen implements Screen {
 			sr.polygon(polygon);
 			sr.end();
 		}
-	}
-	
-	private float[] polygonArray(float[][] vertices, int edges) {
-		float[] polygon = new float[edges * 2];
-		
-		for(int i = 0; i < edges; i ++) {
-			polygon[i*2] = vertices[i][0];
-			polygon[(i*2)+1] = vertices[i][1];
-		}
-		
-		return polygon;	
-	}
+	}*/
 	
 	private void drawBackground() {
 		Gdx.gl.glClearColor(2/255f, 2/255f, 2/255f, 1);
