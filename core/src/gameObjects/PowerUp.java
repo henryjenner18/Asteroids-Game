@@ -14,13 +14,15 @@ public class PowerUp extends SpaceObject {
 	
 	public PowerUp(World world, float x, float y) {
 		super(world);
-		type = rand.nextInt(4);
+		type = rand.nextInt(5);
 		position = new Vector2(x, y);
 		r = 19;
 		edges = 6;
 		vertices = new float[edges][2];
 		lifespan = 7;
 		setTimeLeft(lifespan);
+		fillColour = new int[3];
+		lineColour = new int[3];
 		setColours();
 		setVertices();
 		resetFlashTimer();
@@ -29,19 +31,19 @@ public class PowerUp extends SpaceObject {
 	}
 	
 	public void update(float delta) {
-		timeLeft -= delta;
+		timeLeft -= delta; // Reducing time to live
 		if(timeLeft <= 0) {
 			setTimeLeft(0);
 		}
 		
-		flashTimer -= delta;
+		flashTimer -= delta; // Rate of flashing increases
 		if(flashTimer <= 0) {
 			setColours();
-			flash = !flash;
+			flash = !flash; // Reverse colour scheme
 			resetFlashTimer();
 		}
 		
-		dh ++;
+		dh += 2;
 		setVertices();
 	}
 	
@@ -57,61 +59,57 @@ public class PowerUp extends SpaceObject {
 		}
 	}
 
-	private void setColours() {
-		fillColour = new int[3];
-		lineColour = new int[3];
-		
+	private void setColours() {		
 		if(type == 0) {
-			fillColour[0] = 255;
-			fillColour[1] = 24;
-			fillColour[2] = 24;
-				
-			if(flash == true) {
-				lineColour[0] = 221;
-				lineColour[1] = 218;
-				lineColour[2] = 55;
-			} else {
-				lineColour = fillColour;
-			}
+			fillColour[0] = 236;
+			fillColour[1] = 0;
+			fillColour[2] = 0;
 			
+			lineColour[0] = 150;
+			lineColour[1] = 0;
+			lineColour[2] = 0;
+
 		} else if(type == 1) {
 			fillColour[0] = 255;
-			fillColour[1] = 76;
+			fillColour[1] = 145;
 			fillColour[2] = 31;
 			
-			if(flash == true) {
-				lineColour[0] = 94;
-				lineColour[1] = 62;
-				lineColour[2] = 222;
-			} else {
-				lineColour = fillColour;
-			}
-		
+			lineColour[0] = 251;
+			lineColour[1] = 76;
+			lineColour[2] = 31;
+
 		} else if(type == 2) {
-			fillColour[0] = 0;
-			fillColour[1] = 133;
-			fillColour[2] = 35;
+			fillColour[0] = 2;
+			fillColour[1] = 179;
+			fillColour[2] = 55;
 			
-			if(flash == true) {
-				lineColour[0] = 255;
-				lineColour[1] = 92;
-				lineColour[2] = 136;
-			} else {
-				lineColour = fillColour;
-			}
+			lineColour[0] = 2;
+			lineColour[1] = 111;
+			lineColour[2] = 55;
 		
 		} else if(type == 3) {
-			fillColour[0] = 0;
-			fillColour[1] = 102;
-			fillColour[2] = 225;
+			fillColour[0] = 2;
+			fillColour[1] = 111;
+			fillColour[2] = 253;
 			
-			if(flash == true) {
-				lineColour[0] = 255;
-				lineColour[1] = 204;
-				lineColour[2] = 153;
-			} else {
-				lineColour = fillColour;
-			}
+			lineColour[0] = 2;
+			lineColour[1] = 54;
+			lineColour[2] = 144;
+			
+		} else if(type == 4) {
+			fillColour[0] = 153;
+			fillColour[1] = 0;
+			fillColour[2] = 153;
+			
+			lineColour[0] = 102;
+			lineColour[1] = 0;
+			lineColour[2] = 102;		
+		}
+		
+		if(flash == true) {
+			int[] temp = fillColour;
+			fillColour = lineColour;
+			lineColour = temp;
 		}
 	}
 	

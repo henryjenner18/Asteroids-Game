@@ -60,6 +60,7 @@ public class Rocket extends SpaceObject {
 			if(respawnTimer <= 0) {
 				respawn = false;
 				invincible = true;
+				resetRespawnTimer();
 			}
 		}
 		
@@ -228,6 +229,11 @@ public class Rocket extends SpaceObject {
 		radians = (float) Math.toRadians(heading + 180);
 		flame[2][0] = position.x + MathUtils.cos(radians) * height / 2;
 		flame[2][1] = position.y + MathUtils.sin(radians) * height / 2;
+	}
+	
+	public void hyperspace() {
+		position.x = rand.nextInt(Main.getWidth() + 1);
+		position.y = rand.nextInt(Main.getHeight() + 1);
 	}
 	
 	public void setRespawn(boolean b) {

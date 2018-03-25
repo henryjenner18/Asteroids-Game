@@ -41,6 +41,9 @@ public class UFO extends SpaceObject {
 		terminalVel = 6;
 		score = (int) (1000 / ran);
 		resetCountdown();
+		fillColour = new int[3];
+		lineColour = new int[3];
+		missileColour = new int[3];
 		setColours();
 	}
 	
@@ -52,36 +55,25 @@ public class UFO extends SpaceObject {
 		}	
 	}
 	
-	private void setColours() {
-		if(daughter == false) {
-			fillColour = new int[3];
+	private void setColours() {		
+		if(daughter == false) {			
 			fillColour[0] = 102;
 			fillColour[1] = 255;
-			fillColour[2] = 102;
+			fillColour[2] = 102;			
 			
-			missileColour = new int[3];
-			missileColour[0] = 250;
-			missileColour[1] = 0;
-			missileColour[2] = 0;
 		} else {
-			fillColour = new int[3];
 			fillColour[0] = 255;
-			fillColour[1] = 153;
-			fillColour[2] = 200;
-			
-			missileColour = new int[3];
-			missileColour[0] = 204;
-			missileColour[1] = 0;
-			missileColour[2] = 102;
+			fillColour[1] = 102;
+			fillColour[2] = 255;
 		}
-		
-		
-		lineColour = new int[3];
+			
 		lineColour[0] = 125;
 		lineColour[1] = 50;
 		lineColour[2] = 255;
 		
-		
+		missileColour[0] = 255;
+		missileColour[1] = 0;
+		missileColour[2] = 0;
 		
 		setFlashColour();
 	}

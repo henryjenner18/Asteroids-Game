@@ -3,6 +3,7 @@ package gameManagers;
 import java.util.ArrayList;
 
 import gameHelpers.AssetLoader;
+import gameObjects.Rocket;
 import gameObjects.SpaceObject;
 import main.Main;
 
@@ -20,6 +21,7 @@ public class CollisionDetector {
 		asteroidsToRemove = new ArrayList<Integer>();
 		ufosToRemove = new ArrayList<Integer>();
 		
+		// Combinations of objects to check for collisions between
 		checkForCollisions(world.getShields(), world.getAsteroids());
 		checkForCollisions(world.getShields(), world.getUFOs());
 		checkForCollisions(world.getMissiles(), world.getShields());
@@ -175,6 +177,10 @@ public class CollisionDetector {
 					
 					} else if(world.getPowerUp(obj2Index).getType() == 3) {
 						world.getRocket(obj1Index).setContinuousFire(true);
+						
+					} else if(world.getPowerUp(obj2Index).getType() == 4) {
+						Rocket r = world.getRocket(obj1Index);
+						r.hyperspace();
 					}
 					
 					if(Main.isSound()) {

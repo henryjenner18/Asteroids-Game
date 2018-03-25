@@ -18,7 +18,7 @@ public class Fragment extends SpaceObject {
 		super(world);
 		position = new Vector2(x, y);
 		velocity = new Vector2();
-		this.objVelocity = new Vector2(objVelocity.x, objVelocity.y).scl((float) 0.5);
+		this.objVelocity = new Vector2(objVelocity.x, objVelocity.y).scl((float) 0.7);
 		heading = rand.nextInt(361);
 		v = rand.nextInt(51) + 50;	
 		edges = rand.nextInt(3)+3;

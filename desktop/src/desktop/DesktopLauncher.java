@@ -12,13 +12,6 @@ public class DesktopLauncher {
 		DisplayMode displayMode = LwjglApplicationConfiguration.getDesktopDisplayMode();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.setFromDisplayMode(displayMode);
-		
-		//config.fullscreen = false;
-		//config.width *= 0.85;
-		//config.height *= 0.85;
-		//width = displayMode.width;
-		//height = displayMode.height;
-		
 		new LwjglApplication(new Main(config.width, config.height), config);
 	}
 }

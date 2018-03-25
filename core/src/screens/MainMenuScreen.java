@@ -1,7 +1,5 @@
 package screens;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -26,6 +24,7 @@ public class MainMenuScreen implements Screen {
 	final Main main;
 	
 	public MainMenuScreen(final Main main) {
+		Gdx.input.setCursorCatched(true);
 		batch = AssetLoader.batch;
 		this.main = main;
 		sr = AssetLoader.sr;
@@ -42,6 +41,7 @@ public class MainMenuScreen implements Screen {
 	public void render(float delta) {	
 		checkSound();
 		AssetLoader.zoomOut();
+		AssetLoader.fadeInMusic();
 		drawBackground();
 		drawText();
 	}
@@ -61,7 +61,7 @@ public class MainMenuScreen implements Screen {
 		
 		// Title - Asteroids
 		String str = "ASTEROIDS";
-		AssetLoader.font.setColor(Color.ROYAL);
+		AssetLoader.font.setColor(102/255f, 255/255f, 102/255f, 1f);
 		layout.setText(AssetLoader.font, str);
 		float strWidth = layout.width;
 		float strHeight = layout.height;
@@ -87,6 +87,7 @@ public class MainMenuScreen implements Screen {
 		f.draw(batch, str, 10, strHeight + 10);
 				
 		if(AssetLoader.cam.zoom == 1) {
+			Gdx.input.setCursorCatched(false);
 			AssetLoader.resetFont();
 			// Play solo
 			str = "Solo";	
@@ -97,11 +98,7 @@ public class MainMenuScreen implements Screen {
 			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 					y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
 				
-				str = "[Solo]";
-				layout.setText(AssetLoader.font, str);
-				strWidth = layout.width;
-				strHeight = layout.height;
-				
+				AssetLoader.hoverFont();
 				if(Gdx.input.isTouched()) {
 					main.setGameScreen(false);
 				}
@@ -110,6 +107,7 @@ public class MainMenuScreen implements Screen {
 			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
 			
 			// Play co-op
+			AssetLoader.resetFont();
 			str = "Co-op";	
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
@@ -118,11 +116,7 @@ public class MainMenuScreen implements Screen {
 			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 					y >= h/2 - 4*strHeight && y <= h/2 - 3*strHeight) {
 							
-				str = "[Co-op]";
-				layout.setText(AssetLoader.font, str);
-				strWidth = layout.width;
-				strHeight = layout.height;
-							
+				AssetLoader.hoverFont();						
 				if(Gdx.input.isTouched()) {
 					main.setGameScreen(true);
 				}
@@ -131,6 +125,7 @@ public class MainMenuScreen implements Screen {
 			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 3*strHeight);			
 			
 			// Exit
+			AssetLoader.resetFont();
 			str = "Exit";
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
@@ -139,11 +134,7 @@ public class MainMenuScreen implements Screen {
 			if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 					y >= h/2 - 6*strHeight && y <= h/2 - 5*strHeight) {
 	
-				str = "[Exit]";
-				layout.setText(AssetLoader.font, str);
-				strWidth = layout.width;
-				strHeight = layout.height;
-				
+				AssetLoader.hoverFont();
 				if(Gdx.input.isTouched()) {
 					Gdx.app.exit();
 				}
@@ -153,46 +144,6 @@ public class MainMenuScreen implements Screen {
 		}
 		batch.end();
 	}
-	
-	/*private void drawAsteroids() {
-		int numAsteroids = world.getNumAsteroids();
-		
-		for(int i = 0; i < numAsteroids; i++) {
-			float x = world.getAsteroid(i).getX();
-			float y = world.getAsteroid(i).getY();
-			float vertices[][] = world.getAsteroid(i).getVertices();
-			int edges = world.getAsteroid(i).getEdges();
-			float[] polygon = polygonArray(vertices, edges);
-			
-			int[] fillColour = world.getAsteroid(i).getFillColour();
-			int[] lineColour = world.getAsteroid(i).getLineColour();
-			
-			// Filled Polygon
-			for(int e = 0; e < edges; e++) {
-				sr.begin(ShapeType.Filled);
-				sr.setColor(fillColour[0]/255f, fillColour[1]/255f, fillColour[2]/255f, 1);
-				
-				if(e == edges - 1) { // Final vertex - need to make triangle with the first vertex
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[0][0], vertices[0][1],
-							x, y);
-					sr.end();
-				} else {
-					sr.triangle(vertices[e][0], vertices[e][1],
-							vertices[e+1][0], vertices[e+1][1],
-							x, y);
-					sr.end();
-				}
-			}
-			
-			// Polygon outline
-			Gdx.gl.glLineWidth(6);
-			sr.begin(ShapeType.Line);
-			sr.setColor(lineColour[0]/255f, lineColour[1]/255f, lineColour[2]/255f, 1);
-			sr.polygon(polygon);
-			sr.end();
-		}
-	}*/
 	
 	private void drawBackground() {
 		Gdx.gl.glClearColor(2/255f, 2/255f, 2/255f, 1);

@@ -40,7 +40,7 @@ public class World {
 		init();
 	}
 	
-	private void init() {
+	private void init() { // Method to reset the world for a new game
 		rockets = new ArrayList<Rocket>();
 		asteroids = new ArrayList<Asteroid>();
 		missiles = new ArrayList<Missile>();
@@ -72,63 +72,51 @@ public class World {
 	}
 	
 	public void update(float delta) {
-		switch (currentState) {
-		case PAUSE:
-			break;
-			
-		default:
-			updatePlay(delta);
-			break;
+		if(!isPause()) { // Updating the game whenever not paused
+			updateGame(delta);
+			updateObjects(delta);
 		}
 	}
 
-	private void updatePlay(float delta) {
-		updateObjects(delta);
-		
-		if(extraLifeCount >= 25000) {
+	private void updateGame(float delta) {	
+		if(extraLifeCount >= 25000) { // Extra life per 25000 points
 			extraLifeCount -= 25000;
 			lives += 1;
 		}
 		
-		if(isRunning()) {
-			for(int i = 0; i < rockets.size(); i++) {
-				rockets.get(i).update(delta);
-			}
-			
+		if(isRunning()) { // Only spawn UFOs during actual game time		
 			ufoSpawnTimer -= delta;
 			
-			if(ufoSpawnTimer <= 0) {
+			if(ufoSpawnTimer <= 0) { // Time period between UFO spawns
 				objSpawner.newUFO();
 				resetUFOSpawnTimer();
 			}
 		}
 		
 		if(asteroids.size() == 0 && ufos.size() == 0 && !isGameOver()) {
-			nextLevel = true;
+			nextLevel = true; // Screen is clear, therefore level completed
 		}
 		
 		if(isNextLevel()) {
-			if(asteroidSpawnTimer > 0) {
+			if(asteroidSpawnTimer > 0) { // Pause between levels
 				asteroidSpawnTimer -= delta;
 				
 			} else {
-				levelUp();
-				
-				for(int a = 0; a < level + 1; a ++) {
-					objSpawner.newAsteroid();
-				}
-				
-				resetAsteroidSpawnTimer();
-				nextLevel = false;
+				levelUp(); // Change game variables for next level
 			}
 		}
 		
 		if(!isGameOver()) {
-			gameTimer += delta;
+			gameTimer += delta; // Recording the time of the game
 		}
 	}
 	
 	private void updateObjects(float delta) {
+		// Fetch every instance of object from respective arraylist and update
+		for(int i = 0; i < rockets.size(); i++) {
+			rockets.get(i).update(delta);
+		}
+		
 		for(int i = 0; i < asteroids.size(); i++) {
 			asteroids.get(i).update(delta);
 		}
@@ -157,17 +145,25 @@ public class World {
 	// Gameplay
 	private void levelUp() {
 		level++;
+		
 		if(ufoAccuracy > 0) {
 			ufoAccuracy--;
 		}
 		
 		if(ufoDelta > 8) {
-			ufoDelta--;
+			ufoDelta--; // Time period between spawns reduces each level
 		}
 		
 		if(level > 1 && Main.isSound()) {
 			AssetLoader.levelUp.play(1f);
-		}	
+		}
+		
+		for(int a = 0; a < level + 1; a ++) {
+			objSpawner.newAsteroid();
+		}
+		
+		resetAsteroidSpawnTimer();
+		nextLevel = false;
 	}
 	
 	public void compareHighScore(boolean twoPlayer) {		
@@ -193,30 +189,36 @@ public class World {
 		lives--;
 		
 		if(lives <= 0) {
-			currentState = GameState.GAMEOVER;
-
-			for(int i = getNumRockets()-1; i >= 0 ; i--) {
-				Rocket rocket = getRocket(i);
-				float x = rocket.getX();
-				float y = rocket.getY();
-				float r = (float) (rocket.getR() / 2.4);
-				Vector2 objVelocity = rocket.getVelocity();
-				int[] fillColour = rocket.getFillColour();
-				int[] lineColour = rocket.getLineColour();
-				objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
-				removeRocket(i);
-			}
-			
-			if(Main.isSound()) {
-				AssetLoader.gameOver.play(0.7f);
-			}
+			gameOver();
 			
 		} else {
 			respawn = true;
 		}
 	}
 	
+	private void gameOver() {
+		currentState = GameState.GAMEOVER;
+
+		for(int i = getNumRockets()-1; i >= 0 ; i--) {
+			// Remove and explode partner rocket when game over
+			Rocket rocket = getRocket(i);
+			float x = rocket.getX();
+			float y = rocket.getY();
+			float r = (float) (rocket.getR() / 2.4);
+			Vector2 objVelocity = rocket.getVelocity();
+			int[] fillColour = rocket.getFillColour();
+			int[] lineColour = rocket.getLineColour();
+			objSpawner.fragments(x, y, r, objVelocity, fillColour, lineColour);
+			removeRocket(i);
+		}
+		
+		if(Main.isSound()) {
+			AssetLoader.gameOver.play(0.7f);
+		}
+	}
+	
 	public void checkForPowerUp(float x, float y) {
+		// 1 in 20 chance of each exploded object producing power up
 		Random rand = new Random();
 		
 		int n = rand.nextInt(20) + 1;

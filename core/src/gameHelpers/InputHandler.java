@@ -21,37 +21,55 @@ public class InputHandler implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		if(world.isRunning()) {
-			if(numRockets > 0) {
-				Rocket r = world.getRocket(0);
+			if(numRockets > 0) {	
+				Rocket r = world.getRocket(0); // Input for player one
 				
 				if(r.getRespawn() == false) {
 					switch(keycode) {
 					case Keys.UP:
 						r.setThrusting(true);
 						break;
+						
 					case Keys.LEFT:
 						r.setLeft(true);
 						break;
+						
 					case Keys.RIGHT:
 						r.setRight(true);
 						break;
+						
 					case Keys.SPACE:
-					case Keys.CONTROL_RIGHT:
-						int num;
-						if(r.getTripleMissile() == true) {
-							num = 3;
-						} else {
-							num = 1;
-						}
-						world.objSpawner.missile('r', num, r.getX(), r.getY(), r.getHeading(),
-								r.getHeight(), r.getVelocity(), r.getMissileV(), r.getMissileColour());
+						if(Main.isTwoPlayer() == false) {
+							int num;
+							if(r.getTripleMissile() == true) {
+								num = 3;
+							} else {
+								num = 1;
+							}
+							world.objSpawner.missile('r', num, r.getX(), r.getY(), r.getHeading(),
+									r.getHeight(), r.getVelocity(), r.getMissileV(), r.getMissileColour());
+						}	
 						break;
+						
+					case Keys.CONTROL_RIGHT:
+						if(Main.isTwoPlayer() == true) {
+							int num;
+							if(r.getTripleMissile() == true) {
+								num = 3;
+							} else {
+								num = 1;
+							}
+							world.objSpawner.missile('r', num, r.getX(), r.getY(), r.getHeading(),
+									r.getHeight(), r.getVelocity(), r.getMissileV(), r.getMissileColour());
+						}
+						break;
+						
 					default:
 						break;
 					}
 				}						
 				
-				if(numRockets > 1) {
+				if(numRockets > 1) { // Input for player two
 					r = world.getRocket(1);
 					
 					if(r.getRespawn() == false) {
@@ -59,12 +77,15 @@ public class InputHandler implements InputProcessor {
 						case Keys.W:
 							r.setThrusting(true);
 							break;
+							
 						case Keys.A:
 							r.setLeft(true);
 							break;
+							
 						case Keys.D:
 							r.setRight(true);
 							break;
+							
 						case Keys.CONTROL_LEFT:
 							int num;
 							if(r.getTripleMissile() == true) {
@@ -75,6 +96,7 @@ public class InputHandler implements InputProcessor {
 							world.objSpawner.missile('r', num, r.getX(), r.getY(), r.getHeading(),
 									r.getHeight(), r.getVelocity(), r.getMissileV(), r.getMissileColour());
 							break;
+							
 						default:
 							break;
 						}
@@ -109,12 +131,15 @@ public class InputHandler implements InputProcessor {
 				case Keys.UP:
 					r.setThrusting(false);
 					break;
+					
 				case Keys.LEFT:
 					r.setLeft(false);
 					break;
+					
 				case Keys.RIGHT:
 					r.setRight(false);
 					break;
+					
 				default:
 					break;
 				}
@@ -126,12 +151,15 @@ public class InputHandler implements InputProcessor {
 					case Keys.W:
 						r.setThrusting(false);
 						break;
+						
 					case Keys.A:
 						r.setLeft(false);
 						break;
+						
 					case Keys.D:
 						r.setRight(false);
 						break;
+						
 					default:
 						break;
 					}

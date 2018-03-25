@@ -25,8 +25,10 @@ public class AssetLoader {
 	
 	private static int w = Main.getWidth();
 	private static int h = Main.getHeight();
+	private static float musicVol;
 	
-	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion, rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver;
+	public static Sound asteroidExplosion, rocketExplosion, ufoExplosion,
+	rocketMissile, ufoMissile, powerUp, levelUp, ufoSpawn, gameOver;
 	public static Music inPlayMusic;
 	
 	public static void load() {
@@ -39,20 +41,23 @@ public class AssetLoader {
 		
 		font = new BitmapFont(Gdx.files.internal("text.fnt"));
 		
+		// Storing high scores
 		prefs = Gdx.app.getPreferences("HighScore");
-		
+
 		if(!prefs.contains("highScore1P")) {
 			prefs.putInteger("highScore1P", 0);
 		}
-		
+
 		if(!prefs.contains("highScore2P")) {
 			prefs.putInteger("highScore2P", 0);
 		}
-		
+
 		// Music
 		inPlayMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/pixelatedCosmos.mp3"));
 		inPlayMusic.setLooping(true);
-		inPlayMusic.setVolume(0.2f);
+		musicVol = 0f;
+		inPlayMusic.setVolume(musicVol);
+		inPlayMusic.play();
 		
 		// Sound FX
 		asteroidExplosion = Gdx.audio.newSound(Gdx.files.internal("audio/asteroidExplosion.wav"));
@@ -66,8 +71,20 @@ public class AssetLoader {
 		gameOver = Gdx.audio.newSound(Gdx.files.internal("audio/gameOver.wav"));
 	}
 	
-	public static void resetFont() {
+	public static void fadeInMusic() {
+		if(musicVol < 0.199f) {
+			musicVol += 0.001f;
+		}
+		
+		inPlayMusic.setVolume(musicVol);
+	}
+	
+	public static void resetFont() { // Default font colour
 		AssetLoader.font.setColor(Color.WHITE);
+	}
+	
+	public static void hoverFont() { // Colour for when a button is hovered over
+		AssetLoader.font.setColor(Color.VIOLET);
 	}
 	
 	public static void setHighScore1P(int val) {
@@ -134,13 +151,9 @@ public class AssetLoader {
 	
 	public static void zoomOut() {
 		if(cam.zoom < 1) {
-			cam.zoom += 0.01;
+			cam.zoom += 0.005;
 		} else {
-			cam.zoom = 1;
-			
-			if(Main.isSound()) {
-				inPlayMusic.play();
-			}		
+			cam.zoom = 1;	
 		}
 		
 		setCam();

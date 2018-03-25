@@ -28,7 +28,7 @@ public class Renderer {
 	private World world;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
-	private int w, h, g;
+	private int w, h, gameOverY;
 	
 	public Renderer(World world) {
 		this.world = world;
@@ -36,7 +36,7 @@ public class Renderer {
 		sr = AssetLoader.sr;
 		w = Main.getWidth();
 		h = Main.getHeight();
-		g = h + 150;
+		gameOverY = h + 150;
 	}
 
 	public void render(float delta) {
@@ -69,16 +69,15 @@ public class Renderer {
 			
 			// Game over
 			str = "GAME OVER";	
-			AssetLoader.font.setColor(Color.FIREBRICK);
+			AssetLoader.font.setColor(Color.RED);
 			layout.setText(AssetLoader.font, str);
 			strWidth = layout.width;
 			strHeight = layout.height;
-			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, g);
-			
+			AssetLoader.font.draw(batch, str, w/2 - strWidth/2, gameOverY);
 			AssetLoader.resetFont();
-			
-			if(g > h/2 + 2*strHeight) {
-				g -= 5;
+
+			if(gameOverY > h/2 + 2*strHeight) {
+				gameOverY -= 5;
 			}
 			
 			if(world.gameOverTimer > 0) {
@@ -98,6 +97,7 @@ public class Renderer {
 				Gdx.input.setCursorCatched(false);
 				
 				// Play again
+				AssetLoader.resetFont();
 				str = "Play again";
 				layout.setText(AssetLoader.font, str);
 				strWidth = layout.width;
@@ -106,20 +106,17 @@ public class Renderer {
 				if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 					y >= h/2 - 2*strHeight && y <= h/2 - strHeight) {
 							
-					str = "[Play again]";
-					layout.setText(AssetLoader.font, str);
-					strWidth = layout.width;
-					strHeight = layout.height;
-							
+					AssetLoader.hoverFont();		
 					if(Gdx.input.isTouched()) {
 						world.restart();
-						g = h + 150;
+						gameOverY = h + 150;
 					}
 				}
 						
 				AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - strHeight);
 				
 				// Exit
+				AssetLoader.resetFont();
 				str = "Exit";
 				layout.setText(AssetLoader.font, str);
 				strWidth = layout.width;
@@ -128,11 +125,7 @@ public class Renderer {
 				if(x >= w/2 - strWidth/2 && x <= w/2 + strWidth/2 &&
 					y >= h/2 - 5*strHeight && y <= h/2 - 4*strHeight) {
 	
-					str = "[Exit]";
-					layout.setText(AssetLoader.font, str);
-					strWidth = layout.width;
-					strHeight = layout.height;
-							
+					AssetLoader.hoverFont();		
 					if(Gdx.input.isTouched()) {
 						Gdx.app.exit();
 					}
@@ -141,6 +134,7 @@ public class Renderer {
 				AssetLoader.font.draw(batch, str, w/2 - strWidth/2, h/2 - 4*strHeight);
 				
 				// Game time
+				AssetLoader.resetFont();
 				float gameTimer = world.getGameTimer();
 				int mins = MathUtils.floor(gameTimer / 60);
 				int secs = Math.round(gameTimer % 60);

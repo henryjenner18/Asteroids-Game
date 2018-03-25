@@ -1,11 +1,5 @@
-/textyellow.png
-/textWhite.png
-/text.png
-/gameHelpers/
 /gameManagers/
+/gameHelpers/
 /screens/
-/textWhite.fnt
-/text.fnt
-/textold.png
-/texty.png
-/textnew.png
+/gameObjects/
+/main/

@@ -9,6 +9,7 @@ import screens.GameScreen;
 import screens.MainMenuScreen;
 
 public class Main extends Game { // Main game class
+	
 	private static int width; // Dimensions used for whole program
 	private static int height;
 	private static int[][] stars;

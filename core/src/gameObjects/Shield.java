@@ -21,6 +21,8 @@ public class Shield extends SpaceObject {
 		targetR = 65;
 		rValue = 0;
 		dAngle = (5 * (360 / edges)) / targetR;
+		fillColour = new int[3];
+		lineColour = new int[3];
 		setColours();
 	}
 	
@@ -66,9 +68,6 @@ public class Shield extends SpaceObject {
 				rValue = 255;
 			}
 		}
-	
-		fillColour = new int[3];
-		lineColour = new int[3];
 		
 		fillColour[0] = rValue;
 		fillColour[1] = 100;
